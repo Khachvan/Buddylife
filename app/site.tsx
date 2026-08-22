@@ -74,6 +74,7 @@ const tr = {
     city: "Քաղաք (ոչ պարտադիր)",
     province: "Մարզ / նահանգ (ոչ պարտադիր)",
     petType: "Կենդանու տեսակ",
+    petOptions: ["Ընտրել", "Շուն", "Կատու", "Երկուսն էլ"],
     contactRequired: "Նշեք էլ․ փոստ կամ հեռախոսահամար։",
     locationParent: "Օգնում է գտնել ձեր տարածքի համապատասխան ծառայությունները։",
     locationBusiness: "Օգնում է կապվել ձեր տարածքի կենդանատերերի հետ։",
@@ -175,6 +176,7 @@ const tr = {
     city: "Город (необязательно)",
     province: "Область / регион (необязательно)",
     petType: "Питомец",
+    petOptions: ["Выберите", "Собака", "Кошка", "Оба"],
     contactRequired: "Укажите электронную почту или телефон.",
     locationParent: "Помогает находить подходящие услуги рядом с вами.",
     locationBusiness: "Помогает связаться с владельцами питомцев рядом с вами.",
@@ -264,6 +266,7 @@ const tr = {
     city: "City (optional)",
     province: "Province / region (optional)",
     petType: "Pet type",
+    petOptions: ["Choose pet type", "Dog", "Cat", "Both"],
     contactRequired: "Please provide an email address or phone number.",
     locationParent: "Helps us connect you with relevant services nearby.",
     locationBusiness: "Helps us connect you with nearby pet parents.",
@@ -1063,12 +1066,17 @@ function JoinModal({
                       {t.petType}
                       <b className="requiredMark">*</b>
                     </span>
-                    <select name="petType" required>
-                      <option value="">—</option>
-                      <option>Dog</option>
-                      <option>Cat</option>
-                      <option>Both</option>
-                    </select>
+                    <div className="selectWrap">
+                      <select name="petType" required defaultValue="">
+                        <option value="" disabled>
+                          {t.petOptions[0]}
+                        </option>
+                        <option value="dog">{t.petOptions[1]}</option>
+                        <option value="cat">{t.petOptions[2]}</option>
+                        <option value="both">{t.petOptions[3]}</option>
+                      </select>
+                      <ChevronDown aria-hidden="true" />
+                    </div>
                   </label>
                 </>
               ) : (
