@@ -6,6 +6,7 @@ import {
   BadgeCheck,
   BarChart3,
   BellRing,
+  BookOpen,
   CalendarClock,
   ChevronDown,
   HeartPulse,
@@ -22,10 +23,16 @@ import {
   X,
 } from "lucide-react";
 type Lang = "hy" | "ru" | "en";
-type View = "home" | "features" | "owners" | "business";
+type View = "home" | "features" | "owners" | "business" | "learn";
 const tr = {
   hy: {
-    nav: ["Գլխավոր", "Հնարավորություններ", "Կենդանատերերին", "Բիզնեսին"],
+    nav: [
+      "Գլխավոր",
+      "Հնարավորություններ",
+      "Կենդանատերերին",
+      "Բիզնեսին",
+      "Սովորել",
+    ],
     join: "Միանալ մեզ",
     slides: [
       [
@@ -122,7 +129,7 @@ const tr = {
     ],
   },
   ru: {
-    nav: ["Главная", "Возможности", "Владельцам", "Бизнесу"],
+    nav: ["Главная", "Возможности", "Владельцам", "Бизнесу", "Знания"],
     join: "Присоединиться",
     slides: [
       [
@@ -207,7 +214,7 @@ const tr = {
     ],
   },
   en: {
-    nav: ["Home", "Features", "Pet parents", "For business"],
+    nav: ["Home", "Features", "Pet parents", "For business", "Learn"],
     join: "Join us",
     slides: [
       [
@@ -295,6 +302,98 @@ const tr = {
     ],
   },
 };
+const hub = {
+  hy: {
+    kicker: "BUDDYLIFE ԿՐԹԱԿԱՆ ՀԱԲ",
+    title: "Ավելի տեղեկացված խնամք՝ ամեն օր։",
+    lead: "Կարճ, հստակ և տեսողական ուղեցույցներ՝ ստեղծված վստահելի անասնաբուժական աղբյուրների հիման վրա։",
+    latest: "Ընտրված ուղեցույցներ",
+    all: "Տեսնել բոլոր թեմաները",
+    disclaimer:
+      "Կրթական նյութերը չեն փոխարինում անասնաբույժի ախտորոշմանը կամ բուժմանը։ Արտակարգ իրավիճակում անմիջապես դիմեք մասնագետի։",
+    read: "4 րոպե ընթերցում",
+    topics: [
+      [
+        "Կանխարգելում",
+        "Ինչու տարեկան զննումն ու անհատական պատվաստումների պլանը կարևոր են",
+        "Կանոնավոր զննումները կարող են խնդիրները նկատել ավելի վաղ, իսկ պատվաստումների ճիշտ պլանը կախված է տարիքից, կենսակերպից և տեղական ռիսկերից։",
+        "/learn-preventive-care.png",
+      ],
+      [
+        "Սեզոնային անվտանգություն",
+        "Շոգ եղանակին անվտանգ զբոսանքի պարզ կանոնները",
+        "Ընտրեք զով ժամեր, ապահովեք մաքուր ջուր և ստվեր, ու երբեք կենդանուն մի թողեք փակ մեքենայում։",
+        "/learn-summer-safety.png",
+      ],
+      [
+        "Կատուների բարեկեցություն",
+        "Ինչպես տունը դարձնել հետաքրքիր և անվտանգ կատվի համար",
+        "Թաքստոցները, բարձր տեղերը, մաքուր ռեսուրսները, խաղն ու կանխատեսելի միջավայրը նվազեցնում են սթրեսը։",
+        "/learn-cat-enrichment.png",
+      ],
+    ],
+  },
+  ru: {
+    kicker: "ОБРАЗОВАТЕЛЬНЫЙ ХАБ BUDDYLIFE",
+    title: "Более осознанная забота — каждый день.",
+    lead: "Короткие, понятные и визуальные материалы на основе надёжных ветеринарных источников.",
+    latest: "Избранные материалы",
+    all: "Все темы",
+    disclaimer:
+      "Материалы носят образовательный характер и не заменяют диагностику или лечение ветеринара. В экстренной ситуации немедленно обратитесь к специалисту.",
+    read: "4 минуты",
+    topics: [
+      [
+        "Профилактика",
+        "Почему важны ежегодный осмотр и индивидуальный план вакцинации",
+        "Регулярные осмотры помогают заметить проблемы раньше, а план вакцинации зависит от возраста, образа жизни и местных рисков.",
+        "/learn-preventive-care.png",
+      ],
+      [
+        "Сезонная безопасность",
+        "Простые правила прогулок в жаркую погоду",
+        "Выбирайте прохладные часы, обеспечьте воду и тень и никогда не оставляйте питомца в закрытой машине.",
+        "/learn-summer-safety.png",
+      ],
+      [
+        "Благополучие кошек",
+        "Как сделать дом интересным и безопасным для кошки",
+        "Укрытия, вертикальные пространства, чистые ресурсы, игра и предсказуемая среда снижают стресс.",
+        "/learn-cat-enrichment.png",
+      ],
+    ],
+  },
+  en: {
+    kicker: "BUDDYLIFE EDUCATION HUB",
+    title: "Better-informed care, every day.",
+    lead: "Short, clear and visual guides grounded in trusted veterinary sources.",
+    latest: "Featured guides",
+    all: "Explore every topic",
+    disclaimer:
+      "Educational content does not replace veterinary diagnosis or treatment. Contact a professional immediately in an emergency.",
+    read: "4 min read",
+    topics: [
+      [
+        "Preventive care",
+        "Why annual checkups and an individual vaccination plan matter",
+        "Regular exams can identify concerns earlier, while vaccination plans should reflect age, lifestyle and local risk.",
+        "/learn-preventive-care.png",
+      ],
+      [
+        "Seasonal safety",
+        "Simple rules for safer walks in hot weather",
+        "Choose cooler hours, provide fresh water and shade, and never leave a pet inside a closed car.",
+        "/learn-summer-safety.png",
+      ],
+      [
+        "Cat wellbeing",
+        "How to make home engaging and safe for an indoor cat",
+        "Hiding places, vertical space, clean resources, play and a predictable environment can reduce stress.",
+        "/learn-cat-enrichment.png",
+      ],
+    ],
+  },
+};
 const images = [
   "/banner-organized.png",
   "/banner-trusted-care.png",
@@ -324,6 +423,7 @@ export default function BuddyPage({ view }: { view: View }) {
     [sent, setSent] = useState(false),
     [cms, setCms] = useState<Record<string, string>>({});
   const t = tr[lang];
+  const h = hub[lang];
   useEffect(() => {
     const s = localStorage.getItem("buddylife-lang") as Lang | null;
     if (s && tr[s]) setLang(s);
@@ -393,6 +493,7 @@ export default function BuddyPage({ view }: { view: View }) {
           </section>
           <AudienceSplit t={t} />
           <FeaturePreview t={t} />
+          <EducationPreview h={h} />
           <Press t={t} open={open} />
         </>
       )}
@@ -401,6 +502,7 @@ export default function BuddyPage({ view }: { view: View }) {
         <AudiencePage type="business" t={t} open={open} />
       )}{" "}
       {view === "features" && <Features t={t} open={open} />}
+      {view === "learn" && <EducationHub h={h} />}
       <Footer t={t} />
       {modal && (
         <JoinModal
@@ -435,6 +537,7 @@ function Header({
     ["features", "/features", t.nav[1]],
     ["owners", "/pet-parents", t.nav[2]],
     ["business", "/for-business", t.nav[3]],
+    ["learn", "/learn", t.nav[4]],
   ];
   return (
     <header className="nav shell">
@@ -655,6 +758,76 @@ function FeaturePreview({ t }: { t: any }) {
         </a>
       </div>
     </section>
+  );
+}
+function EducationCards({ h }: { h: any }) {
+  return (
+    <div className="educationGrid">
+      {h.topics.map((topic: any) => (
+        <article className="educationCard" key={topic[1]}>
+          <div className="educationImage">
+            <Image
+              src={topic[3]}
+              alt=""
+              fill
+              sizes="(max-width: 760px) 100vw, 33vw"
+            />
+          </div>
+          <div className="educationBody">
+            <span className="topicTag">{topic[0]}</span>
+            <h3>{topic[1]}</h3>
+            <p>{topic[2]}</p>
+            <small>
+              <BookOpen size={15} /> {h.read}
+            </small>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+function EducationPreview({ h }: { h: any }) {
+  return (
+    <section className="section educationPreview">
+      <div className="shell">
+        <div className="educationHeader">
+          <div>
+            <p className="eyebrow">{h.kicker}</p>
+            <h2>{h.title}</h2>
+            <p>{h.lead}</p>
+          </div>
+          <Link className="educationLink" href="/learn">
+            {h.all} →
+          </Link>
+        </div>
+        <EducationCards h={h} />
+      </div>
+    </section>
+  );
+}
+function EducationHub({ h }: { h: any }) {
+  return (
+    <>
+      <section className="hubHero">
+        <div className="shell hubIntro">
+          <p className="eyebrow">{h.kicker}</p>
+          <h1>{h.title}</h1>
+          <p>{h.lead}</p>
+        </div>
+      </section>
+      <section className="section hubPage">
+        <div className="shell">
+          <div className="educationHeader compact">
+            <h2>{h.latest}</h2>
+          </div>
+          <EducationCards h={h} />
+          <div className="educationDisclaimer">
+            <ShieldCheck size={22} />
+            <p>{h.disclaimer}</p>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
 function Press({ t, open }: { t: any; open: () => void }) {
@@ -930,6 +1103,7 @@ function Footer({ t }: { t: any }) {
           <Link href="/features">{t.nav[1]}</Link>
           <Link href="/pet-parents">{t.nav[2]}</Link>
           <Link href="/for-business">{t.nav[3]}</Link>
+          <Link href="/learn">{t.nav[4]}</Link>
         </div>
         <div className="footerColumn">
           <b>Community</b>
