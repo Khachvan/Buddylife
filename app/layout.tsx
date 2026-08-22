@@ -22,8 +22,9 @@ export const metadata: Metadata = {
     images: ["/og.webp"],
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: [{ url: "/buddylife-favicon.png", type: "image/png" }],
+    shortcut: "/buddylife-favicon.png",
+    apple: "/buddylife-favicon.png",
   },
 };
 

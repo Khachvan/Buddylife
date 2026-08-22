@@ -5,6 +5,7 @@ const publicPaths = [
   "/access",
   "/api/unlock",
   "/favicon.svg",
+  "/buddylife-favicon.png",
   "/buddylife-logo-clean.webp",
 ];
 export function proxy(request: NextRequest) {
