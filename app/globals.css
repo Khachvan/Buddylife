@@ -1262,9 +1262,26 @@ button {
   align-items: flex-start;
   flex-direction: column;
 }
+.carouselCopy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -34px;
+  top: 50%;
+  width: min(720px, calc(100% + 20px));
+  height: min(500px, calc(100% - 70px));
+  transform: translateY(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 32px;
+  background: rgba(250, 248, 252, 0.84);
+  box-shadow: 0 24px 80px rgba(45, 22, 63, 0.13);
+  backdrop-filter: blur(14px);
+}
 .carouselCopy h1 {
   font-size: clamp(54px, 6vw, 82px);
   max-width: 650px;
+  color: var(--plum);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 .carouselCopy > p:not(.eyebrow) {
   max-width: 560px;
@@ -1662,14 +1679,24 @@ button {
   .carouselShade {
     background: linear-gradient(
       180deg,
-      rgba(250, 248, 252, 0.92),
-      rgba(250, 248, 252, 0.7) 65%,
-      rgba(45, 22, 63, 0.2)
+      rgba(250, 248, 252, 0.34),
+      rgba(250, 248, 252, 0.18) 65%,
+      rgba(45, 22, 63, 0.12)
     );
   }
   .carouselCopy {
     justify-content: flex-end;
     padding-bottom: 55px;
+  }
+  .carouselCopy::before {
+    left: -18px;
+    top: auto;
+    bottom: 24px;
+    width: calc(100% + 36px);
+    height: 400px;
+    transform: none;
+    border-radius: 28px;
+    background: rgba(250, 248, 252, 0.86);
   }
   .audienceSplit,
   .previewCards {
@@ -1991,8 +2018,7 @@ button {
   width: 118px;
   height: 118px;
   object-fit: contain;
-  background: white;
-  border-radius: 18px;
+  background: transparent;
 }
 .trustMarks {
   display: flex;

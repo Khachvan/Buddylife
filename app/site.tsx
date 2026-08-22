@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { FormEvent, useEffect, useState } from "react";
-import Link from "next/link";
 import {
   BadgeCheck,
   BarChart3,
@@ -541,21 +540,21 @@ function Header({
   ];
   return (
     <header className="nav shell">
-      <Link
+      <a
         className="brand"
         href="/"
         onClick={(e) => view === "home" && e.preventDefault()}
       >
         <Image
-          src="/buddylife-logo.png"
+          src="/buddylife-logo-transparent.png"
           alt="BuddyLife"
           width={132}
           height={132}
         />
-      </Link>
+      </a>
       <nav className="navLinks">
         {links.map(([key, href, label]) => (
-          <Link
+          <a
             key={key}
             href={href}
             className={view === key ? "active" : ""}
@@ -563,7 +562,7 @@ function Header({
             onClick={(e) => view === key && e.preventDefault()}
           >
             {label}
-          </Link>
+          </a>
         ))}
       </nav>
       <div className="navRight">
@@ -622,14 +621,14 @@ function Header({
             <X />
           </button>
           <Image
-            src="/buddylife-logo.png"
+            src="/buddylife-logo-transparent.png"
             alt="BuddyLife"
             width={120}
             height={120}
           />
           <nav>
             {links.map(([key, href, label]) => (
-              <Link
+              <a
                 key={key}
                 href={href}
                 className={view === key ? "active" : ""}
@@ -639,7 +638,7 @@ function Header({
                 }}
               >
                 {label}
-              </Link>
+              </a>
             ))}
           </nav>
           <button
@@ -697,7 +696,7 @@ function AudienceSplit({ t }: { t: any }) {
             </span>
           </div>
           <div className="audienceActions">
-            <Link href="/pet-parents">{t.learn} →</Link>
+            <a href="/pet-parents">{t.learn} →</a>
           </div>
         </div>
       </article>
@@ -722,7 +721,7 @@ function AudienceSplit({ t }: { t: any }) {
             </span>
           </div>
           <div className="audienceActions">
-            <Link href="/for-business">{t.learn} →</Link>
+            <a href="/for-business">{t.learn} →</a>
           </div>
         </div>
       </article>
@@ -796,9 +795,9 @@ function EducationPreview({ h }: { h: any }) {
             <h2>{h.title}</h2>
             <p>{h.lead}</p>
           </div>
-          <Link className="educationLink" href="/learn">
+          <a className="educationLink" href="/learn">
             {h.all} →
-          </Link>
+          </a>
         </div>
         <EducationCards h={h} />
       </div>
@@ -1082,7 +1081,7 @@ function Footer({ t }: { t: any }) {
         <div className="footerIdentity">
           <div className="footerLogo">
             <Image
-              src="/buddylife-logo.png"
+              src="/buddylife-logo-transparent.png"
               alt="BuddyLife"
               width={108}
               height={108}
@@ -1100,10 +1099,10 @@ function Footer({ t }: { t: any }) {
         </div>
         <div className="footerColumn">
           <b>BuddyLife</b>
-          <Link href="/features">{t.nav[1]}</Link>
-          <Link href="/pet-parents">{t.nav[2]}</Link>
-          <Link href="/for-business">{t.nav[3]}</Link>
-          <Link href="/learn">{t.nav[4]}</Link>
+          <a href="/features">{t.nav[1]}</a>
+          <a href="/pet-parents">{t.nav[2]}</a>
+          <a href="/for-business">{t.nav[3]}</a>
+          <a href="/learn">{t.nav[4]}</a>
         </div>
         <div className="footerColumn">
           <b>Community</b>
