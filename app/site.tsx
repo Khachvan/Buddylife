@@ -415,7 +415,10 @@ const businessIcons = [
   BarChart3,
 ];
 function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
-  if (window.location.pathname === href) e.preventDefault();
+  e.preventDefault();
+  if (window.location.pathname !== href) {
+    window.location.href = new URL(href, window.location.origin).href;
+  }
 }
 export default function BuddyPage({ view }: { view: View }) {
   const [lang, setLang] = useState<Lang>("hy"),
