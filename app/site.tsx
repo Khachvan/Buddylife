@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import {
   BadgeCheck,
   BarChart3,
@@ -414,6 +414,10 @@ const businessIcons = [
   Store,
   BarChart3,
 ];
+function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
+  e.preventDefault();
+  if (window.location.pathname !== href) window.location.assign(href);
+}
 export default function BuddyPage({ view }: { view: View }) {
   const [lang, setLang] = useState<Lang>("hy"),
     [slide, setSlide] = useState(0),
@@ -540,11 +544,7 @@ function Header({
   ];
   return (
     <header className="nav shell">
-      <a
-        className="brand"
-        href="/"
-        onClick={(e) => view === "home" && e.preventDefault()}
-      >
+      <a className="brand" href="/" onClick={(e) => openRoute(e, "/")}>
         <Image
           src="/buddylife-logo-transparent.png"
           alt="BuddyLife"
@@ -559,7 +559,7 @@ function Header({
             href={href}
             className={view === key ? "active" : ""}
             aria-current={view === key ? "page" : undefined}
-            onClick={(e) => view === key && e.preventDefault()}
+            onClick={(e) => openRoute(e, href)}
           >
             {label}
           </a>
@@ -633,7 +633,7 @@ function Header({
                 href={href}
                 className={view === key ? "active" : ""}
                 onClick={(e) => {
-                  if (view === key) e.preventDefault();
+                  openRoute(e, href);
                   setMobileOpen(false);
                 }}
               >
@@ -696,7 +696,12 @@ function AudienceSplit({ t }: { t: any }) {
             </span>
           </div>
           <div className="audienceActions">
-            <a href="/pet-parents">{t.learn} →</a>
+            <a
+              href="/pet-parents"
+              onClick={(e) => openRoute(e, "/pet-parents")}
+            >
+              {t.learn} →
+            </a>
           </div>
         </div>
       </article>
@@ -721,7 +726,12 @@ function AudienceSplit({ t }: { t: any }) {
             </span>
           </div>
           <div className="audienceActions">
-            <a href="/for-business">{t.learn} →</a>
+            <a
+              href="/for-business"
+              onClick={(e) => openRoute(e, "/for-business")}
+            >
+              {t.learn} →
+            </a>
           </div>
         </div>
       </article>
@@ -795,7 +805,11 @@ function EducationPreview({ h }: { h: any }) {
             <h2>{h.title}</h2>
             <p>{h.lead}</p>
           </div>
-          <a className="educationLink" href="/learn">
+          <a
+            className="educationLink"
+            href="/learn"
+            onClick={(e) => openRoute(e, "/learn")}
+          >
             {h.all} →
           </a>
         </div>
@@ -1099,10 +1113,21 @@ function Footer({ t }: { t: any }) {
         </div>
         <div className="footerColumn">
           <b>BuddyLife</b>
-          <a href="/features">{t.nav[1]}</a>
-          <a href="/pet-parents">{t.nav[2]}</a>
-          <a href="/for-business">{t.nav[3]}</a>
-          <a href="/learn">{t.nav[4]}</a>
+          <a href="/features" onClick={(e) => openRoute(e, "/features")}>
+            {t.nav[1]}
+          </a>
+          <a href="/pet-parents" onClick={(e) => openRoute(e, "/pet-parents")}>
+            {t.nav[2]}
+          </a>
+          <a
+            href="/for-business"
+            onClick={(e) => openRoute(e, "/for-business")}
+          >
+            {t.nav[3]}
+          </a>
+          <a href="/learn" onClick={(e) => openRoute(e, "/learn")}>
+            {t.nav[4]}
+          </a>
         </div>
         <div className="footerColumn">
           <b>Community</b>
