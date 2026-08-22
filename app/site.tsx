@@ -512,8 +512,6 @@ export default function BuddyPage({ view }: { view: View }) {
           <i />
           <i />
         </div>
-        <b>BuddyLife</b>
-        <span>{t.loading}</span>
       </div>
       <Header
         t={t}
