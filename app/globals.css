@@ -35,15 +35,15 @@ a {
   gap: 24px;
 }
 .brand {
-  width: 132px;
-  height: 72px;
-  overflow: hidden;
+  width: 92px;
+  height: 82px;
+  overflow: visible;
   display: flex;
   align-items: center;
 }
 .brand img {
-  width: 132px;
-  height: 132px;
+  width: 82px;
+  height: 82px;
   object-fit: contain;
 }
 .navLinks {
@@ -721,8 +721,13 @@ footer {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #817789;
+  color: #b3206a;
   font-weight: 700;
+  white-space: nowrap;
+  width: max-content;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #fde9f2;
 }
 .hubHero {
   background: linear-gradient(135deg, #f1e9fb, #fff0f6);
@@ -786,11 +791,11 @@ footer {
     height: 78px;
   }
   .brand {
-    width: 96px;
+    width: 76px;
   }
   .brand img {
-    width: 100px;
-    height: 100px;
+    width: 72px;
+    height: 72px;
   }
   .languages {
     gap: 2px;
@@ -1468,6 +1473,35 @@ button {
   border: 1px solid #e8dfed;
   border-radius: 24px;
   padding: 30px;
+  overflow: hidden;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.featureRoadmap article:not(.secretFeature)::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 7px;
+  background: linear-gradient(90deg, var(--violet), var(--pink));
+}
+.featureRoadmap article:not(.secretFeature):nth-child(2) {
+  background: linear-gradient(145deg, #fff 48%, #edf9f5);
+}
+.featureRoadmap article:not(.secretFeature):nth-child(3) {
+  background: linear-gradient(145deg, #fff 48%, #fff2e8);
+}
+.featureRoadmap article:not(.secretFeature):nth-child(4) {
+  background: linear-gradient(145deg, #fff 48%, #f7edff);
+}
+.featureRoadmap article:not(.secretFeature):hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(45, 22, 63, 0.13);
+}
+.featureRoadmap article:not(.secretFeature) > span {
+  color: #fff;
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  box-shadow: 0 12px 28px rgba(111, 66, 193, 0.25);
 }
 .featureRoadmap article > b {
   position: absolute;
@@ -1491,15 +1525,16 @@ button {
   user-select: none;
   opacity: 0.7;
 }
-.secretFeature::after {
-  content: "•••";
+.soonLabel {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  font-size: 52px;
-  letter-spacing: 10px;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: white;
+  font-weight: 900;
   text-shadow: 0 2px 20px #2d163f;
 }
 .secretFeature b {
@@ -1541,6 +1576,11 @@ button {
 }
 .joinModal h2 {
   font-size: 40px;
+  line-height: 1.08;
+  margin: 0 52px 18px 0;
+}
+.joinModal > .eyebrow {
+  margin-bottom: 14px;
 }
 .pressTip {
   background: #f2e8f8;
@@ -1548,6 +1588,13 @@ button {
   padding: 16px;
   font-size: 13px;
   font-weight: 800;
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+.joinModal .roleTabs {
+  margin: 0 0 22px;
+  position: relative;
+  z-index: 1;
 }
 .modalForm {
   display: grid;
@@ -2007,16 +2054,16 @@ button {
   max-width: 310px;
 }
 .footerLogo {
-  width: 120px;
-  height: 74px;
-  overflow: hidden;
+  width: 150px;
+  height: 150px;
+  overflow: visible;
   display: flex;
   align-items: center;
   margin-bottom: 18px;
 }
 .footerLogo img {
-  width: 118px;
-  height: 118px;
+  width: 150px;
+  height: 150px;
   object-fit: contain;
   background: transparent;
 }

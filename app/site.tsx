@@ -60,6 +60,7 @@ const tr = {
       "Գործիքներ, որոնք լուծում են իրական առօրյա խնդիրներ՝ առանց ավելորդ բարդության։",
     launch: "Մեկնարկին",
     future: "Գաղտնի՝ շուտով",
+    soon: "Շուտով",
     blur: "Մենք դեռ չենք բացահայտում այս հնարավորությունը։",
     press:
       "Վաղ գրանցված օգտատերերը կհրավիրվեն BuddyLife-ի առաջիկա մամուլի շնորհանդեսին։",
@@ -157,6 +158,7 @@ const tr = {
       "Инструменты для реальных ежедневных задач без лишней сложности.",
     launch: "На старте",
     future: "Секретно — скоро",
+    soon: "Скоро",
     blur: "Эту возможность мы пока не раскрываем.",
     press:
       "Ранние пользователи будут приглашены на ближайшую пресс-презентацию BuddyLife.",
@@ -242,6 +244,7 @@ const tr = {
       "Tools that solve real everyday problems without unnecessary complexity.",
     launch: "At launch",
     future: "Secret — coming soon",
+    soon: "Coming soon",
     blur: "We are not revealing this feature yet.",
     press:
       "Early registered users will be invited to BuddyLife’s upcoming press launch event.",
@@ -553,7 +556,7 @@ function Header({
         onClick={(e) => openRoute(e, "/")}
       >
         <Image
-          src="/buddylife-logo-transparent.png"
+          src="/buddylife-logo-clean.png"
           alt="BuddyLife"
           width={132}
           height={132}
@@ -629,7 +632,7 @@ function Header({
             <X />
           </button>
           <Image
-            src="/buddylife-logo-transparent.png"
+            src="/buddylife-logo-clean.png"
             alt="BuddyLife"
             width={120}
             height={120}
@@ -949,9 +952,10 @@ function Features({ t, open }: { t: any; open: () => void }) {
               <div>
                 <span>?</span>
                 <b>{t.future}</b>
-                <h3>BuddyLife •••••••</h3>
+                <h3>BuddyLife</h3>
                 <p>{t.blur}</p>
               </div>
+              <strong className="soonLabel">{t.soon}</strong>
             </article>
           ))}
         </div>
@@ -1107,7 +1111,7 @@ function Footer({ t }: { t: any }) {
         <div className="footerIdentity">
           <div className="footerLogo">
             <Image
-              src="/buddylife-logo-transparent.png"
+              src="/buddylife-logo-clean.png"
               alt="BuddyLife"
               width={108}
               height={108}
