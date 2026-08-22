@@ -14,6 +14,7 @@ import {
   MapPin,
   MapPinned,
   Menu,
+  PawPrint,
   Search,
   ShieldCheck,
   Sparkles,
@@ -33,6 +34,7 @@ const tr = {
       "Սովորել",
     ],
     join: "Միանալ մեզ",
+    loading: "Պատրաստում ենք ձեր հաջորդ քայլը…",
     slides: [
       [
         "Ամեն կարևոր բան՝ մեկ վայրում",
@@ -145,6 +147,7 @@ const tr = {
   ru: {
     nav: ["Главная", "Возможности", "Владельцам", "Бизнесу", "Знания"],
     join: "Присоединиться",
+    loading: "Готовим следующий шаг…",
     slides: [
       [
         "Всё важное — в одном месте",
@@ -245,6 +248,7 @@ const tr = {
   en: {
     nav: ["Home", "Features", "Pet parents", "For business", "Learn"],
     join: "Join us",
+    loading: "Preparing your next step…",
     slides: [
       [
         "Everything important, in one place",
@@ -462,7 +466,10 @@ const businessIcons = [
 function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
   e.preventDefault();
   if (window.location.pathname !== href) {
-    window.location.href = new URL(href, window.location.origin).href;
+    document.documentElement.classList.add("isNavigating");
+    window.setTimeout(() => {
+      window.location.href = new URL(href, window.location.origin).href;
+    }, 420);
   }
 }
 export default function BuddyPage({ view }: { view: View }) {
@@ -498,6 +505,16 @@ export default function BuddyPage({ view }: { view: View }) {
   const title = cms[`banner_${slide + 1}_${lang}`] || t.slides[slide][0];
   return (
     <main>
+      <div className="routeLoader" aria-live="polite">
+        <div className="loaderOrbit">
+          <PawPrint />
+          <i />
+          <i />
+          <i />
+        </div>
+        <b>BuddyLife</b>
+        <span>{t.loading}</span>
+      </div>
       <Header
         t={t}
         lang={lang}
@@ -996,6 +1013,9 @@ function Features({ t, open }: { t: any; open: () => void }) {
                 <h3>BuddyLife</h3>
                 <p>{t.blur}</p>
               </div>
+              <span className="secretPaw">
+                <PawPrint aria-hidden="true" />
+              </span>
               <strong className="soonLabel">{t.soon}</strong>
             </article>
           ))}
