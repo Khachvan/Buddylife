@@ -75,6 +75,16 @@ const tr = {
     province: "Մարզ / նահանգ (ոչ պարտադիր)",
     petType: "Կենդանու տեսակ",
     petOptions: ["Ընտրել", "Շուն", "Կատու", "Երկուսն էլ"],
+    categoryOptions: [
+      "Ընտրել",
+      "Անասնաբուժություն",
+      "Գրումինգ",
+      "Կենդանիների հյուրանոց",
+      "Խանութ",
+      "Վարժեցում",
+      "Այլ",
+    ],
+    selectRequired: "Խնդրում ենք ընտրել տարբերակ։",
     contactRequired: "Նշեք էլ․ փոստ կամ հեռախոսահամար։",
     locationParent: "Օգնում է գտնել ձեր տարածքի համապատասխան ծառայությունները։",
     locationBusiness: "Օգնում է կապվել ձեր տարածքի կենդանատերերի հետ։",
@@ -177,6 +187,16 @@ const tr = {
     province: "Область / регион (необязательно)",
     petType: "Питомец",
     petOptions: ["Выберите", "Собака", "Кошка", "Оба"],
+    categoryOptions: [
+      "Выберите",
+      "Ветеринария",
+      "Груминг",
+      "Зоогостиница",
+      "Магазин",
+      "Дрессировка",
+      "Другое",
+    ],
+    selectRequired: "Пожалуйста, выберите вариант.",
     contactRequired: "Укажите электронную почту или телефон.",
     locationParent: "Помогает находить подходящие услуги рядом с вами.",
     locationBusiness: "Помогает связаться с владельцами питомцев рядом с вами.",
@@ -267,6 +287,16 @@ const tr = {
     province: "Province / region (optional)",
     petType: "Pet type",
     petOptions: ["Choose pet type", "Dog", "Cat", "Both"],
+    categoryOptions: [
+      "Choose category",
+      "Veterinary",
+      "Grooming",
+      "Pet hotel",
+      "Shop",
+      "Training",
+      "Other",
+    ],
+    selectRequired: "Please choose an option.",
     contactRequired: "Please provide an email address or phone number.",
     locationParent: "Helps us connect you with relevant services nearby.",
     locationBusiness: "Helps us connect you with nearby pet parents.",
@@ -980,6 +1010,58 @@ function Features({ t, open }: { t: any; open: () => void }) {
     </section>
   );
 }
+function VisualSelect({
+  name,
+  options,
+  onChoose,
+}: {
+  name: string;
+  options: string[];
+  onChoose: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState("");
+  return (
+    <div
+      className={`visualSelect ${open ? "open" : ""}`}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false);
+      }}
+    >
+      <input type="hidden" name={name} value={selected} />
+      <button
+        type="button"
+        className={selected ? "selected" : ""}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+      >
+        <span>{selected || options[0]}</span>
+        <ChevronDown aria-hidden="true" />
+      </button>
+      {open && (
+        <div className="visualSelectMenu" role="listbox">
+          {options.slice(1).map((option) => (
+            <button
+              type="button"
+              role="option"
+              aria-selected={selected === option}
+              key={option}
+              onClick={() => {
+                setSelected(option);
+                setOpen(false);
+                onChoose();
+              }}
+            >
+              {option}
+              <span>✓</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 function JoinModal({
   t,
   role,
@@ -996,10 +1078,18 @@ function JoinModal({
   setSent: (x: boolean) => void;
 }) {
   const [contactError, setContactError] = useState(false);
+  const [selectError, setSelectError] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget),
       body = Object.fromEntries(fd.entries());
+    if (
+      (role === "parent" && !body.petType) ||
+      (role === "business" && !body.category)
+    ) {
+      setSelectError(true);
+      return;
+    }
     if (!String(body.email || "").trim() && !String(body.phone || "").trim()) {
       setContactError(true);
       return;
@@ -1036,7 +1126,10 @@ function JoinModal({
           <>
             <p className="eyebrow">EARLY ACCESS</p>
             <h2>{t.join}</h2>
-            <p className="pressTip">✦ {t.press}</p>
+            <div className="eventInvite">
+              <Image src="/launch-ticket.png" alt="" width={210} height={132} />
+              <p>{t.press}</p>
+            </div>
             <div className="roleTabs">
               <button
                 className={role === "parent" ? "active" : ""}
@@ -1066,17 +1159,11 @@ function JoinModal({
                       {t.petType}
                       <b className="requiredMark">*</b>
                     </span>
-                    <div className="selectWrap">
-                      <select name="petType" required defaultValue="">
-                        <option value="" disabled>
-                          {t.petOptions[0]}
-                        </option>
-                        <option value="dog">{t.petOptions[1]}</option>
-                        <option value="cat">{t.petOptions[2]}</option>
-                        <option value="both">{t.petOptions[3]}</option>
-                      </select>
-                      <ChevronDown aria-hidden="true" />
-                    </div>
+                    <VisualSelect
+                      name="petType"
+                      options={t.petOptions}
+                      onChoose={() => setSelectError(false)}
+                    />
                   </label>
                 </>
               ) : (
@@ -1093,21 +1180,20 @@ function JoinModal({
                       {t.category}
                       <b className="requiredMark">*</b>
                     </span>
-                    <select name="category" required>
-                      <option value="">—</option>
-                      <option>Veterinary</option>
-                      <option>Grooming</option>
-                      <option>Pet hotel</option>
-                      <option>Shop</option>
-                      <option>Training</option>
-                      <option>Other</option>
-                    </select>
+                    <VisualSelect
+                      name="category"
+                      options={t.categoryOptions}
+                      onChoose={() => setSelectError(false)}
+                    />
                   </label>
                   <label>
                     {t.social}
                     <input name="social" />
                   </label>
                 </>
+              )}
+              {selectError && (
+                <p className="contactError">{t.selectRequired}</p>
               )}
               <p className="contactRequirement">
                 <b className="requiredMark">*</b> {t.contactRequired}
