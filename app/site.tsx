@@ -1052,11 +1052,17 @@ function JoinModal({
               {role === "parent" ? (
                 <>
                   <label>
-                    {t.name}
+                    <span className="fieldLabel">
+                      {t.name}
+                      <b className="requiredMark">*</b>
+                    </span>
                     <input name="name" required />
                   </label>
                   <label>
-                    {t.petType}
+                    <span className="fieldLabel">
+                      {t.petType}
+                      <b className="requiredMark">*</b>
+                    </span>
                     <select name="petType" required>
                       <option value="">—</option>
                       <option>Dog</option>
@@ -1068,11 +1074,17 @@ function JoinModal({
               ) : (
                 <>
                   <label>
-                    {t.businessName}
+                    <span className="fieldLabel">
+                      {t.businessName}
+                      <b className="requiredMark">*</b>
+                    </span>
                     <input name="businessName" required />
                   </label>
                   <label>
-                    {t.category}
+                    <span className="fieldLabel">
+                      {t.category}
+                      <b className="requiredMark">*</b>
+                    </span>
                     <select name="category" required>
                       <option value="">—</option>
                       <option>Veterinary</option>
@@ -1089,6 +1101,9 @@ function JoinModal({
                   </label>
                 </>
               )}
+              <p className="contactRequirement">
+                <b className="requiredMark">*</b> {t.contactRequired}
+              </p>
               <div className="formRow">
                 <label>
                   {t.email}

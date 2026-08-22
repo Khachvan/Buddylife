@@ -1642,6 +1642,18 @@ button {
   font-size: 12px;
   font-weight: 800;
 }
+.requiredMark {
+  color: #d92d20;
+  font-size: 15px;
+  line-height: 1;
+}
+.contactRequirement {
+  margin: 2px 0 -7px;
+  color: #685d70;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+}
 .fieldLabel {
   display: flex;
   align-items: center;
