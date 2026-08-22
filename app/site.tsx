@@ -1,6 +1,13 @@
 "use client";
 import Image from "next/image";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import {
+  FormEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   BadgeCheck,
   BarChart3,
@@ -10,7 +17,6 @@ import {
   ChevronDown,
   HeartPulse,
   Home,
-  Mail,
   MapPin,
   MapPinned,
   Menu,
@@ -23,7 +29,15 @@ import {
   X,
 } from "lucide-react";
 type Lang = "hy" | "ru" | "en";
-type View = "home" | "features" | "owners" | "business" | "learn";
+type View =
+  | "home"
+  | "features"
+  | "owners"
+  | "business"
+  | "learn"
+  | "privacy"
+  | "terms"
+  | "verification";
 const tr = {
   hy: {
     nav: [
@@ -37,7 +51,7 @@ const tr = {
     loading: "Պատրաստում ենք ձեր հաջորդ քայլը…",
     slides: [
       [
-        "Ամեն կարևոր բան՝ մեկ վայրում",
+        "Ձեր կենդանու առողջությունը, խնամքն ու վստահելի ծառայությունները՝ միասին",
         "Կենդանու առողջության պատմությունը, փաստաթղթերը և կարևոր օրերը այլևս չեն կորչի։",
       ],
       [
@@ -90,6 +104,29 @@ const tr = {
     contactRequired: "Նշեք էլ․ փոստ կամ հեռախոսահամար։",
     locationParent: "Օգնում է գտնել ձեր տարածքի համապատասխան ծառայությունները։",
     locationBusiness: "Օգնում է կապվել ձեր տարածքի կենդանատերերի հետ։",
+    locationInfo: "Ինչու ենք հարցնում տեղադրությունը",
+    close: "Փակել",
+    verificationTitle: "Վստահությունը կառուցում ենք թափանցիկ ձևով։",
+    verificationLead:
+      "BuddyLife-ի մեկնարկային ստուգման մոտեցումը՝ հստակ բիզնես տվյալներ, պրոֆիլի վերանայում և համայնքային հետադարձ կապ։",
+    verificationCards: [
+      [
+        "Բիզնեսի նույնականացում",
+        "Հաստատում ենք հիմնական տվյալներն ու պաշտոնական կապի միջոցները։",
+      ],
+      [
+        "Պրոֆիլի վերանայում",
+        "Ստուգում ենք ծառայությունների նկարագրությունն ու ներկայացված մասնագիտական տվյալները։",
+      ],
+      [
+        "Շարունակական վստահություն",
+        "Հաշվետվություններն ու համայնքային ազդակները օգնում են պահպանել որակը։",
+      ],
+    ],
+    verificationLink: "Ինչպես է աշխատելու ստուգումը",
+    launchStatus: "Հայաստան • Նախամեկնարկային փուլ",
+    privacyLabel: "Գաղտնիության քաղաքականություն",
+    termsLabel: "Օգտագործման պայմաններ",
     category: "Ծառայության տեսակ",
     social: "Instagram կամ կայք (ոչ պարտադիր)",
     submit: "Պահպանել իմ տեղը",
@@ -150,7 +187,7 @@ const tr = {
     loading: "Готовим следующий шаг…",
     slides: [
       [
-        "Всё важное — в одном месте",
+        "Здоровье питомца, забота и надёжные услуги — вместе",
         "История здоровья, документы и важные даты питомца больше не потеряются.",
       ],
       [
@@ -203,6 +240,29 @@ const tr = {
     contactRequired: "Укажите электронную почту или телефон.",
     locationParent: "Помогает находить подходящие услуги рядом с вами.",
     locationBusiness: "Помогает связаться с владельцами питомцев рядом с вами.",
+    locationInfo: "Зачем мы спрашиваем местоположение",
+    close: "Закрыть",
+    verificationTitle: "Мы создаём доверие прозрачно.",
+    verificationLead:
+      "Подход BuddyLife при запуске: проверка основных данных бизнеса, профиля и обратной связи сообщества.",
+    verificationCards: [
+      [
+        "Идентификация бизнеса",
+        "Проверяем основные сведения и официальные контакты.",
+      ],
+      [
+        "Проверка профиля",
+        "Рассматриваем описание услуг и заявленные профессиональные данные.",
+      ],
+      [
+        "Постоянное доверие",
+        "Обращения и сигналы сообщества помогают поддерживать качество.",
+      ],
+    ],
+    verificationLink: "Как будет работать проверка",
+    launchStatus: "Армения • Подготовка к запуску",
+    privacyLabel: "Политика конфиденциальности",
+    termsLabel: "Условия использования",
     category: "Категория услуги",
     social: "Instagram или сайт (необязательно)",
     submit: "Сохранить место",
@@ -251,7 +311,7 @@ const tr = {
     loading: "Preparing your next step…",
     slides: [
       [
-        "Everything important, in one place",
+        "Your pet’s health, care and trusted services—together",
         "Health history, documents and important dates will no longer get lost.",
       ],
       [
@@ -304,6 +364,29 @@ const tr = {
     contactRequired: "Please provide an email address or phone number.",
     locationParent: "Helps us connect you with relevant services nearby.",
     locationBusiness: "Helps us connect you with nearby pet parents.",
+    locationInfo: "Why we ask for location",
+    close: "Close",
+    verificationTitle: "Trust, built transparently.",
+    verificationLead:
+      "BuddyLife’s launch approach: clear business identity, profile review and ongoing community feedback.",
+    verificationCards: [
+      [
+        "Business identity",
+        "We review core business details and official contact channels.",
+      ],
+      [
+        "Profile review",
+        "We review service descriptions and submitted professional information.",
+      ],
+      [
+        "Ongoing trust",
+        "Reports and community signals help maintain quality over time.",
+      ],
+    ],
+    verificationLink: "How verification will work",
+    launchStatus: "Armenia • Pre-launch",
+    privacyLabel: "Privacy policy",
+    termsLabel: "Terms of use",
     category: "Service category",
     social: "Instagram or website (optional)",
     submit: "Save my place",
@@ -365,19 +448,19 @@ const hub = {
         "Կանխարգելում",
         "Ինչու տարեկան զննումն ու անհատական պատվաստումների պլանը կարևոր են",
         "Կանոնավոր զննումները կարող են խնդիրները նկատել ավելի վաղ, իսկ պատվաստումների ճիշտ պլանը կախված է տարիքից, կենսակերպից և տեղական ռիսկերից։",
-        "/learn-preventive-care.png",
+        "/learn-preventive-care.webp",
       ],
       [
         "Սեզոնային անվտանգություն",
         "Շոգ եղանակին անվտանգ զբոսանքի պարզ կանոնները",
         "Ընտրեք զով ժամեր, ապահովեք մաքուր ջուր և ստվեր, ու երբեք կենդանուն մի թողեք փակ մեքենայում։",
-        "/learn-summer-safety.png",
+        "/learn-summer-safety.webp",
       ],
       [
         "Կատուների բարեկեցություն",
         "Ինչպես տունը դարձնել հետաքրքիր և անվտանգ կատվի համար",
         "Թաքստոցները, բարձր տեղերը, մաքուր ռեսուրսները, խաղն ու կանխատեսելի միջավայրը նվազեցնում են սթրեսը։",
-        "/learn-cat-enrichment.png",
+        "/learn-cat-enrichment.webp",
       ],
     ],
   },
@@ -395,19 +478,19 @@ const hub = {
         "Профилактика",
         "Почему важны ежегодный осмотр и индивидуальный план вакцинации",
         "Регулярные осмотры помогают заметить проблемы раньше, а план вакцинации зависит от возраста, образа жизни и местных рисков.",
-        "/learn-preventive-care.png",
+        "/learn-preventive-care.webp",
       ],
       [
         "Сезонная безопасность",
         "Простые правила прогулок в жаркую погоду",
         "Выбирайте прохладные часы, обеспечьте воду и тень и никогда не оставляйте питомца в закрытой машине.",
-        "/learn-summer-safety.png",
+        "/learn-summer-safety.webp",
       ],
       [
         "Благополучие кошек",
         "Как сделать дом интересным и безопасным для кошки",
         "Укрытия, вертикальные пространства, чистые ресурсы, игра и предсказуемая среда снижают стресс.",
-        "/learn-cat-enrichment.png",
+        "/learn-cat-enrichment.webp",
       ],
     ],
   },
@@ -425,27 +508,76 @@ const hub = {
         "Preventive care",
         "Why annual checkups and an individual vaccination plan matter",
         "Regular exams can identify concerns earlier, while vaccination plans should reflect age, lifestyle and local risk.",
-        "/learn-preventive-care.png",
+        "/learn-preventive-care.webp",
       ],
       [
         "Seasonal safety",
         "Simple rules for safer walks in hot weather",
         "Choose cooler hours, provide fresh water and shade, and never leave a pet inside a closed car.",
-        "/learn-summer-safety.png",
+        "/learn-summer-safety.webp",
       ],
       [
         "Cat wellbeing",
         "How to make home engaging and safe for an indoor cat",
         "Hiding places, vertical space, clean resources, play and a predictable environment can reduce stress.",
-        "/learn-cat-enrichment.png",
+        "/learn-cat-enrichment.webp",
       ],
     ],
   },
 };
+const legalContent = {
+  hy: {
+    privacy: [
+      "Գաղտնիության քաղաքականություն",
+      "BuddyLife-ը հավաքում է միայն վաղ հասանելիության գրանցման համար անհրաժեշտ տվյալները՝ անուն, կոնտակտ, օգտատիրոջ տեսակ և կամավոր տեղադրություն։ Տվյալներն օգտագործվում են մեկնարկի մասին կապի, ծառայության պլանավորման և անանուն պահանջարկի վերլուծության համար։ Մենք չենք վաճառում անձնական տվյալներ։ Դուք կարող եք խնդրել տվյալների ուղղում կամ հեռացում՝ կապվելով մեր պաշտոնական սոցիալական էջերի միջոցով։",
+    ],
+    terms: [
+      "Օգտագործման պայմաններ",
+      "BuddyLife-ը նախամեկնարկային ծառայություն է։ Կայքի նյութերը տեղեկատվական են և չեն փոխարինում անասնաբուժական ախտորոշմանը կամ բուժմանը։ Գործառույթները, ժամկետներն ու գործընկերային ստուգման ընթացակարգերը կարող են փոփոխվել մինչև հանրային մեկնարկը։",
+    ],
+    verification: [
+      "Ինչպես է աշխատելու ստուգումը",
+      "Մեկնարկին BuddyLife-ը կվերանայի բիզնեսի հիմնական տվյալները, պաշտոնական կապի միջոցները, ծառայությունների նկարագրությունն ու ներկայացված մասնագիտական տեղեկությունները։ Ստուգված նշանը չի հանդիսանում բժշկական երաշխիք։ Համայնքային հաղորդումները կօգնեն վերանայել պրոֆիլները և պահպանել հարթակի որակը։",
+    ],
+    contact: "Պաշտոնական կապ՝ BuddyLife Armenia-ի Instagram և Facebook էջերով։",
+  },
+  ru: {
+    privacy: [
+      "Политика конфиденциальности",
+      "BuddyLife собирает только данные, необходимые для ранней регистрации: имя, контакт, тип пользователя и необязательное местоположение. Они используются для связи о запуске, планирования сервиса и обезличенного анализа спроса. Мы не продаём персональные данные. Запросить исправление или удаление можно через наши официальные социальные страницы.",
+    ],
+    terms: [
+      "Условия использования",
+      "BuddyLife находится на этапе подготовки к запуску. Материалы сайта носят информационный характер и не заменяют диагностику или лечение ветеринара. Функции, сроки и процедуры проверки партнёров могут измениться до публичного запуска.",
+    ],
+    verification: [
+      "Как будет работать проверка",
+      "При запуске BuddyLife будет проверять основные сведения о бизнесе, официальные контакты, описание услуг и предоставленную профессиональную информацию. Значок проверки не является медицинской гарантией. Обращения сообщества помогут пересматривать профили и поддерживать качество платформы.",
+    ],
+    contact:
+      "Официальная связь — через страницы BuddyLife Armenia в Instagram и Facebook.",
+  },
+  en: {
+    privacy: [
+      "Privacy policy",
+      "BuddyLife collects only the information needed for early-access registration: name, contact details, audience type and optional location. We use it for launch communication, service planning and aggregated demand analysis. We do not sell personal data. You may request correction or deletion through our official social channels.",
+    ],
+    terms: [
+      "Terms of use",
+      "BuddyLife is a pre-launch service. Website materials are informational and do not replace veterinary diagnosis or treatment. Features, timelines and partner-review procedures may change before public launch.",
+    ],
+    verification: [
+      "How verification will work",
+      "At launch, BuddyLife will review core business details, official contact channels, service descriptions and submitted professional information. A verification badge is not a medical guarantee. Community reports will help us reassess profiles and maintain platform quality.",
+    ],
+    contact:
+      "Official contact is available through BuddyLife Armenia on Instagram and Facebook.",
+  },
+};
 const images = [
-  "/banner-organized.png",
-  "/banner-trusted-care.png",
-  "/banner-community.png",
+  "/banner-organized.webp",
+  "/banner-trusted-care.webp",
+  "/banner-community.webp",
 ];
 const parentIcons = [
   HeartPulse,
@@ -469,8 +601,27 @@ function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
     document.documentElement.classList.add("isNavigating");
     window.setTimeout(() => {
       window.location.href = new URL(href, window.location.origin).href;
-    }, 420);
+    }, 120);
   }
+}
+function track(
+  eventType: string,
+  language: Lang,
+  audience = "",
+  metadata: Record<string, unknown> = {},
+) {
+  fetch("/api/track", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      eventType,
+      page: window.location.pathname,
+      language,
+      audience,
+      metadata,
+    }),
+    keepalive: true,
+  }).catch(() => {});
 }
 export default function BuddyPage({ view }: { view: View }) {
   const [lang, setLang] = useState<Lang>("hy"),
@@ -479,11 +630,15 @@ export default function BuddyPage({ view }: { view: View }) {
     [role, setRole] = useState<"parent" | "business">("parent"),
     [sent, setSent] = useState(false),
     [cms, setCms] = useState<Record<string, string>>({});
+  const opener = useRef<HTMLElement | null>(null);
   const t = tr[lang];
   const h = hub[lang];
   useEffect(() => {
     const s = localStorage.getItem("buddylife-lang") as Lang | null;
-    if (s && tr[s]) setLang(s);
+    if (s && tr[s]) {
+      setLang(s);
+      document.documentElement.lang = s;
+    }
     fetch("/api/content")
       .then((r) => r.json())
       .then((x) => setCms(x.content || {}))
@@ -495,13 +650,21 @@ export default function BuddyPage({ view }: { view: View }) {
   }, []);
   const change = (v: Lang) => {
     setLang(v);
+    document.documentElement.lang = v;
     localStorage.setItem("buddylife-lang", v);
+    track("language_changed", v, role);
   };
   const open = (r?: "parent" | "business") => {
+    opener.current = document.activeElement as HTMLElement;
     if (r) setRole(r);
     setSent(false);
     setModal(true);
+    track("join_opened", lang, r || role, { view });
   };
+  const closeModal = useCallback(() => {
+    setModal(false);
+    window.setTimeout(() => opener.current?.focus(), 0);
+  }, []);
   const title = cms[`banner_${slide + 1}_${lang}`] || t.slides[slide][0];
   return (
     <main>
@@ -558,7 +721,8 @@ export default function BuddyPage({ view }: { view: View }) {
           </section>
           <AudienceSplit t={t} />
           <FeaturePreview t={t} />
-          <EducationPreview h={h} />
+          <TrustSection t={t} />
+          <EducationPreview h={h} lang={lang} />
           <Press t={t} open={open} />
         </>
       )}
@@ -568,15 +732,20 @@ export default function BuddyPage({ view }: { view: View }) {
       )}{" "}
       {view === "features" && <Features t={t} open={open} />}
       {view === "learn" && <EducationHub h={h} />}
+      {(view === "privacy" || view === "terms" || view === "verification") && (
+        <LegalPage kind={view} content={legalContent[lang]} />
+      )}
       <Footer t={t} />
       {modal && (
         <JoinModal
           t={t}
           role={role}
           setRole={setRole}
-          close={() => setModal(false)}
+          close={closeModal}
           sent={sent}
           setSent={setSent}
+          lang={lang}
+          view={view}
         />
       )}
     </main>
@@ -612,7 +781,7 @@ function Header({
         onClick={(e) => openRoute(e, "/")}
       >
         <Image
-          src="/buddylife-logo-clean.png"
+          src="/buddylife-logo-clean.webp"
           alt="BuddyLife"
           width={132}
           height={132}
@@ -688,7 +857,7 @@ function Header({
             <X />
           </button>
           <Image
-            src="/buddylife-logo-clean.png"
+            src="/buddylife-logo-clean.webp"
             alt="BuddyLife"
             width={120}
             height={120}
@@ -832,8 +1001,47 @@ function FeaturePreview({ t }: { t: any }) {
             </article>
           ))}
         </div>
-        <a className="centerLink" href="/features" target="_top">
+        <a
+          className="centerLink"
+          href="/features"
+          target="_top"
+          onClick={(e) => openRoute(e, "/features")}
+        >
           {t.learn} →
+        </a>
+      </div>
+    </section>
+  );
+}
+function TrustSection({ t }: { t: any }) {
+  const icons = [BadgeCheck, ShieldCheck, UsersRound];
+  return (
+    <section className="section trustSection">
+      <div className="shell">
+        <div className="sectionIntro centered">
+          <p className="eyebrow">BUDDYLIFE TRUST</p>
+          <h2>{t.verificationTitle}</h2>
+          <p>{t.verificationLead}</p>
+        </div>
+        <div className="trustGrid">
+          {t.verificationCards.map((card: string[], i: number) => {
+            const Icon = icons[i];
+            return (
+              <article key={card[0]}>
+                <Icon />
+                <h3>{card[0]}</h3>
+                <p>{card[1]}</p>
+              </article>
+            );
+          })}
+        </div>
+        <a
+          className="centerLink"
+          href="/verification"
+          target="_top"
+          onClick={(e) => openRoute(e, "/verification")}
+        >
+          {t.verificationLink} →
         </a>
       </div>
     </section>
@@ -865,7 +1073,7 @@ function EducationCards({ h }: { h: any }) {
     </div>
   );
 }
-function EducationPreview({ h }: { h: any }) {
+function EducationPreview({ h, lang }: { h: any; lang: Lang }) {
   return (
     <section className="section educationPreview">
       <div className="shell">
@@ -879,12 +1087,43 @@ function EducationPreview({ h }: { h: any }) {
             className="educationLink"
             href="/learn"
             target="_top"
-            onClick={(e) => openRoute(e, "/learn")}
+            onClick={(e) => {
+              track("education_opened", lang);
+              openRoute(e, "/learn");
+            }}
           >
             {h.all} →
           </a>
         </div>
         <EducationCards h={h} />
+      </div>
+    </section>
+  );
+}
+function LegalPage({
+  kind,
+  content,
+}: {
+  kind: "privacy" | "terms" | "verification";
+  content: any;
+}) {
+  const item = content[kind];
+  return (
+    <section className="legalPage">
+      <div className="shell">
+        <p className="eyebrow">BUDDYLIFE ARMENIA</p>
+        <h1>{item[0]}</h1>
+        <div className="legalCard">
+          <p>{item[1]}</p>
+          <hr />
+          <p>{content.contact}</p>
+          <div className="legalContacts">
+            <a href="https://www.instagram.com/buddylifearmenia/">Instagram</a>
+            <a href="https://www.facebook.com/profile.php?id=61593562114437">
+              Facebook
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1087,6 +1326,8 @@ function JoinModal({
   close,
   sent,
   setSent,
+  lang,
+  view,
 }: {
   t: any;
   role: "parent" | "business";
@@ -1094,9 +1335,18 @@ function JoinModal({
   close: () => void;
   sent: boolean;
   setSent: (x: boolean) => void;
+  lang: Lang;
+  view: View;
 }) {
   const [contactError, setContactError] = useState(false);
   const [selectError, setSelectError] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    modalRef.current?.querySelector<HTMLButtonElement>(".modalClose")?.focus();
+    const escape = (e: KeyboardEvent) => e.key === "Escape" && close();
+    document.addEventListener("keydown", escape);
+    return () => document.removeEventListener("keydown", escape);
+  }, [close]);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget),
@@ -1118,7 +1368,10 @@ function JoinModal({
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ ...body, role }),
     });
-    if (res.ok) setSent(true);
+    if (res.ok) {
+      setSent(true);
+      track("registration_completed", lang, role, { view });
+    }
   }
   return (
     <div
@@ -1127,8 +1380,32 @@ function JoinModal({
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="joinModal" role="dialog" aria-modal="true">
-        <button className="modalClose" aria-label="Close" onClick={close}>
+      <div
+        ref={modalRef}
+        className="joinModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="join-dialog-title"
+        onKeyDown={(e) => {
+          if (e.key !== "Tab" || !modalRef.current) return;
+          const items = [
+            ...modalRef.current.querySelectorAll<HTMLElement>(
+              'button:not([disabled]),input:not([disabled]),a[href],[tabindex="0"]',
+            ),
+          ];
+          if (!items.length) return;
+          const first = items[0],
+            last = items[items.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }}
+      >
+        <button className="modalClose" aria-label={t.close} onClick={close}>
           ×
         </button>
         {sent ? (
@@ -1143,21 +1420,34 @@ function JoinModal({
         ) : (
           <>
             <p className="eyebrow">EARLY ACCESS</p>
-            <h2>{t.join}</h2>
+            <h2 id="join-dialog-title">{t.join}</h2>
             <div className="eventInvite">
-              <Image src="/launch-ticket.png" alt="" width={210} height={132} />
+              <Image
+                src="/launch-ticket.webp"
+                alt=""
+                width={210}
+                height={132}
+              />
               <p>{t.press}</p>
             </div>
             <div className="roleTabs">
               <button
+                type="button"
                 className={role === "parent" ? "active" : ""}
-                onClick={() => setRole("parent")}
+                onClick={() => {
+                  setRole("parent");
+                  track("audience_selected", lang, "parent", { view });
+                }}
               >
                 🐾 {t.parent}
               </button>
               <button
+                type="button"
                 className={role === "business" ? "active" : ""}
-                onClick={() => setRole("business")}
+                onClick={() => {
+                  setRole("business");
+                  track("audience_selected", lang, "business", { view });
+                }}
               >
                 ✦ {t.business}
               </button>
@@ -1241,30 +1531,43 @@ function JoinModal({
                 <label>
                   <span className="fieldLabel">
                     {t.city}
-                    <span className="infoHint" tabIndex={0}>
+                    <button
+                      type="button"
+                      className="infoHint"
+                      aria-label={t.locationInfo}
+                      aria-describedby="city-location-tip"
+                    >
                       i
-                      <span role="tooltip">
+                      <span role="tooltip" id="city-location-tip">
                         {role === "parent"
                           ? t.locationParent
                           : t.locationBusiness}
                       </span>
-                    </span>
+                    </button>
                   </span>
-                  <input name="city" />
+                  <input name="city" aria-describedby="city-location-tip" />
                 </label>
                 <label>
                   <span className="fieldLabel">
                     {t.province}
-                    <span className="infoHint" tabIndex={0}>
+                    <button
+                      type="button"
+                      className="infoHint"
+                      aria-label={t.locationInfo}
+                      aria-describedby="province-location-tip"
+                    >
                       i
-                      <span role="tooltip">
+                      <span role="tooltip" id="province-location-tip">
                         {role === "parent"
                           ? t.locationParent
                           : t.locationBusiness}
                       </span>
-                    </span>
+                    </button>
                   </span>
-                  <input name="province" />
+                  <input
+                    name="province"
+                    aria-describedby="province-location-tip"
+                  />
                 </label>
               </div>
               <small>{t.privacy}</small>
@@ -1283,7 +1586,7 @@ function Footer({ t }: { t: any }) {
         <div className="footerIdentity">
           <div className="footerLogo">
             <Image
-              src="/buddylife-logo-clean.png"
+              src="/buddylife-logo-clean.webp"
               alt="BuddyLife"
               width={108}
               height={108}
@@ -1292,10 +1595,10 @@ function Footer({ t }: { t: any }) {
           <p>{t.footer}</p>
           <div className="trustMarks">
             <span>
-              <ShieldCheck /> Privacy-minded
+              <ShieldCheck /> {t.privacyLabel}
             </span>
             <span>
-              <MapPin /> Built for Armenia
+              <MapPin /> {t.launchStatus}
             </span>
           </div>
         </div>
@@ -1329,6 +1632,13 @@ function Footer({ t }: { t: any }) {
           >
             {t.nav[4]}
           </a>
+          <a
+            href="/verification"
+            target="_top"
+            onClick={(e) => openRoute(e, "/verification")}
+          >
+            {t.verificationLink}
+          </a>
         </div>
         <div className="footerColumn">
           <b>Community</b>
@@ -1345,7 +1655,7 @@ function Footer({ t }: { t: any }) {
           </a>
         </div>
         <div className="footerColumn footerStatus">
-          <b>Launch status</b>
+          <b>{t.launchStatus}</b>
           <span>
             <i /> Early access preparation
           </span>
@@ -1354,9 +1664,15 @@ function Footer({ t }: { t: any }) {
       </div>
       <div className="shell footerBottom">
         <small>© 2026 BuddyLife Armenia</small>
-        <small>{t.privacy}</small>
-        <a href="/admin" aria-label="Website management">
-          <Mail /> Website management
+        <a
+          href="/privacy"
+          target="_top"
+          onClick={(e) => openRoute(e, "/privacy")}
+        >
+          {t.privacyLabel}
+        </a>
+        <a href="/terms" target="_top" onClick={(e) => openRoute(e, "/terms")}>
+          {t.termsLabel}
         </a>
       </div>
     </footer>

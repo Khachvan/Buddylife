@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://buddylife.pet"),
+  metadataBase: new URL("https://buddylife-armenia.khachvantsyan.chatgpt.site"),
   title: "BuddyLife Armenia — Քո կենդանու կյանքը՝ կազմակերպված",
-  description: "Վստահելի խնամք, կարևոր տեղեկություններ և կենդանիների ծառայություններ՝ մեկ հարմար վայրում։",
+  description:
+    "Վստահելի խնամք, կարևոր տեղեկություններ և կենդանիների ծառայություններ՝ մեկ հարմար վայրում։",
   openGraph: {
     title: "BuddyLife Armenia",
     description: "Քո կենդանու կյանքը՝ կազմակերպված։",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "BuddyLife Armenia" }],
+    images: [
+      { url: "/og.webp", width: 1200, height: 630, alt: "BuddyLife Armenia" },
+    ],
     locale: "hy_AM",
     type: "website",
   },
@@ -16,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BuddyLife Armenia",
     description: "Քո կենդանու կյանքը՝ կազմակերպված։",
-    images: ["/og.png"],
+    images: ["/og.webp"],
   },
   icons: {
     icon: "/favicon.svg",
