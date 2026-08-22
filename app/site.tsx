@@ -415,8 +415,7 @@ const businessIcons = [
   BarChart3,
 ];
 function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
-  e.preventDefault();
-  if (window.location.pathname !== href) window.location.assign(href);
+  if (window.location.pathname === href) e.preventDefault();
 }
 export default function BuddyPage({ view }: { view: View }) {
   const [lang, setLang] = useState<Lang>("hy"),
@@ -544,7 +543,12 @@ function Header({
   ];
   return (
     <header className="nav shell">
-      <a className="brand" href="/" onClick={(e) => openRoute(e, "/")}>
+      <a
+        className="brand"
+        href="/"
+        target="_top"
+        onClick={(e) => openRoute(e, "/")}
+      >
         <Image
           src="/buddylife-logo-transparent.png"
           alt="BuddyLife"
@@ -557,6 +561,7 @@ function Header({
           <a
             key={key}
             href={href}
+            target="_top"
             className={view === key ? "active" : ""}
             aria-current={view === key ? "page" : undefined}
             onClick={(e) => openRoute(e, href)}
@@ -631,6 +636,7 @@ function Header({
               <a
                 key={key}
                 href={href}
+                target="_top"
                 className={view === key ? "active" : ""}
                 onClick={(e) => {
                   openRoute(e, href);
@@ -698,6 +704,7 @@ function AudienceSplit({ t }: { t: any }) {
           <div className="audienceActions">
             <a
               href="/pet-parents"
+              target="_top"
               onClick={(e) => openRoute(e, "/pet-parents")}
             >
               {t.learn} →
@@ -728,6 +735,7 @@ function AudienceSplit({ t }: { t: any }) {
           <div className="audienceActions">
             <a
               href="/for-business"
+              target="_top"
               onClick={(e) => openRoute(e, "/for-business")}
             >
               {t.learn} →
@@ -762,7 +770,7 @@ function FeaturePreview({ t }: { t: any }) {
             </article>
           ))}
         </div>
-        <a className="centerLink" href="/features">
+        <a className="centerLink" href="/features" target="_top">
           {t.learn} →
         </a>
       </div>
@@ -808,6 +816,7 @@ function EducationPreview({ h }: { h: any }) {
           <a
             className="educationLink"
             href="/learn"
+            target="_top"
             onClick={(e) => openRoute(e, "/learn")}
           >
             {h.all} →
@@ -1113,19 +1122,32 @@ function Footer({ t }: { t: any }) {
         </div>
         <div className="footerColumn">
           <b>BuddyLife</b>
-          <a href="/features" onClick={(e) => openRoute(e, "/features")}>
+          <a
+            href="/features"
+            target="_top"
+            onClick={(e) => openRoute(e, "/features")}
+          >
             {t.nav[1]}
           </a>
-          <a href="/pet-parents" onClick={(e) => openRoute(e, "/pet-parents")}>
+          <a
+            href="/pet-parents"
+            target="_top"
+            onClick={(e) => openRoute(e, "/pet-parents")}
+          >
             {t.nav[2]}
           </a>
           <a
             href="/for-business"
+            target="_top"
             onClick={(e) => openRoute(e, "/for-business")}
           >
             {t.nav[3]}
           </a>
-          <a href="/learn" onClick={(e) => openRoute(e, "/learn")}>
+          <a
+            href="/learn"
+            target="_top"
+            onClick={(e) => openRoute(e, "/learn")}
+          >
             {t.nav[4]}
           </a>
         </div>
