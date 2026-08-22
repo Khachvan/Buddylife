@@ -67,13 +67,16 @@ const tr = {
     role: "Ո՞վ եք դուք",
     parent: "Կենդանատեր",
     business: "Բիզնես",
-    name: "Անուն (ոչ պարտադիր)",
+    name: "Անուն",
     businessName: "Բիզնեսի անվանում",
     email: "Էլ․ փոստ",
-    phone: "Հեռախոս (ոչ պարտադիր)",
-    city: "Քաղաք",
+    phone: "Հեռախոս",
+    city: "Քաղաք (ոչ պարտադիր)",
     province: "Մարզ / նահանգ (ոչ պարտադիր)",
     petType: "Կենդանու տեսակ",
+    contactRequired: "Նշեք էլ․ փոստ կամ հեռախոսահամար։",
+    locationParent: "Օգնում է գտնել ձեր տարածքի համապատասխան ծառայությունները։",
+    locationBusiness: "Օգնում է կապվել ձեր տարածքի կենդանատերերի հետ։",
     category: "Ծառայության տեսակ",
     social: "Instagram կամ կայք (ոչ պարտադիր)",
     submit: "Պահպանել իմ տեղը",
@@ -165,13 +168,16 @@ const tr = {
     role: "Кто вы?",
     parent: "Владелец",
     business: "Бизнес",
-    name: "Имя (необязательно)",
+    name: "Имя",
     businessName: "Название бизнеса",
     email: "Эл. почта",
-    phone: "Телефон (необязательно)",
-    city: "Город",
+    phone: "Телефон",
+    city: "Город (необязательно)",
     province: "Область / регион (необязательно)",
     petType: "Питомец",
+    contactRequired: "Укажите электронную почту или телефон.",
+    locationParent: "Помогает находить подходящие услуги рядом с вами.",
+    locationBusiness: "Помогает связаться с владельцами питомцев рядом с вами.",
     category: "Категория услуги",
     social: "Instagram или сайт (необязательно)",
     submit: "Сохранить место",
@@ -251,13 +257,16 @@ const tr = {
     role: "Who are you?",
     parent: "Pet parent",
     business: "Business",
-    name: "Name (optional)",
+    name: "Name",
     businessName: "Business name",
     email: "Email",
-    phone: "Phone (optional)",
-    city: "City",
+    phone: "Phone",
+    city: "City (optional)",
     province: "Province / region (optional)",
     petType: "Pet type",
+    contactRequired: "Please provide an email address or phone number.",
+    locationParent: "Helps us connect you with relevant services nearby.",
+    locationBusiness: "Helps us connect you with nearby pet parents.",
     category: "Service category",
     social: "Instagram or website (optional)",
     submit: "Save my place",
@@ -541,7 +550,6 @@ function Header({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const links = [
-    ["home", "/", t.nav[0]],
     ["features", "/features", t.nav[1]],
     ["owners", "/pet-parents", t.nav[2]],
     ["business", "/for-business", t.nav[3]],
@@ -984,10 +992,16 @@ function JoinModal({
   sent: boolean;
   setSent: (x: boolean) => void;
 }) {
+  const [contactError, setContactError] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget),
       body = Object.fromEntries(fd.entries());
+    if (!String(body.email || "").trim() && !String(body.phone || "").trim()) {
+      setContactError(true);
+      return;
+    }
+    setContactError(false);
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -1039,7 +1053,7 @@ function JoinModal({
                 <>
                   <label>
                     {t.name}
-                    <input name="name" />
+                    <input name="name" required />
                   </label>
                   <label>
                     {t.petType}
@@ -1078,20 +1092,51 @@ function JoinModal({
               <div className="formRow">
                 <label>
                   {t.email}
-                  <input name="email" type="email" required />
+                  <input
+                    name="email"
+                    type="email"
+                    onInput={() => setContactError(false)}
+                  />
                 </label>
                 <label>
                   {t.phone}
-                  <input name="phone" type="tel" />
+                  <input
+                    name="phone"
+                    type="tel"
+                    onInput={() => setContactError(false)}
+                  />
                 </label>
               </div>
+              {contactError && (
+                <p className="contactError">{t.contactRequired}</p>
+              )}
               <div className="formRow">
                 <label>
-                  {t.city}
-                  <input name="city" required />
+                  <span className="fieldLabel">
+                    {t.city}
+                    <span className="infoHint" tabIndex={0}>
+                      i
+                      <span role="tooltip">
+                        {role === "parent"
+                          ? t.locationParent
+                          : t.locationBusiness}
+                      </span>
+                    </span>
+                  </span>
+                  <input name="city" />
                 </label>
                 <label>
-                  {t.province}
+                  <span className="fieldLabel">
+                    {t.province}
+                    <span className="infoHint" tabIndex={0}>
+                      i
+                      <span role="tooltip">
+                        {role === "parent"
+                          ? t.locationParent
+                          : t.locationBusiness}
+                      </span>
+                    </span>
+                  </span>
                   <input name="province" />
                 </label>
               </div>
