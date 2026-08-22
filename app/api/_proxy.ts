@@ -11,7 +11,7 @@ export async function proxyRequest(request: Request, path: string) {
     method: request.method,
     headers: {
       "content-type": request.headers.get("content-type") || "application/json",
-      "OAI-Sites-Authorization": authorization,
+      "OAI-Sites-Authorization": `Bearer ${authorization}`,
     },
     cache: "no-store",
   };
