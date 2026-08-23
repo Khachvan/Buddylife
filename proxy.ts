@@ -10,7 +10,12 @@ const publicPaths = [
 ];
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  if (publicPaths.some((item) => path === item) || path.startsWith("/_next/"))
+  const isPublicAsset = /\.(?:avif|gif|ico|jpe?g|png|svg|webp)$/i.test(path);
+  if (
+    publicPaths.some((item) => path === item) ||
+    path.startsWith("/_next/") ||
+    isPublicAsset
+  )
     return NextResponse.next();
   const pin = process.env.SITE_PIN;
   const expected = pin ? createHash("sha256").update(pin).digest("hex") : "";

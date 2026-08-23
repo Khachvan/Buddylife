@@ -696,6 +696,7 @@ footer {
 .legalCard p {
   color: #5f5367;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 .legalCard hr {
   border: 0;
@@ -1370,8 +1371,8 @@ button {
   backdrop-filter: blur(14px);
 }
 .carouselCopy h1 {
-  font-size: clamp(44px, 5vw, 68px);
-  max-width: 650px;
+  font-size: clamp(42px, 4vw, 56px);
+  max-width: 610px;
   color: var(--plum);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
@@ -2767,17 +2768,89 @@ button {
     padding: 6px;
   }
   .carousel {
-    height: calc(100svh - 76px);
-    min-height: 610px;
+    height: auto;
+    min-height: 0;
+    padding-top: 56.25vw;
+    background: linear-gradient(180deg, #f5effa 0%, var(--warm) 100%);
+  }
+  .carouselImage,
+  .carouselShade {
+    inset: 0 0 auto;
+    height: 56.25vw;
+    max-height: 360px;
+  }
+  .carouselImage {
+    background: var(--plum);
+  }
+  .carouselImage img {
+    object-fit: contain;
+    object-position: center;
+    transform: none;
+  }
+  .carouselImage img.active {
+    transform: none;
+  }
+  .carouselShade {
+    background: linear-gradient(
+      180deg,
+      rgba(45, 22, 63, 0.02) 55%,
+      rgba(250, 248, 252, 0.28) 100%
+    );
   }
   .carouselCopy {
-    padding-bottom: 42px;
+    height: auto;
+    min-height: 390px;
+    justify-content: flex-start;
+    padding-top: 34px;
+    padding-bottom: 38px;
+  }
+  .carouselCopy::before {
+    inset: 16px -10px;
+    width: auto;
+    height: auto;
+    transform: none;
+    border-radius: 24px;
+    background: rgba(250, 248, 252, 0.9);
+    backdrop-filter: blur(10px);
   }
   .carouselCopy h1 {
-    font-size: 42px;
+    font-size: clamp(31px, 8.5vw, 34px);
+    line-height: 1.06;
+    margin-top: 8px;
+  }
+  .carouselCopy > p:not(.eyebrow) {
+    font-size: 16px;
+    line-height: 1.55;
+    margin-bottom: 8px;
   }
   .carouselDots {
-    margin-top: 24px;
+    gap: 0;
+    margin-top: 4px;
+  }
+  .carouselDots button,
+  .carouselDots button.active {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+  }
+  .carouselDots button::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: 7px;
+    left: 7px;
+    height: 5px;
+    border-radius: 20px;
+    background: #c9bcd4;
+  }
+  .carouselDots button.active::after {
+    right: 2px;
+    left: 2px;
+    background: var(--pink);
+  }
+  .legalCard {
+    padding: 24px;
   }
   .audienceSplit {
     gap: 18px;
