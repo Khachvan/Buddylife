@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Կենդանատերերին | BuddyLife Armenia",
   description:
     "Կառավարեք ձեր կենդանու առողջությունը, հիշեցումները, փաստաթղթերն ու վստահելի ծառայությունները։",
+  alternates: { canonical: "/pet-parents" },
 };
 export default function PetParents() {
   return <BuddyPage view="owners" />;

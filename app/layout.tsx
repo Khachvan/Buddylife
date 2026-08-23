@@ -3,9 +3,31 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://buddylife.am"),
+  applicationName: "BuddyLife Armenia",
+  category: "pet care",
+  keywords: [
+    "կենդանիների խնամք",
+    "անասնաբույժ Հայաստան",
+    "շների խնամք",
+    "կատուների խնամք",
+    "pet care Armenia",
+    "BuddyLife Armenia",
+  ],
   title: "BuddyLife Armenia — Քո կենդանու կյանքը՝ կազմակերպված",
   description:
     "Վստահելի խնամք, կարևոր տեղեկություններ և կենդանիների ծառայություններ՝ մեկ հարմար վայրում։",
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "BuddyLife Armenia",
     description: "Քո կենդանու կյանքը՝ կազմակերպված։",
@@ -42,7 +64,39 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hy">
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://buddylife.am/#organization",
+                  name: "BuddyLife Armenia",
+                  url: "https://buddylife.am",
+                  logo: "https://buddylife.am/buddylife-logo-clean.webp",
+                  areaServed: { "@type": "Country", name: "Armenia" },
+                  sameAs: [
+                    "https://www.instagram.com/buddylifearmenia/",
+                    "https://www.facebook.com/profile.php?id=61593562114437",
+                  ],
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://buddylife.am/#website",
+                  url: "https://buddylife.am",
+                  name: "BuddyLife Armenia",
+                  inLanguage: ["hy", "ru", "en"],
+                  publisher: { "@id": "https://buddylife.am/#organization" },
+                },
+              ],
+            }).replace(/</g, "\\u003c"),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

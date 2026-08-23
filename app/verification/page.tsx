@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Ինչպես է աշխատելու ստուգումը | BuddyLife Armenia",
   description:
     "BuddyLife-ի բիզնես պրոֆիլների ստուգման և շարունակական վստահության մոտեցումը։",
+  alternates: { canonical: "/verification" },
 };
 export default function Verification() {
   return <BuddyPage view="verification" />;

@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Կենդանիների բիզնեսներին | BuddyLife Armenia",
   description:
     "Կառուցեք վստահություն, տեսանելիություն և կապ Հայաստանի կենդանատերերի հետ։",
+  alternates: { canonical: "/for-business" },
 };
 export default function Business() {
   return <BuddyPage view="business" />;

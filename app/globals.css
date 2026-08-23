@@ -748,11 +748,20 @@ footer {
   gap: 22px;
 }
 .educationCard {
+  display: block;
+  color: inherit;
   background: #fff;
   border: 1px solid #e9e1f0;
   border-radius: 25px;
   overflow: hidden;
   box-shadow: 0 16px 50px rgba(45, 22, 63, 0.07);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.educationCard:hover,
+.educationCard:focus-visible {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 70px rgba(45, 22, 63, 0.14);
+  outline: none;
 }
 .educationImage {
   position: relative;
@@ -831,6 +840,72 @@ footer {
   border-radius: 18px;
   background: #f5f1f8;
   color: #655b6e;
+}
+.articlePage {
+  padding: 72px 0 110px;
+  background: linear-gradient(180deg, #f7f1fb, var(--cream));
+}
+.articleShell {
+  width: min(780px, calc(100% - 40px));
+  margin-inline: auto;
+}
+.articleBack {
+  display: inline-flex;
+  margin-bottom: 32px;
+  color: var(--violet);
+  font-weight: 850;
+}
+.articlePage h1 {
+  font-size: clamp(42px, 6vw, 70px);
+}
+.articleDeck {
+  margin: 24px 0 34px;
+  color: var(--muted);
+  font-size: 21px;
+  line-height: 1.6;
+}
+.articleHero {
+  width: 100%;
+  height: auto;
+  border-radius: 28px;
+  margin-bottom: 34px;
+}
+.articleBody {
+  padding: 34px;
+  border: 1px solid #e7dfeb;
+  border-radius: 28px;
+  background: white;
+}
+.articleBody h2 {
+  margin: 34px 0 12px;
+  font-size: 30px;
+}
+.articleBody p,
+.articleBody li {
+  color: #5f5367;
+  font-size: 17px;
+  line-height: 1.8;
+}
+.articleDisclaimer {
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 18px;
+  background: #f4ecfb;
+  color: var(--plum);
+  font-weight: 750;
+}
+.successSocials {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+.successSocials a {
+  padding: 11px 16px;
+  border-radius: 999px;
+  background: #f2eafb;
+  color: var(--violet);
+  font-weight: 850;
 }
 .educationDisclaimer svg {
   flex: none;
@@ -2875,6 +2950,24 @@ button {
   .previewCards article,
   .benefitGrid article {
     padding: 27px;
+  }
+  .previewCards article:nth-child(n + 3) {
+    display: none;
+  }
+  .articlePage {
+    padding: 48px 0 80px;
+  }
+  .articleShell {
+    width: min(100% - 28px, 780px);
+  }
+  .articlePage h1 {
+    font-size: 38px;
+  }
+  .articleDeck {
+    font-size: 18px;
+  }
+  .articleBody {
+    padding: 24px;
   }
   .footerMain {
     grid-template-columns: 1fr;

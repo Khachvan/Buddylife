@@ -51,7 +51,7 @@ const tr = {
     loading: "Պատրաստում ենք ձեր հաջորդ քայլը…",
     slides: [
       [
-        "Ձեր կենդանու առողջությունը, խնամքն ու վստահելի ծառայությունները՝ միասին",
+        "Կենդանու ամբողջ խնամքը՝ մեկ վայրում",
         "Կենդանու առողջության պատմությունը, փաստաթղթերը և կարևոր օրերը այլևս չեն կորչի։",
       ],
       [
@@ -579,6 +579,11 @@ const images = [
   "/banner-trusted-care.webp",
   "/banner-community.webp",
 ];
+const educationSlugs = [
+  "preventive-care",
+  "summer-safety",
+  "indoor-cat-enrichment",
+];
 const parentIcons = [
   HeartPulse,
   BellRing,
@@ -667,7 +672,7 @@ export default function BuddyPage({ view }: { view: View }) {
   }, []);
   const title = cms[`banner_${slide + 1}_${lang}`] || t.slides[slide][0];
   return (
-    <main>
+    <main id="main-content">
       <div className="routeLoader" aria-live="polite">
         <div className="loaderOrbit">
           <PawPrint />
@@ -1050,12 +1055,17 @@ function TrustSection({ t }: { t: any }) {
 function EducationCards({ h }: { h: any }) {
   return (
     <div className="educationGrid">
-      {h.topics.map((topic: any) => (
-        <article className="educationCard" key={topic[1]}>
+      {h.topics.map((topic: any, index: number) => (
+        <a
+          className="educationCard"
+          href={`/learn/${educationSlugs[index]}`}
+          key={topic[1]}
+          aria-label={`${topic[1]} — ${h.read}`}
+        >
           <div className="educationImage">
             <Image
               src={topic[3]}
-              alt=""
+              alt={topic[1]}
               fill
               sizes="(max-width: 760px) 100vw, 33vw"
             />
@@ -1068,7 +1078,7 @@ function EducationCards({ h }: { h: any }) {
               <BookOpen size={15} /> {h.read}
             </small>
           </div>
-        </article>
+        </a>
       ))}
     </div>
   );
@@ -1413,6 +1423,14 @@ function JoinModal({
             <span>♥</span>
             <h2>{t.success}</h2>
             <p>{t.press}</p>
+            <div className="successSocials">
+              <a href="https://www.instagram.com/buddylifearmenia/">
+                Instagram
+              </a>
+              <a href="https://www.facebook.com/profile.php?id=61593562114437">
+                Facebook
+              </a>
+            </div>
             <button className="button" onClick={close}>
               OK
             </button>
