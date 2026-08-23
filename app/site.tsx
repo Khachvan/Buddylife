@@ -787,6 +787,29 @@ function Header({
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const scrollY = window.scrollY;
+    const previous = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+      overflow: document.body.style.overflow,
+    };
+    document.documentElement.classList.add("menuOpen");
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.documentElement.classList.remove("menuOpen");
+      document.body.style.position = previous.position;
+      document.body.style.top = previous.top;
+      document.body.style.width = previous.width;
+      document.body.style.overflow = previous.overflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [mobileOpen]);
   const links = [
     ["features", "/features", t.nav[1]],
     ["owners", "/pet-parents", t.nav[2]],
@@ -1674,9 +1697,13 @@ function Footer({ t }: { t: any }) {
           </div>
           <p>{t.footer}</p>
           <div className="trustMarks">
-            <span>
+            <a
+              href="/privacy"
+              target="_top"
+              onClick={(e) => openRoute(e, "/privacy")}
+            >
               <ShieldCheck /> {t.privacyLabel}
-            </span>
+            </a>
             <span>
               <MapPin /> {t.launchStatus}
             </span>
@@ -1744,13 +1771,6 @@ function Footer({ t }: { t: any }) {
       </div>
       <div className="shell footerBottom">
         <small>© 2026 BuddyLife Armenia</small>
-        <a
-          href="/privacy"
-          target="_top"
-          onClick={(e) => openRoute(e, "/privacy")}
-        >
-          {t.privacyLabel}
-        </a>
         <a href="/terms" target="_top" onClick={(e) => openRoute(e, "/terms")}>
           {t.termsLabel}
         </a>

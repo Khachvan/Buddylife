@@ -594,6 +594,11 @@ footer {
   font-size: 13px;
 }
 @media (max-width: 900px) {
+  .modalForm input,
+  .modalForm select,
+  .customSelectTrigger {
+    font-size: 16px;
+  }
   .navLinks {
     display: none;
   }
@@ -984,6 +989,15 @@ footer {
   cursor: pointer;
 }
 .articleShare svg { width: 17px; height: 17px; }
+.articleShare .shareLogoButton {
+  width: 42px;
+  min-width: 42px;
+  padding: 0;
+  justify-content: center;
+}
+.articleShare .shareLogoButton svg { width: 21px; height: 21px; }
+.facebookShareButton { color: #1877f2 !important; }
+.telegramShareButton { color: #229ed9 !important; }
 .facebookMark { font-family: Arial, sans-serif; font-size: 17px; font-weight: 900; line-height: 1; }
 .nativeShare { display: none !important; }
 .successSocials {
@@ -2817,7 +2831,8 @@ button {
   gap: 9px;
   margin-top: 23px;
 }
-.trustMarks span {
+.trustMarks span,
+.trustMarks a {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -2827,6 +2842,10 @@ button {
   color: #cbbbd4;
   font-size: 10px;
   font-weight: 800;
+}
+.trustMarks a:hover {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.28);
 }
 .trustMarks svg {
   width: 14px;
@@ -2925,6 +2944,14 @@ button {
   background: #faf8fc;
   padding: 30px;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+html.menuOpen,
+html.menuOpen body {
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 .mobileDrawer > img {
   width: 120px;
