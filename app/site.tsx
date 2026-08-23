@@ -1592,7 +1592,15 @@ function JoinModal({
                   <input
                     name="phone"
                     type="tel"
-                    onInput={() => setContactError(false)}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    onInput={(event) => {
+                      event.currentTarget.value = event.currentTarget.value.replace(
+                        /\D/g,
+                        "",
+                      );
+                      setContactError(false);
+                    }}
                   />
                 </label>
               </div>
