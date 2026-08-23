@@ -19,15 +19,19 @@ import {
   Home,
   MapPin,
   MapPinned,
+  Link2,
   Menu,
   PawPrint,
   Search,
+  Send,
+  Share2,
   ShieldCheck,
   Sparkles,
   Store,
   UsersRound,
   X,
 } from "lucide-react";
+import { track as vaTrack } from "@vercel/analytics";
 type Lang = "hy" | "ru" | "en";
 type View =
   | "home"
@@ -1052,33 +1056,49 @@ function TrustSection({ t }: { t: any }) {
     </section>
   );
 }
+function EducationShare({ title, slug }: { title: string; slug: string }) {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const url = `https://buddylife.am/learn/${slug}`;
+  const shareEvent = (channel: string) => vaTrack("education_article_shared", { channel, article: url });
+  async function copyLink() {
+    await navigator.clipboard.writeText(url);
+    shareEvent("copy_link");
+    setCopied(true);
+    window.setTimeout(() => { setCopied(false); setOpen(false); }, 1400);
+  }
+  return (
+    <div className={`cardShare ${open ? "open" : ""}`} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}>
+      <button type="button" className="cardShareTrigger" aria-label={`Կիսվել՝ ${title}`} aria-expanded={open} onClick={() => setOpen(!open)}><Share2 aria-hidden="true" /></button>
+      {open && <div className="cardShareMenu" role="menu">
+        <a role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" onClick={() => shareEvent("facebook")}><span className="facebookMark">f</span><span>Facebook</span></a>
+        <a role="menuitem" href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer" onClick={() => shareEvent("telegram")}><Send aria-hidden="true" /><span>Telegram</span></a>
+        <button type="button" role="menuitem" onClick={copyLink}><Link2 aria-hidden="true" /><span>{copied ? "Պատճենված է" : "Հղումը"}</span></button>
+      </div>}
+    </div>
+  );
+}
 function EducationCards({ h }: { h: any }) {
   return (
     <div className="educationGrid">
       {h.topics.map((topic: any, index: number) => (
-        <a
+        <article
           className="educationCard"
-          href={`/learn/${educationSlugs[index]}`}
           key={topic[1]}
-          aria-label={`${topic[1]} — ${h.read}`}
         >
-          <div className="educationImage">
-            <Image
-              src={topic[3]}
-              alt={topic[1]}
-              fill
-              sizes="(max-width: 760px) 100vw, 33vw"
-            />
-          </div>
-          <div className="educationBody">
-            <span className="topicTag">{topic[0]}</span>
-            <h3>{topic[1]}</h3>
-            <p>{topic[2]}</p>
-            <small>
-              <BookOpen size={15} /> {h.read}
-            </small>
-          </div>
-        </a>
+          <a className="educationCardLink" href={`/learn/${educationSlugs[index]}`} aria-label={`${topic[1]} — ${h.read}`}>
+            <div className="educationImage">
+              <Image src={topic[3]} alt={topic[1]} fill sizes="(max-width: 760px) 100vw, 33vw" />
+            </div>
+            <div className="educationBody">
+              <span className="topicTag">{topic[0]}</span>
+              <h3>{topic[1]}</h3>
+              <p>{topic[2]}</p>
+              <small><BookOpen size={15} /> {h.read}</small>
+            </div>
+          </a>
+          <EducationShare title={topic[1]} slug={educationSlugs[index]} />
+        </article>
       ))}
     </div>
   );
