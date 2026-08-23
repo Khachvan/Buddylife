@@ -1955,6 +1955,8 @@ button {
   display: grid;
   place-items: center;
   padding: 18px;
+  overscroll-behavior: contain;
+  touch-action: none;
 }
 .joinModal {
   width: min(720px, 100%);
@@ -1965,6 +1967,9 @@ button {
   padding: 36px;
   position: relative;
   box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 .modalClose {
   position: absolute;

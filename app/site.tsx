@@ -608,6 +608,7 @@ function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
   e.preventDefault();
   if (window.location.pathname !== href) {
     document.documentElement.classList.add("isNavigating");
+    window.setTimeout(() => document.documentElement.classList.remove("isNavigating"), 4000);
     window.setTimeout(() => {
       window.location.href = new URL(href, window.location.origin).href;
     }, 120);
@@ -643,6 +644,12 @@ export default function BuddyPage({ view }: { view: View }) {
   const t = tr[lang];
   const h = hub[lang];
   useEffect(() => {
+    const clearNavigationState = () => document.documentElement.classList.remove("isNavigating");
+    clearNavigationState();
+    window.addEventListener("pageshow", clearNavigationState);
+    window.addEventListener("popstate", clearNavigationState);
+    const visible = () => { if (document.visibilityState === "visible") clearNavigationState(); };
+    document.addEventListener("visibilitychange", visible);
     const s = localStorage.getItem("buddylife-lang") as Lang | null;
     if (s && tr[s]) {
       setLang(s);
@@ -652,6 +659,11 @@ export default function BuddyPage({ view }: { view: View }) {
       .then((r) => r.json())
       .then((x) => setCms(x.content || {}))
       .catch(() => {});
+    return () => {
+      window.removeEventListener("pageshow", clearNavigationState);
+      window.removeEventListener("popstate", clearNavigationState);
+      document.removeEventListener("visibilitychange", visible);
+    };
   }, []);
   useEffect(() => {
     const id = setInterval(() => setSlide((x) => (x + 1) % 3), 6000);
@@ -1334,7 +1346,9 @@ function VisualSelect({
               role="option"
               aria-selected={selected === option}
               key={option}
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 setSelected(option);
                 setOpen(false);
                 onChoose();
@@ -1372,10 +1386,30 @@ function JoinModal({
   const [selectError, setSelectError] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    const scrollY = window.scrollY;
+    const previous = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+      overflow: document.body.style.overflow,
+    };
+    document.documentElement.classList.add("modalOpen");
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
     modalRef.current?.querySelector<HTMLButtonElement>(".modalClose")?.focus();
     const escape = (e: KeyboardEvent) => e.key === "Escape" && close();
     document.addEventListener("keydown", escape);
-    return () => document.removeEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("keydown", escape);
+      document.documentElement.classList.remove("modalOpen");
+      document.body.style.position = previous.position;
+      document.body.style.top = previous.top;
+      document.body.style.width = previous.width;
+      document.body.style.overflow = previous.overflow;
+      window.scrollTo(0, scrollY);
+    };
   }, [close]);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
