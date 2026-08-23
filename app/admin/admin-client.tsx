@@ -20,10 +20,15 @@ export default function AdminClient() {
     events: [],
   });
   const [saved, setSaved] = useState("");
+  const [loadError, setLoadError] = useState("");
   useEffect(() => {
     fetch("/api/admin-content")
-      .then((r) => r.json())
-      .then(setData);
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`CMS service returned ${response.status}`);
+        return response.json();
+      })
+      .then((payload) => setData({ content: payload.content || {}, registrations: payload.registrations || [], events: payload.events || [] }))
+      .catch(() => setLoadError("Registration data is temporarily unavailable. Please reload after the secure connection is restored."));
   }, []);
   async function save(key: string, value: string) {
     await fetch("/api/admin-content", {
@@ -84,6 +89,7 @@ export default function AdminClient() {
           <span>Businesses</span>
         </article>
       </section>
+      {loadError && <section className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p><button type="button" onClick={() => window.location.reload()}>Reload</button></section>}
       <section className="adminRegistrationLinks">
         <a href="/admin/registrations/parents"><span>🐾</span><div><b>Pet parent registrations</b><small>Search, review locations and export contacts</small></div><strong>Open →</strong></a>
         <a href="/admin/registrations/businesses"><span>✦</span><div><b>Business registrations</b><small>Review business interest, categories and regions</small></div><strong>Open →</strong></a>

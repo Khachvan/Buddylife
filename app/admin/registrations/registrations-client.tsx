@@ -9,11 +9,16 @@ export default function RegistrationsClient({ role }: { role: Role }) {
   const [registrations, setRegistrations] = useState<any[]>([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     fetch("/api/admin-content")
-      .then((r) => r.json())
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`CMS service returned ${response.status}`);
+        return response.json();
+      })
       .then((data) => setRegistrations((data.registrations || []).filter((item: any) => item.role === role)))
+      .catch(() => setLoadError("Registration data is temporarily unavailable. Please reload after the secure connection is restored."))
       .finally(() => setLoading(false));
   }, [role]);
 
@@ -54,6 +59,7 @@ export default function RegistrationsClient({ role }: { role: Role }) {
         <article><b>{filtered.length}</b><span>Visible results</span></article>
       </section>
       <section className="adminPanel">
+        {loadError && <div className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p></div>}
         <div className="adminPanelHead">
           <label className="adminSearch"><Search aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, contact or location" /></label>
           <button className="button secondary" type="button" onClick={downloadCsv} disabled={!filtered.length}><Download aria-hidden="true" /> Export CSV</button>
