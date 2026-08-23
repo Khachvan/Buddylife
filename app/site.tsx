@@ -105,7 +105,7 @@ const tr = {
       "Այլ",
     ],
     selectRequired: "Խնդրում ենք ընտրել տարբերակ։",
-    contactRequired: "Նշեք էլ․ փոստ կամ հեռախոսահամար։",
+    contactRequired: "Նշեք էլ․ փոստը և հեռախոսահամարը։",
     locationParent: "Օգնում է գտնել ձեր տարածքի համապատասխան ծառայությունները։",
     locationBusiness: "Օգնում է կապվել ձեր տարածքի կենդանատերերի հետ։",
     locationInfo: "Ինչու ենք հարցնում տեղադրությունը",
@@ -241,7 +241,7 @@ const tr = {
       "Другое",
     ],
     selectRequired: "Пожалуйста, выберите вариант.",
-    contactRequired: "Укажите электронную почту или телефон.",
+    contactRequired: "Укажите электронную почту и телефон.",
     locationParent: "Помогает находить подходящие услуги рядом с вами.",
     locationBusiness: "Помогает связаться с владельцами питомцев рядом с вами.",
     locationInfo: "Зачем мы спрашиваем местоположение",
@@ -365,7 +365,7 @@ const tr = {
       "Other",
     ],
     selectRequired: "Please choose an option.",
-    contactRequired: "Please provide an email address or phone number.",
+    contactRequired: "Please provide both an email address and phone number.",
     locationParent: "Helps us connect you with relevant services nearby.",
     locationBusiness: "Helps us connect you with nearby pet parents.",
     locationInfo: "Why we ask for location",
@@ -1445,7 +1445,7 @@ function JoinModal({
       setSelectError(true);
       return;
     }
-    if (!String(body.email || "").trim() && !String(body.phone || "").trim()) {
+    if (!String(body.email || "").trim() || !String(body.phone || "").trim()) {
       setContactError(true);
       return;
     }
@@ -1603,18 +1603,26 @@ function JoinModal({
               </p>
               <div className="formRow">
                 <label>
-                  {t.email}
+                  <span className="fieldLabel">
+                    {t.email}
+                    <b className="requiredMark">*</b>
+                  </span>
                   <input
                     name="email"
                     type="email"
+                    required
                     onInput={() => setContactError(false)}
                   />
                 </label>
                 <label>
-                  {t.phone}
+                  <span className="fieldLabel">
+                    {t.phone}
+                    <b className="requiredMark">*</b>
+                  </span>
                   <input
                     name="phone"
                     type="tel"
+                    required
                     inputMode="numeric"
                     pattern="[0-9]*"
                     onInput={(event) => {
