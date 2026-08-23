@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://buddylife-armenia.khachvantsyan.chatgpt.site"),
+  metadataBase: new URL("https://buddylife.am"),
   title: "BuddyLife Armenia — Քո կենդանու կյանքը՝ կազմակերպված",
   description:
     "Վստահելի խնամք, կարևոր տեղեկություններ և կենդանիների ծառայություններ՝ մեկ հարմար վայրում։",
@@ -22,9 +22,16 @@ export const metadata: Metadata = {
     images: ["/og.webp"],
   },
   icons: {
-    icon: [{ url: "/buddylife-favicon.png", type: "image/png" }],
-    shortcut: "/buddylife-favicon.png",
-    apple: "/buddylife-favicon.png",
+    icon: [
+      { url: "/buddylife-favicon-32.png", type: "image/png", sizes: "32x32" },
+      {
+        url: "/buddylife-favicon-192.png",
+        type: "image/png",
+        sizes: "192x192",
+      },
+    ],
+    shortcut: "/buddylife-favicon-32.png",
+    apple: "/buddylife-apple-touch.png",
   },
 };
 
