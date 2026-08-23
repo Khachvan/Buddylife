@@ -83,6 +83,10 @@ export default function AdminClient() {
           <span>Businesses</span>
         </article>
       </section>
+      <section className="adminRegistrationLinks">
+        <a href="/admin/registrations/parents"><span>🐾</span><div><b>Pet parent registrations</b><small>Search, review locations and export contacts</small></div><strong>Open →</strong></a>
+        <a href="/admin/registrations/businesses"><span>✦</span><div><b>Business registrations</b><small>Review business interest, categories and regions</small></div><strong>Open →</strong></a>
+      </section>
       <section className="adminPanel">
         <h2>Rotating banner copy</h2>
         <p>Edit the headline text. Empty fields use the website defaults.</p>

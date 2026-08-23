@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import ArticleShare from "./article-share";
 
 const articles = {
   "preventive-care": {
@@ -89,6 +90,7 @@ export default async function LearnArticle({ params }: { params: Promise<{ slug:
           ))}
           <p className="articleDisclaimer">Այս նյութը ընդհանուր կրթական տեղեկատվություն է և չի փոխարինում անասնաբույժի անհատական խորհրդին, ախտորոշմանը կամ բուժմանը։</p>
         </div>
+        <ArticleShare title={article.title} url={`https://buddylife.am/learn/${slug}`} />
       </article>
     </main>
   );
