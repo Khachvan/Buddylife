@@ -7,6 +7,9 @@ const publicPaths = [
   "/favicon.svg",
   "/buddylife-favicon.png",
   "/buddylife-logo-clean.webp",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/manifest.webmanifest",
 ];
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
