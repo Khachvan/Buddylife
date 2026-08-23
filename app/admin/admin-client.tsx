@@ -50,9 +50,10 @@ export default function AdminClient() {
           <p className="eyebrow">BUDDYLIFE CMS</p>
           <h1>Website management</h1>
         </div>
-        <a className="button" href="/">
-          View website
-        </a>
+        <div className="adminActions">
+          <a className="button secondary" href="https://buddylife.am/">View website</a>
+          <a className="button" href="/api/backoffice-logout">Log out</a>
+        </div>
       </div>
       <section className="adminStats">
         <article>

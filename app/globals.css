@@ -2322,6 +2322,35 @@ button {
   justify-content: space-between;
   align-items: center;
 }
+.adminActions { display: flex; gap: 10px; }
+.backofficeLogin {
+  min-height: 100svh;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 18% 12%, rgba(213,69,141,.18), transparent 34%), radial-gradient(circle at 82% 86%, rgba(114,70,167,.2), transparent 35%), #f8f5fa;
+}
+.backofficeLoginCard {
+  width: min(460px, 100%);
+  padding: 42px;
+  border: 1px solid rgba(114,70,167,.13);
+  border-radius: 30px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 30px 80px rgba(45,22,63,.14);
+}
+.backofficeLoginCard > img { width: 170px; height: auto; object-fit: contain; margin-bottom: 28px; }
+.backofficeLoginCard h1 { margin: 5px 0 9px; font-size: 38px; letter-spacing: -.04em; }
+.backofficeLoginCard > p:not(.eyebrow) { color: var(--muted); line-height: 1.55; }
+.backofficeLoginCard form { display: grid; gap: 18px; margin: 28px 0 22px; }
+.backofficeLoginCard label { display: grid; gap: 7px; font-size: 13px; font-weight: 850; }
+.backofficeLoginCard label > div { min-height: 50px; display: flex; align-items: center; gap: 10px; padding: 0 13px; border: 1px solid #ded5e5; border-radius: 14px; background: #fff; }
+.backofficeLoginCard label svg { width: 18px; color: var(--violet); }
+.backofficeLoginCard input { width: 100%; border: 0; outline: 0; font: inherit; background: transparent; }
+.backofficeLoginCard label button { border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; }
+.backofficeLoginCard form > .button { border: 0; min-height: 50px; cursor: pointer; }
+.backofficeLoginCard form > .button:disabled { opacity: .6; }
+.backofficeLoginCard > small { display: block; text-align: center; color: var(--muted); }
+.backofficeError { margin: -5px 0 0 !important; color: #ad235f !important; font-size: 13px; font-weight: 800; }
 .adminStats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
