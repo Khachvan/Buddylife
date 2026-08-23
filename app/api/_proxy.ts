@@ -12,6 +12,11 @@ export async function proxyRequest(request: Request, path: string) {
     headers: {
       "content-type": request.headers.get("content-type") || "application/json",
       "OAI-Sites-Authorization": `Bearer ${authorization}`,
+      // The legacy Sites API protects CMS data with the original owner identity
+      // in addition to the service bypass token. This proxy is itself guarded by
+      // the BuddyLife backoffice session in proxy.ts.
+      "oai-authenticated-user-id": "buddylife-backoffice",
+      "oai-authenticated-user-email": "khachvantsyan@gmail.com",
     },
     cache: "no-store",
   };
