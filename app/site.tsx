@@ -1408,6 +1408,15 @@ function JoinModal({
   const [contactError, setContactError] = useState(false);
   const [selectError, setSelectError] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const chooseRole = (nextRole: "parent" | "business") => {
+    setRole(nextRole);
+    setContactError(false);
+    setSelectError(false);
+    window.requestAnimationFrame(() => {
+      modalRef.current?.scrollTo({ top: 0, behavior: "instant" });
+    });
+    track("audience_selected", lang, nextRole, { view });
+  };
   useEffect(() => {
     const scrollY = window.scrollY;
     const previous = {
@@ -1461,12 +1470,7 @@ function JoinModal({
     }
   }
   return (
-    <div
-      className="modalBackdrop"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
-    >
+    <div className="modalBackdrop">
       <div
         ref={modalRef}
         className="joinModal"
@@ -1529,20 +1533,14 @@ function JoinModal({
               <button
                 type="button"
                 className={role === "parent" ? "active" : ""}
-                onClick={() => {
-                  setRole("parent");
-                  track("audience_selected", lang, "parent", { view });
-                }}
+                onClick={() => chooseRole("parent")}
               >
                 🐾 {t.parent}
               </button>
               <button
                 type="button"
                 className={role === "business" ? "active" : ""}
-                onClick={() => {
-                  setRole("business");
-                  track("audience_selected", lang, "business", { view });
-                }}
+                onClick={() => chooseRole("business")}
               >
                 ✦ {t.business}
               </button>

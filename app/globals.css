@@ -1974,6 +1974,7 @@ button {
 }
 .joinModal {
   width: min(720px, 100%);
+  height: min(820px, 92vh);
   max-height: 92vh;
   overflow: auto;
   background: white;
@@ -3206,6 +3207,7 @@ html.menuOpen body {
   }
   .joinModal {
     border-radius: 24px;
+    height: 94svh;
     max-height: 94svh;
   }
   .mobileDrawer {
