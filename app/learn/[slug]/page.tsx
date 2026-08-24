@@ -53,7 +53,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${article.title} | BuddyLife Armenia`,
     description: article.description,
     alternates: { canonical: `/learn/${slug}` },
-    openGraph: { title: article.title, description: article.description, type: "article", images: [article.image] },
+    keywords: ["կենդանիների խնամք", "կենդանիների խորհուրդներ", "BuddyLife Armenia", article.title],
+    openGraph: { title: article.title, description: article.description, type: "article", locale: "hy_AM", url: `/learn/${slug}` },
+    twitter: { card: "summary_large_image", title: article.title, description: article.description },
   };
 }
 
@@ -71,6 +73,10 @@ export default async function LearnArticle({ params }: { params: Promise<{ slug:
     author: { "@type": "Organization", name: "BuddyLife Armenia" },
     publisher: { "@id": "https://buddylife.am/#organization" },
     mainEntityOfPage: `https://buddylife.am/learn/${slug}`,
+    datePublished: "2026-08-24",
+    dateModified: "2026-08-24",
+    isAccessibleForFree: true,
+    keywords: "կենդանիների խնամք, կենդանիների խորհուրդներ, BuddyLife Armenia",
   };
   return (
     <main className="articlePage">

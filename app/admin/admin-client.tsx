@@ -91,6 +91,7 @@ export default function AdminClient() {
       </section>
       {loadError && <section className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p><button type="button" onClick={() => window.location.reload()}>Reload</button></section>}
       <section className="adminRegistrationLinks">
+        <a href="/admin/seo"><span>↗</span><div><b>SEO performance</b><small>Indexing readiness, search visibility and Vercel performance</small></div><strong>Open →</strong></a>
         <a href="/admin/registrations/parents"><span>🐾</span><div><b>Pet parent registrations</b><small>Search, review locations and export contacts</small></div><strong>Open →</strong></a>
         <a href="/admin/registrations/businesses"><span>✦</span><div><b>Business registrations</b><small>Review business interest, categories and regions</small></div><strong>Open →</strong></a>
       </section>

@@ -2455,6 +2455,26 @@ button {
 .registrationsTable .tableRow > span { display: grid; gap: 3px; }
 .registrationsTable small { color: var(--muted); }
 .adminEmpty { padding: 28px 12px; color: var(--muted); }
+.seoAdminPage .adminTop > div:first-child > p:last-child { color: var(--muted); max-width: 650px; }
+.seoCheckGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 34px 0 0; }
+.seoCheckGrid article { display: flex; align-items: flex-start; gap: 14px; padding: 22px; border: 1px solid #dce9e4; border-radius: 20px; background: #f7fffb; }
+.seoCheckGrid article.needsAttention { border-color: #efc9d9; background: #fff6fa; }
+.seoCheckGrid b { display: block; margin-bottom: 5px; color: var(--plum); }
+.seoCheckGrid p { margin: 0; color: var(--muted); line-height: 1.5; font-size: 13px; }
+.seoStatus { flex: 0 0 34px; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #e5f7ef; color: #087b53; font-weight: 900; }
+.needsAttention .seoStatus { background: #fae4ed; color: #ad235f; }
+.seoDestinations { display: grid; grid-template-columns: .8fr 1.2fr; gap: 30px; align-items: start; }
+.seoDestinations h2 { margin: 4px 0 8px; }
+.seoDestinations p { color: var(--muted); line-height: 1.6; }
+.seoToolLinks { display: grid; gap: 11px; }
+.seoToolLinks a { display: grid; gap: 4px; padding: 17px 18px; border: 1px solid #e3d9e9; border-radius: 16px; background: #faf7fc; transition: transform .2s, border-color .2s; }
+.seoToolLinks a:hover { transform: translateY(-2px); border-color: var(--violet); }
+.seoToolLinks span { color: var(--muted); font-size: 13px; }
+.seoPageList { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.seoPageList a { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 15px 17px; border-radius: 15px; background: #f8f5fa; border: 1px solid #ebe3ef; }
+.seoPageList a > span { display: grid; gap: 3px; min-width: 0; }
+.seoPageList small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seoPageList strong { color: var(--violet); }
 .adminTable {
   overflow: auto;
 }
@@ -2472,6 +2492,9 @@ button {
   color: var(--violet);
 }
 @media (max-width: 900px) {
+  .seoCheckGrid { grid-template-columns: 1fr; }
+  .seoDestinations { grid-template-columns: 1fr; }
+  .seoPageList { grid-template-columns: 1fr; }
   .articleShare { align-items: flex-start; flex-direction: column; }
   .articleShare nav { justify-content: flex-start; }
   .nativeShare { display: inline-flex !important; }

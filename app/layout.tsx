@@ -9,16 +9,27 @@ export const metadata: Metadata = {
   category: "pet care",
   keywords: [
     "կենդանիների խնամք",
+    "կենդանիների խնամք Հայաստան",
+    "կենդանիների ծառայություններ Երևան",
+    "ընտանի կենդանիների հավելված",
+    "կենդանու առողջության հիշեցումներ",
+    "վստահելի անասնաբույժ Երևան",
     "անասնաբույժ Հայաստան",
     "շների խնամք",
     "կատուների խնամք",
+    "зоотовары Армения",
+    "уход за питомцами Армения",
     "pet care Armenia",
+    "pet services Yerevan",
     "BuddyLife Armenia",
   ],
   title: "BuddyLife Armenia — Քո կենդանու կյանքը՝ կազմակերպված",
   description:
     "Վստահելի խնամք, կարևոր տեղեկություններ և կենդանիների ծառայություններ՝ մեկ հարմար վայրում։",
   alternates: { canonical: "/" },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
   robots: {
     index: true,
     follow: true,
@@ -80,6 +91,12 @@ export default function RootLayout({
                   url: "https://buddylife.am",
                   logo: "https://buddylife.am/buddylife-logo-clean.webp",
                   areaServed: { "@type": "Country", name: "Armenia" },
+                  knowsAbout: [
+                    "Կենդանիների խնամք",
+                    "Կենդանիների կրթություն",
+                    "Կենդանիների ծառայություններ Հայաստանում",
+                    "Pet care in Armenia",
+                  ],
                   sameAs: [
                     "https://www.instagram.com/buddylifearmenia/",
                     "https://www.facebook.com/profile.php?id=61593562114437",
@@ -91,6 +108,15 @@ export default function RootLayout({
                   url: "https://buddylife.am",
                   name: "BuddyLife Armenia",
                   inLanguage: ["hy", "ru", "en"],
+                  about: {
+                    "@type": "Thing",
+                    name: "Կենդանիների խնամք Հայաստանում",
+                  },
+                  audience: {
+                    "@type": "Audience",
+                    audienceType: "Pet parents and pet-care businesses in Armenia",
+                    geographicArea: { "@type": "Country", name: "Armenia" },
+                  },
                   publisher: { "@id": "https://buddylife.am/#organization" },
                 },
               ],
