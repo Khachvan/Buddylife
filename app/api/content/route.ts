@@ -1,4 +1,12 @@
-import { proxyRequest } from "../_proxy";
-export async function GET(request: Request) {
-  return proxyRequest(request, "/api/content");
+import { ensureSchema, getSql } from "../../../lib/database";
+
+export async function GET() {
+  try {
+    await ensureSchema();
+    const rows = await getSql()`SELECT key, value FROM cms_content`;
+    return Response.json({ content: Object.fromEntries(rows.map((row) => [row.key, row.value])) });
+  } catch (error) {
+    console.error("CMS content read failed", error);
+    return Response.json({ content: {} });
+  }
 }
