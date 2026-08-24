@@ -1496,8 +1496,8 @@ function JoinModal({
           }
         }}
       >
-        <button className="modalClose" aria-label={t.close} onClick={close}>
-          ×
+        <button type="button" className="modalClose" aria-label={t.close} onClick={close}>
+          <X aria-hidden="true" />
         </button>
         {sent ? (
           <div className="modalSuccess">

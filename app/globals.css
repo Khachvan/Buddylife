@@ -1988,13 +1988,35 @@ button {
 }
 .modalClose {
   position: absolute;
-  right: 20px;
-  top: 15px;
-  border: 0;
-  background: none;
-  font-size: 32px;
-  color: var(--muted);
+  z-index: 4;
+  right: 18px;
+  top: 18px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(114, 70, 167, 0.2);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ffffff, #f4ecfa);
+  box-shadow: 0 8px 22px rgba(76, 38, 98, 0.13);
+  color: var(--primary);
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.modalClose svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 2.4;
+}
+.modalClose:hover {
+  transform: translateY(-1px) rotate(4deg);
+  background: linear-gradient(145deg, #fbf7ff, #eadcf6);
+  box-shadow: 0 11px 26px rgba(76, 38, 98, 0.2);
+}
+.modalClose:focus-visible {
+  outline: 3px solid rgba(213, 69, 141, 0.3);
+  outline-offset: 3px;
 }
 .joinModal h2 {
   font-size: 40px;
