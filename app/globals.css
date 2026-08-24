@@ -2103,6 +2103,24 @@ button {
   color: var(--plum);
   font: inherit;
 }
+
+/*
+ * Mobile Safari automatically magnifies focused form controls whose computed
+ * font size is below 16px. Keep the modal controls at Safari's non-zooming
+ * threshold while preserving pinch-to-zoom for accessibility.
+ */
+@media (max-width: 900px) {
+  .joinModal .modalForm input,
+  .joinModal .modalForm select,
+  .joinModal .visualSelect > button {
+    font-size: 16px;
+  }
+
+  .joinModal {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
 .selectWrap {
   position: relative;
 }
