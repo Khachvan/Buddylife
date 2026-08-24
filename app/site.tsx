@@ -1183,8 +1183,8 @@ function LegalPage({
           <hr />
           <p>{content.contact}</p>
           <div className="legalContacts">
-            <a href="https://www.instagram.com/buddylifearmenia/">Instagram</a>
-            <a href="https://www.facebook.com/profile.php?id=61593562114437">
+            <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.facebook.com/people/BuddyLife-Armenia/61593562114437/" target="_blank" rel="noopener noreferrer">
               Facebook
             </a>
           </div>
@@ -1505,10 +1505,10 @@ function JoinModal({
             <h2>{t.success}</h2>
             <p>{t.press}</p>
             <div className="successSocials">
-              <a href="https://www.instagram.com/buddylifearmenia/">
+              <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">
                 Instagram
               </a>
-              <a href="https://www.facebook.com/profile.php?id=61593562114437">
+              <a href="https://www.facebook.com/people/BuddyLife-Armenia/61593562114437/" target="_blank" rel="noopener noreferrer">
                 Facebook
               </a>
             </div>
@@ -1755,7 +1755,7 @@ function Footer({ t }: { t: any }) {
         </div>
         <div className="footerColumn">
           <b>Community</b>
-          <a href="https://www.instagram.com/buddylifearmenia/">
+          <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">
             <img
               className="socialMiniIcon"
               src="https://cdn.simpleicons.org/instagram/cdbfd5"
@@ -1763,7 +1763,7 @@ function Footer({ t }: { t: any }) {
             />{" "}
             Instagram
           </a>
-          <a href="https://www.facebook.com/profile.php?id=61593562114437">
+          <a href="https://www.facebook.com/people/BuddyLife-Armenia/61593562114437/" target="_blank" rel="noopener noreferrer">
             <span className="facebookLetter">f</span> Facebook
           </a>
         </div>
