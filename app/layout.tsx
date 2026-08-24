@@ -28,7 +28,9 @@ export const metadata: Metadata = {
     "Վստահելի խնամք, կարևոր տեղեկություններ և կենդանիների ծառայություններ՝ մեկ հարմար վայրում։",
   alternates: { canonical: "/" },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      "j4vRuL8AfyNvhRVy5JLODYj18Tzkhr08aXHR7_796H4",
   },
   robots: {
     index: true,
