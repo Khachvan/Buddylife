@@ -907,6 +907,12 @@ footer {
   padding: 72px 0 110px;
   background: linear-gradient(180deg, #f7f1fb, var(--cream));
 }
+.articleNav {
+  background: white;
+}
+.articleNav .buttonSmall {
+  text-decoration: none;
+}
 .articleShell {
   width: min(780px, calc(100% - 40px));
   margin-inline: auto;

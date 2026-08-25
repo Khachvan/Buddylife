@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArticleShare from "./article-share";
+import ArticleHeader from "./article-header";
 
 const articles = {
   "preventive-care": {
@@ -79,25 +81,28 @@ export default async function LearnArticle({ params }: { params: Promise<{ slug:
     keywords: "կենդանիների խնամք, կենդանիների խորհուրդներ, BuddyLife Armenia",
   };
   return (
-    <main className="articlePage">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-      <article className="articleShell">
-        <a className="articleBack" href="/learn">← Բոլոր ուղեցույցները</a>
-        <p className="eyebrow">BUDDYLIFE ԿՐԹԱԿԱՆ ՀԱԲ</p>
-        <h1>{article.title}</h1>
-        <p className="articleDeck">{article.description}</p>
-        <Image className="articleHero" src={article.image} alt={article.title} width={1200} height={800} priority />
-        <div className="articleBody">
-          {article.sections.map(([heading, body]) => (
-            <section key={heading}>
-              <h2>{heading}</h2>
-              <p>{body}</p>
-            </section>
-          ))}
-          <p className="articleDisclaimer">Այս նյութը ընդհանուր կրթական տեղեկատվություն է և չի փոխարինում անասնաբույժի անհատական խորհրդին, ախտորոշմանը կամ բուժմանը։</p>
-        </div>
-        <ArticleShare title={article.title} url={`https://buddylife.am/learn/${slug}`} />
-      </article>
-    </main>
+    <>
+      <ArticleHeader />
+      <main className="articlePage" id="main-content">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
+        <article className="articleShell">
+          <Link className="articleBack" href="/learn">← Բոլոր ուղեցույցները</Link>
+          <p className="eyebrow">BUDDYLIFE ԿՐԹԱԿԱՆ ՀԱԲ</p>
+          <h1>{article.title}</h1>
+          <p className="articleDeck">{article.description}</p>
+          <Image className="articleHero" src={article.image} alt={article.title} width={1200} height={800} priority />
+          <div className="articleBody">
+            {article.sections.map(([heading, body]) => (
+              <section key={heading}>
+                <h2>{heading}</h2>
+                <p>{body}</p>
+              </section>
+            ))}
+            <p className="articleDisclaimer">Այս նյութը ընդհանուր կրթական տեղեկատվություն է և չի փոխարինում անասնաբույժի անհատական խորհրդին, ախտորոշմանը կամ բուժմանը։</p>
+          </div>
+          <ArticleShare title={article.title} url={`https://buddylife.am/learn/${slug}`} />
+        </article>
+      </main>
+    </>
   );
 }
