@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:sites": "vinext build && node scripts/prepare-sites-worker.mjs",
     "start": "next start",
     "test": "next build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
