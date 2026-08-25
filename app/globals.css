@@ -3281,3 +3281,220 @@ html.menuOpen body {
     padding: 24px;
   }
 }
+
+/* Landing _ Refined.svg — approved visual direction */
+:root {
+  --plum: #3c3941;
+  --cream: #fbfafc;
+  --muted: #81798a;
+}
+
+body {
+  background: #fff;
+}
+
+.nav::before {
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid #edecee;
+  box-shadow: none;
+}
+
+.carousel {
+  height: min(696px, calc(100vh - 96px));
+  min-height: 620px;
+}
+
+.carouselShade {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 42%,
+    rgba(45, 22, 63, 0.03) 100%
+  );
+}
+
+.carouselCopy {
+  padding-left: 48px;
+}
+
+.carouselCopy::before {
+  left: 18px;
+  width: min(628px, calc(100% - 36px));
+  height: min(482px, calc(100% - 86px));
+  border-color: rgba(255, 255, 255, 0.78);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: none;
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
+}
+
+.carouselCopy h1 {
+  max-width: 600px;
+  color: #3c3941;
+}
+
+.carouselCopy > p:not(.eyebrow) {
+  max-width: 565px;
+}
+
+.button {
+  box-shadow: none;
+}
+
+.audienceSplit {
+  padding: 96px 64px 112px;
+  gap: 30px;
+}
+
+.audienceSplit article {
+  padding: 34px;
+  border-color: #e8e5e9;
+  border-radius: 24px;
+  background: #faf9fb;
+  box-shadow: none;
+}
+
+.audienceSplit article::before {
+  display: none;
+}
+
+.audienceVisual {
+  margin-bottom: 34px;
+}
+
+.audienceVisual > svg,
+.trustGrid svg {
+  box-shadow: none;
+}
+
+.featurePreview {
+  background: #faf9fb;
+}
+
+.previewCards article,
+.benefitGrid article {
+  border-color: #e8e5e9;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.previewCards article:hover,
+.benefitGrid article:hover {
+  transform: translateY(-3px);
+  border-color: #d8cde0;
+  box-shadow: 0 14px 34px rgba(45, 22, 63, 0.07);
+}
+
+.trustSection {
+  background: #fff;
+}
+
+.trustGrid article {
+  border-color: #e8e5e9;
+  border-radius: 20px;
+  background: #faf9fb;
+  box-shadow: none;
+}
+
+.educationPreview {
+  background: #faf9fb;
+}
+
+.educationCard {
+  border-color: #e8e5e9;
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+.educationCard:hover,
+.educationCard:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(45, 22, 63, 0.07);
+}
+
+.pressBand {
+  padding: 88px 0;
+  color: #3c3941;
+  background: #fff;
+}
+
+.pressBand > .shell {
+  min-height: 276px;
+  padding: 54px 64px;
+  border: 1px solid #e8e5e9;
+  border-radius: 24px;
+  background: #faf9fb;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.pressBand h2 {
+  max-width: 900px;
+  margin-inline: auto;
+  color: #615b69;
+  font-size: clamp(34px, 3.6vw, 48px);
+  font-weight: 500;
+}
+
+.pressBand .eyebrow.light {
+  color: var(--violet);
+}
+
+.pressBand .whiteButton {
+  color: #fff;
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+}
+
+.trustFooter {
+  background: #29282e;
+}
+
+.footerColumn > b {
+  color: var(--pink);
+}
+
+.footerColumn a,
+.footerColumn span,
+.footerColumn p,
+.footerIdentity p {
+  color: #cbc7cf;
+}
+
+@media (max-width: 900px) {
+  .audienceSplit {
+    padding-inline: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .carousel {
+    height: auto;
+    min-height: 0;
+  }
+
+  .carouselCopy {
+    padding-left: 0;
+  }
+
+  .carouselCopy::before {
+    left: -10px;
+    width: auto;
+  }
+
+  .audienceSplit {
+    padding: 60px 0;
+  }
+
+  .pressBand {
+    padding: 54px 0;
+  }
+
+  .pressBand > .shell {
+    min-height: 0;
+    padding: 42px 24px;
+  }
+}
