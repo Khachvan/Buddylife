@@ -1,4 +1,5 @@
 import { ensureSchema, getSql } from "../../../lib/database";
+import { logEvent } from "../../../lib/logging";
 
 export async function GET() {
   try {
@@ -8,7 +9,7 @@ export async function GET() {
       sql`SELECT key, value FROM cms_content ORDER BY key`,
       sql`
         SELECT id, role, name, pet_type AS "petType", business_name AS "businessName", category, social,
-               email, phone, city, province, created_at AS "createdAt"
+               email, phone, city, province, source, medium, campaign, venue, is_test AS "isTest", created_at AS "createdAt"
         FROM registrations ORDER BY created_at DESC
       `,
       sql`
@@ -22,7 +23,7 @@ export async function GET() {
       events: eventRows,
     });
   } catch (error) {
-    console.error("Backoffice data read failed", error);
+    logEvent("error", "/api/admin-content", "Backoffice data read failed", { error: error instanceof Error ? error.message : "Unknown error" });
     return Response.json({ error: "Database connection failed" }, { status: 503 });
   }
 }
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
     `;
     return Response.json({ ok: true });
   } catch (error) {
-    console.error("Backoffice content save failed", error);
+    logEvent("error", "/api/admin-content", "Backoffice content save failed", { error: error instanceof Error ? error.message : "Unknown error" });
     return Response.json({ error: "Database connection failed" }, { status: 503 });
   }
 }

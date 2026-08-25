@@ -684,12 +684,15 @@ footer {
   min-height: 62vh;
   padding: 90px 0 110px;
   background: linear-gradient(145deg, #f7f1fb, #fff8fb);
+  overflow-x: clip;
 }
 .legalPage h1 {
   max-width: 820px;
   font-size: clamp(42px, 6vw, 72px);
 }
 .legalCard {
+  min-width: 0;
+  width: 100%;
   max-width: 850px;
   margin-top: 34px;
   padding: 34px;
@@ -715,6 +718,8 @@ footer {
   margin-top: 20px;
 }
 .legalContacts a {
+  max-width: 100%;
+  overflow-wrap: anywhere;
   padding: 10px 14px;
   border-radius: 999px;
   background: #f2eafb;
@@ -2452,6 +2457,11 @@ button {
 .adminStats span {
   color: var(--muted);
 }
+.adminMetricNote { margin: -12px 0 24px; color: var(--muted); font-size: 13px; }
+.statusValid, .statusTest { width: fit-content; padding: 3px 8px; border-radius: 999px; font-size: 12px; }
+.statusValid { color: #27623a; background: #e7f6eb; }
+.statusTest { color: #7a4c16; background: #fff0d7; }
+.registrationStatusButton { width: fit-content; padding: 0; border: 0; background: transparent; color: var(--violet); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; text-decoration: underline; }
 .adminPanel {
   background: white;
   border: 1px solid #e7dfeb;

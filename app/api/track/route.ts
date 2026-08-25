@@ -1,4 +1,5 @@
 import { ensureSchema, getSql } from "../../../lib/database";
+import { logEvent } from "../../../lib/logging";
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: Request) {
     `;
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
-    console.error("Analytics event storage failed", error);
+    logEvent("error", "/api/track", "Analytics event storage failed", { error: error instanceof Error ? error.message : "Unknown error" });
     return Response.json({ ok: false }, { status: 202 });
   }
 }

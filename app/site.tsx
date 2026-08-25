@@ -620,6 +620,13 @@ function track(
   audience = "",
   metadata: Record<string, unknown> = {},
 ) {
+  let sessionId = "";
+  try {
+    sessionId = sessionStorage.getItem("buddylife_session") || crypto.randomUUID();
+    sessionStorage.setItem("buddylife_session", sessionId);
+  } catch {
+    sessionId = "unavailable";
+  }
   fetch("/api/track", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -628,7 +635,7 @@ function track(
       page: window.location.pathname,
       language,
       audience,
-      metadata,
+      metadata: { ...metadata, sessionId },
     }),
     keepalive: true,
   }).catch(() => {});
@@ -641,6 +648,7 @@ export default function BuddyPage({ view }: { view: View }) {
     [sent, setSent] = useState(false),
     [cms, setCms] = useState<Record<string, string>>({});
   const opener = useRef<HTMLElement | null>(null);
+  const qrJoinHandled = useRef(false);
   const t = tr[lang];
   const h = hub[lang];
   useEffect(() => {
@@ -686,6 +694,21 @@ export default function BuddyPage({ view }: { view: View }) {
     setModal(false);
     window.setTimeout(() => opener.current?.focus(), 0);
   }, []);
+  useEffect(() => {
+    if (qrJoinHandled.current) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("join") !== "parent") return;
+    qrJoinHandled.current = true;
+    setRole("parent");
+    setSent(false);
+    setModal(true);
+    track("join_opened", lang, "parent", {
+      view,
+      source: params.get("utm_source") || "qr",
+      campaign: params.get("utm_campaign") || "pet_friendly_places",
+      venue: params.get("venue") || "generic",
+    });
+  }, [lang, view]);
   const title = cms[`banner_${slide + 1}_${lang}`] || t.slides[slide][0];
   return (
     <main id="main-content">
@@ -1462,7 +1485,14 @@ function JoinModal({
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ ...body, role }),
+      body: JSON.stringify({
+        ...body,
+        role,
+        utmSource: new URLSearchParams(window.location.search).get("utm_source") || "",
+        utmMedium: new URLSearchParams(window.location.search).get("utm_medium") || "",
+        utmCampaign: new URLSearchParams(window.location.search).get("utm_campaign") || "",
+        venue: new URLSearchParams(window.location.search).get("venue") || "",
+      }),
     });
     if (res.ok) {
       setSent(true);

@@ -29,11 +29,21 @@ export default function RegistrationsClient({ role }: { role: Role }) {
   }, [query, registrations]);
 
   const provinces = new Set(registrations.map((item) => item.province).filter(Boolean)).size;
+  const validRegistrations = registrations.filter((item) => !item.isTest);
+
+  async function setTestStatus(id: string, isTest: boolean) {
+    const response = await fetch("/api/admin-registration", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ id, isTest }),
+    });
+    if (response.ok) setRegistrations((items) => items.map((item) => item.id === id ? { ...item, isTest } : item));
+  }
 
   function downloadCsv() {
     const fields = role === "parent"
-      ? ["name", "petType", "email", "phone", "city", "province", "createdAt"]
-      : ["businessName", "category", "email", "phone", "city", "province", "createdAt"];
+      ? ["name", "petType", "email", "phone", "city", "province", "source", "campaign", "venue", "isTest", "createdAt"]
+      : ["businessName", "category", "email", "phone", "city", "province", "source", "campaign", "venue", "isTest", "createdAt"];
     const escape = (value: unknown) => `"${String(value || "").replaceAll('"', '""')}"`;
     const csv = [fields.join(","), ...filtered.map((row) => fields.map((field) => escape(row[field])).join(","))].join("\n");
     const link = document.createElement("a");
@@ -54,7 +64,7 @@ export default function RegistrationsClient({ role }: { role: Role }) {
         <a className={role === "business" ? "active" : ""} href="/admin/registrations/businesses">Businesses</a>
       </nav>
       <section className="adminStats compact">
-        <article><b>{registrations.length}</b><span>Total registrations</span></article>
+        <article><b>{validRegistrations.length}</b><span>Valid registrations</span></article>
         <article><b>{provinces}</b><span>Provinces represented</span></article>
         <article><b>{filtered.length}</b><span>Visible results</span></article>
       </section>
@@ -65,15 +75,15 @@ export default function RegistrationsClient({ role }: { role: Role }) {
           <button className="button secondary" type="button" onClick={downloadCsv} disabled={!filtered.length}><Download aria-hidden="true" /> Export CSV</button>
         </div>
         <div className="adminTable registrationsTable">
-          <div className="tableRow tableHead"><span>{role === "parent" ? "Name / pet" : "Business / category"}</span><span>Contact</span><span>Location</span><span>Date</span></div>
+          <div className="tableRow tableHead"><span>{role === "parent" ? "Name / pet" : "Business / category"}</span><span>Contact</span><span>Location / source</span><span>Status</span></div>
           {loading && <p className="adminEmpty">Loading registrations…</p>}
           {!loading && !filtered.length && <p className="adminEmpty">No matching registrations yet.</p>}
           {filtered.map((item) => (
             <div className="tableRow" key={item.id}>
               <span><b>{role === "parent" ? item.name || "—" : item.businessName || "—"}</b><small>{role === "parent" ? item.petType || "Pet type not provided" : item.category || "Category not provided"}</small></span>
               <span>{item.email || item.phone || "—"}<small>{item.email && item.phone ? item.phone : ""}</small></span>
-              <span>{[item.city, item.province].filter(Boolean).join(", ") || "—"}</span>
-              <span>{item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-GB") : "—"}</span>
+              <span>{[item.city, item.province].filter(Boolean).join(", ") || "—"}<small>{[item.source, item.campaign, item.venue].filter(Boolean).join(" · ") || "Direct"}</small></span>
+              <span><b className={item.isTest ? "statusTest" : "statusValid"}>{item.isTest ? "Test" : "Valid"}</b><small>{item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-GB") : "—"}</small><button className="registrationStatusButton" type="button" onClick={() => setTestStatus(item.id, !item.isTest)}>{item.isTest ? "Restore" : "Mark test"}</button></span>
             </div>
           ))}
         </div>

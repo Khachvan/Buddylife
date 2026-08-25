@@ -91,7 +91,7 @@ export default function RootLayout({
                   "@id": "https://buddylife.am/#organization",
                   name: "BuddyLife Armenia",
                   url: "https://buddylife.am",
-                  logo: "https://buddylife.am/buddylife-logo-clean.webp",
+                  logo: "https://buddylife.am/buddylife-logo-clean.png",
                   areaServed: { "@type": "Country", name: "Armenia" },
                   knowsAbout: [
                     "Կենդանիների խնամք",

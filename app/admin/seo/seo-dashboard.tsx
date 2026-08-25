@@ -22,15 +22,14 @@ export default function SeoDashboard() {
   ]);
 
   useEffect(() => {
-    Promise.all([
-      fetch("/", { redirect: "manual" }),
-      fetch("/robots.txt").then(async (response) => ({ response, text: await response.text() })),
-      fetch("/sitemap.xml").then(async (response) => ({ response, text: await response.text() })),
-    ]).then(([home, robots, sitemap]) => {
+    fetch("/api/seo-health").then(async (response) => {
+      if (!response.ok) throw new Error("Health check unavailable");
+      return response.json();
+    }).then(({ home, robots, sitemap }) => {
       setChecks([
         { label: "Public website", detail: home.ok ? "Homepage is publicly crawlable." : `Homepage returned ${home.status}.`, ok: home.ok },
-        { label: "Robots directives", detail: robots.response.ok && robots.text.includes("Sitemap:") ? "Search crawlers are allowed and the sitemap is declared." : "robots.txt needs attention.", ok: robots.response.ok && robots.text.includes("Sitemap:") },
-        { label: "XML sitemap", detail: sitemap.response.ok && sitemap.text.includes("buddylife.am/learn") ? "Core pages and Learn articles are included." : "Sitemap needs attention.", ok: sitemap.response.ok && sitemap.text.includes("buddylife.am/learn") },
+        { label: "Robots directives", detail: robots.ok ? "Search crawlers are allowed and the sitemap is declared." : `robots.txt returned ${robots.status}.`, ok: robots.ok },
+        { label: "XML sitemap", detail: sitemap.ok ? "Core pages and Learn articles are included." : `Sitemap returned ${sitemap.status}.`, ok: sitemap.ok },
       ]);
     }).catch(() => setChecks((items) => items.map((item) => ({ ...item, detail: "Check could not complete. Try again.", ok: false }))));
   }, []);

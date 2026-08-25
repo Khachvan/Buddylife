@@ -39,12 +39,11 @@ export default function AdminClient() {
     setSaved(key);
     window.setTimeout(() => setSaved(""), 1200);
   }
-  const joins = data.events.filter(
-    (x: any) => x.eventType === "join_opened",
-  ).length;
-  const completions = data.events.filter(
-    (x: any) => x.eventType === "registration_completed",
-  ).length;
+  const validRegistrations = data.registrations.filter((x: any) => !x.isTest);
+  const uniqueRegistrations = Array.from(new Map(validRegistrations.map((x: any) => [`${x.role}:${String(x.email || "").toLowerCase()}:${String(x.phone || "").replace(/\D/g, "")}`, x])).values());
+  const joinEvents = data.events.filter((x: any) => x.eventType === "join_opened");
+  const joins = new Set(joinEvents.map((x: any) => x.metadata?.sessionId || x.id)).size;
+  const completions = uniqueRegistrations.length;
   const conversion = joins
     ? `${Math.round((completions / joins) * 100)}%`
     : "—";
@@ -62,33 +61,34 @@ export default function AdminClient() {
       </div>
       <section className="adminStats">
         <article>
-          <b>{data.registrations.length}</b>
-          <span>Total early registrations</span>
+          <b>{uniqueRegistrations.length}</b>
+          <span>Unique valid registrations</span>
         </article>
         <article>
           <b>{joins}</b>
-          <span>Join form opens</span>
+          <span>Unique join sessions</span>
         </article>
         <article>
           <b>{conversion}</b>
-          <span>Form-open conversion</span>
+          <span>Unique registration conversion</span>
         </article>
         <article>
           <b>
-            {data.registrations.filter((x: any) => x.role === "parent").length}
+            {uniqueRegistrations.filter((x: any) => x.role === "parent").length}
           </b>
           <span>Pet parents</span>
         </article>
         <article>
           <b>
             {
-              data.registrations.filter((x: any) => x.role === "business")
+              uniqueRegistrations.filter((x: any) => x.role === "business")
                 .length
             }
           </b>
           <span>Businesses</span>
         </article>
       </section>
+      <p className="adminMetricNote">Test records are excluded. Duplicate contacts count once. A join session is counted once per browser session.</p>
       {loadError && <section className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p><button type="button" onClick={() => window.location.reload()}>Reload</button></section>}
       <section className="adminRegistrationLinks">
         <a href="/admin/seo"><span>↗</span><div><b>SEO performance</b><small>Indexing readiness, search visibility and Vercel performance</small></div><strong>Open →</strong></a>

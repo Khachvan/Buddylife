@@ -29,6 +29,11 @@ export function ensureSchema() {
         )
       `;
       await sql`CREATE INDEX IF NOT EXISTS registrations_role_created_idx ON registrations (role, created_at DESC)`;
+      await sql`ALTER TABLE registrations ADD COLUMN IF NOT EXISTS source TEXT`;
+      await sql`ALTER TABLE registrations ADD COLUMN IF NOT EXISTS medium TEXT`;
+      await sql`ALTER TABLE registrations ADD COLUMN IF NOT EXISTS campaign TEXT`;
+      await sql`ALTER TABLE registrations ADD COLUMN IF NOT EXISTS venue TEXT`;
+      await sql`ALTER TABLE registrations ADD COLUMN IF NOT EXISTS is_test BOOLEAN NOT NULL DEFAULT FALSE`;
       await sql`
         CREATE TABLE IF NOT EXISTS analytics_events (
           id UUID PRIMARY KEY,
@@ -55,4 +60,3 @@ export function ensureSchema() {
   }
   return schemaReady;
 }
-
