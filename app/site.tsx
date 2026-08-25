@@ -677,6 +677,13 @@ export default function BuddyPage({ view }: { view: View }) {
     const id = setInterval(() => setSlide((x) => (x + 1) % 3), 6000);
     return () => clearInterval(id);
   }, []);
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const preload = document.createElement("img");
+      preload.src = images[(slide + 1) % images.length];
+    }, 1500);
+    return () => window.clearTimeout(id);
+  }, [slide]);
   const change = (v: Lang) => {
     setLang(v);
     document.documentElement.lang = v;
@@ -731,17 +738,15 @@ export default function BuddyPage({ view }: { view: View }) {
         <>
           <section className="carousel">
             <div className="carouselImage">
-              {images.map((x, i) => (
-                <Image
-                  key={x}
-                  src={x}
-                  alt="BuddyLife Armenia"
-                  fill
-                  priority={i === 0}
-                  className={i === slide ? "active" : ""}
-                  sizes="100vw"
-                />
-              ))}
+              <Image
+                key={images[slide]}
+                src={images[slide]}
+                alt="BuddyLife Armenia"
+                fill
+                priority={slide === 0}
+                className="active"
+                sizes="100vw"
+              />
             </div>
             <div className="carouselShade" />
             <div className="shell carouselCopy">
@@ -1454,10 +1459,31 @@ function JoinModal({
     document.body.style.width = "100%";
     document.body.style.overflow = "hidden";
     modalRef.current?.querySelector<HTMLButtonElement>(".modalClose")?.focus();
-    const escape = (e: KeyboardEvent) => e.key === "Escape" && close();
-    document.addEventListener("keydown", escape);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        close();
+        return;
+      }
+      if (e.key !== "Tab" || !modalRef.current) return;
+      const items = [
+        ...modalRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]),input:not([disabled]),a[href],[tabindex="0"]',
+        ),
+      ];
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", escape);
+      document.removeEventListener("keydown", handleKeyDown);
       document.documentElement.classList.remove("modalOpen");
       document.body.style.position = previous.position;
       document.body.style.top = previous.top;
@@ -1507,24 +1533,6 @@ function JoinModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="join-dialog-title"
-        onKeyDown={(e) => {
-          if (e.key !== "Tab" || !modalRef.current) return;
-          const items = [
-            ...modalRef.current.querySelectorAll<HTMLElement>(
-              'button:not([disabled]),input:not([disabled]),a[href],[tabindex="0"]',
-            ),
-          ];
-          if (!items.length) return;
-          const first = items[0],
-            last = items[items.length - 1];
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }}
       >
         <button type="button" className="modalClose" aria-label={t.close} onClick={close}>
           <X aria-hidden="true" />
@@ -1786,11 +1794,11 @@ function Footer({ t }: { t: any }) {
         <div className="footerColumn">
           <b>Community</b>
           <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">
-            <img
-              className="socialMiniIcon"
-              src="https://cdn.simpleicons.org/instagram/cdbfd5"
-              alt=""
-            />{" "}
+            <svg className="socialMiniIcon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+            </svg>{" "}
             Instagram
           </a>
           <a href="https://www.facebook.com/people/BuddyLife-Armenia/61593562114437/" target="_blank" rel="noopener noreferrer">

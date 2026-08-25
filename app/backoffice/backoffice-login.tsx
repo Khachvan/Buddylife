@@ -18,7 +18,7 @@ export default function BackofficeLogin() {
     <Image src="/buddylife-logo-clean.webp" alt="BuddyLife" width={210} height={70} priority />
     <p className="eyebrow">SECURE BACKOFFICE</p><h1>Welcome back</h1><p>Sign in to manage BuddyLife content and early registrations.</p>
     <form onSubmit={submit}>
-      <label><span>Login</span><div><UserRound aria-hidden="true" /><input name="username" autoComplete="username" required autoFocus /></div></label>
+      <label><span>Login</span><div><UserRound aria-hidden="true" /><input name="username" autoComplete="username" required /></div></label>
       <label><span>Password</span><div><LockKeyhole aria-hidden="true" /><input name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" required /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff /> : <Eye />}</button></div></label>
       {error && <p className="backofficeError" role="alert">{error}</p>}
       <button className="button" type="submit" disabled={loading}>{loading ? "Signing in…" : "Sign in"}</button>

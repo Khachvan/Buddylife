@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 type Role = "parent" | "business";
 
-export default function RegistrationsClient({ role }: { role: Role }) {
+export default function RegistrationsClient({ audienceRole }: { audienceRole: Role }) {
   const [registrations, setRegistrations] = useState<any[]>([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -17,10 +17,10 @@ export default function RegistrationsClient({ role }: { role: Role }) {
         if (!response.ok) throw new Error(`CMS service returned ${response.status}`);
         return response.json();
       })
-      .then((data) => setRegistrations((data.registrations || []).filter((item: any) => item.role === role)))
+      .then((data) => setRegistrations((data.registrations || []).filter((item: any) => item.role === audienceRole)))
       .catch(() => setLoadError("Registration data is temporarily unavailable. Please reload after the secure connection is restored."))
       .finally(() => setLoading(false));
-  }, [role]);
+  }, [audienceRole]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -41,14 +41,14 @@ export default function RegistrationsClient({ role }: { role: Role }) {
   }
 
   function downloadCsv() {
-    const fields = role === "parent"
+    const fields = audienceRole === "parent"
       ? ["name", "petType", "email", "phone", "city", "province", "source", "campaign", "venue", "isTest", "createdAt"]
       : ["businessName", "category", "email", "phone", "city", "province", "source", "campaign", "venue", "isTest", "createdAt"];
     const escape = (value: unknown) => `"${String(value || "").replaceAll('"', '""')}"`;
     const csv = [fields.join(","), ...filtered.map((row) => fields.map((field) => escape(row[field])).join(","))].join("\n");
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-    link.download = `buddylife-${role}-registrations.csv`;
+    link.download = `buddylife-${audienceRole}-registrations.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
   }
@@ -56,12 +56,12 @@ export default function RegistrationsClient({ role }: { role: Role }) {
   return (
     <main className="adminPage">
       <div className="adminTop">
-        <div><p className="eyebrow">BUDDYLIFE CMS</p><h1>{role === "parent" ? "Early registered pet parents" : "Early registered businesses"}</h1></div>
+        <div><p className="eyebrow">BUDDYLIFE CMS</p><h1>{audienceRole === "parent" ? "Early registered pet parents" : "Early registered businesses"}</h1></div>
         <a className="button" href="/admin">CMS overview</a>
       </div>
       <nav className="adminNav" aria-label="Registration views">
-        <a className={role === "parent" ? "active" : ""} href="/admin/registrations/parents">Pet parents</a>
-        <a className={role === "business" ? "active" : ""} href="/admin/registrations/businesses">Businesses</a>
+        <a className={audienceRole === "parent" ? "active" : ""} href="/admin/registrations/parents">Pet parents</a>
+        <a className={audienceRole === "business" ? "active" : ""} href="/admin/registrations/businesses">Businesses</a>
       </nav>
       <section className="adminStats compact">
         <article><b>{validRegistrations.length}</b><span>Valid registrations</span></article>
@@ -75,12 +75,12 @@ export default function RegistrationsClient({ role }: { role: Role }) {
           <button className="button secondary" type="button" onClick={downloadCsv} disabled={!filtered.length}><Download aria-hidden="true" /> Export CSV</button>
         </div>
         <div className="adminTable registrationsTable">
-          <div className="tableRow tableHead"><span>{role === "parent" ? "Name / pet" : "Business / category"}</span><span>Contact</span><span>Location / source</span><span>Status</span></div>
+          <div className="tableRow tableHead"><span>{audienceRole === "parent" ? "Name / pet" : "Business / category"}</span><span>Contact</span><span>Location / source</span><span>Status</span></div>
           {loading && <p className="adminEmpty">Loading registrations…</p>}
           {!loading && !filtered.length && <p className="adminEmpty">No matching registrations yet.</p>}
           {filtered.map((item) => (
             <div className="tableRow" key={item.id}>
-              <span><b>{role === "parent" ? item.name || "—" : item.businessName || "—"}</b><small>{role === "parent" ? item.petType || "Pet type not provided" : item.category || "Category not provided"}</small></span>
+              <span><b>{audienceRole === "parent" ? item.name || "—" : item.businessName || "—"}</b><small>{audienceRole === "parent" ? item.petType || "Pet type not provided" : item.category || "Category not provided"}</small></span>
               <span>{item.email || item.phone || "—"}<small>{item.email && item.phone ? item.phone : ""}</small></span>
               <span>{[item.city, item.province].filter(Boolean).join(", ") || "—"}<small>{[item.source, item.campaign, item.venue].filter(Boolean).join(" · ") || "Direct"}</small></span>
               <span><b className={item.isTest ? "statusTest" : "statusValid"}>{item.isTest ? "Test" : "Valid"}</b><small>{item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-GB") : "—"}</small><button className="registrationStatusButton" type="button" onClick={() => setTestStatus(item.id, !item.isTest)}>{item.isTest ? "Restore" : "Mark test"}</button></span>

@@ -36,7 +36,6 @@ export default function AccessPage() {
               name="pin"
               type="password"
               required
-              autoFocus
               autoComplete="current-password"
             />
           </label>
