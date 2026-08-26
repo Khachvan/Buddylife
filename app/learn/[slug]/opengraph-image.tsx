@@ -1,8 +1,12 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 export const alt = "BuddyLife Armenia educational guide";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+const armenianFont = readFile(path.join(process.cwd(), "public/fonts/NotoSansArmenian.ttf"));
 
 const articleTitles: Record<string, { title: string; label: string }> = {
   "preventive-care": {
@@ -26,6 +30,11 @@ export default async function OpenGraphImage({
 }) {
   const { slug } = await params;
   const article = articleTitles[slug] || articleTitles["preventive-care"];
+  const fontData = await armenianFont;
+  const fontArrayBuffer = fontData.buffer.slice(
+    fontData.byteOffset,
+    fontData.byteOffset + fontData.byteLength,
+  ) as ArrayBuffer;
   return new ImageResponse(
     <div
       style={{
@@ -37,7 +46,7 @@ export default async function OpenGraphImage({
         padding: "62px 68px",
         color: "#2d163f",
         background: "linear-gradient(135deg, #f8f3fb 0%, #efe5f8 54%, #fceaf3 100%)",
-        fontFamily: "sans-serif",
+        fontFamily: "Noto Sans Armenian",
       }}
     >
       <div style={{ position: "absolute", width: 420, height: 420, borderRadius: 999, right: -95, top: -130, background: "linear-gradient(135deg, #7246a7, #d5458d)", opacity: 0.18 }} />
@@ -57,6 +66,12 @@ export default async function OpenGraphImage({
         </div>
       </div>
     </div>,
-    size,
+    {
+      ...size,
+      fonts: [
+        { name: "Noto Sans Armenian", data: fontArrayBuffer, style: "normal", weight: 400 },
+        { name: "Noto Sans Armenian", data: fontArrayBuffer, style: "normal", weight: 700 },
+      ],
+    },
   );
 }

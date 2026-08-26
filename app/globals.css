@@ -981,6 +981,14 @@ footer {
 .articleShare > div span { align-items: flex-start; flex-direction: column; gap: 2px; }
 .articleShare small { color: var(--muted); }
 .articleShare nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.articleShare .shareStatus {
+  flex-basis: 100%;
+  min-height: 20px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: right;
+}
 .articleShare a,
 .articleShare button {
   min-height: 42px;

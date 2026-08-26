@@ -1134,7 +1134,7 @@ function EducationShare({ title, slug }: { title: string; slug: string }) {
     <div className={`cardShare ${open ? "open" : ""}`} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}>
       <button type="button" className="cardShareTrigger" aria-label={`Կիսվել՝ ${title}`} aria-expanded={open} onClick={() => setOpen(!open)}><Share2 aria-hidden="true" /></button>
       {open && <div className="cardShareMenu" role="menu">
-        <a role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" onClick={() => shareEvent("facebook")}><span className="facebookMark">f</span><span>Facebook</span></a>
+        <a role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?display=popup&u=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" onClick={() => shareEvent("facebook")}><span className="facebookMark">f</span><span>Facebook</span></a>
         <a role="menuitem" href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer" onClick={() => shareEvent("telegram")}><Send aria-hidden="true" /><span>Telegram</span></a>
         <button type="button" role="menuitem" onClick={copyLink}><Link2 aria-hidden="true" /><span>{copied ? "Պատճենված է" : "Հղումը"}</span></button>
       </div>}
