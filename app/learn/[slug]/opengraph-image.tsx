@@ -1,12 +1,8 @@
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 
 export const alt = "BuddyLife Armenia educational guide";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-const armenianFont = readFile(path.join(process.cwd(), "public/fonts/NotoSansArmenian.ttf"));
 
 const articleTitles: Record<string, { title: string; label: string }> = {
   "preventive-care": {
@@ -30,11 +26,9 @@ export default async function OpenGraphImage({
 }) {
   const { slug } = await params;
   const article = articleTitles[slug] || articleTitles["preventive-care"];
-  const fontData = await armenianFont;
-  const fontArrayBuffer = fontData.buffer.slice(
-    fontData.byteOffset,
-    fontData.byteOffset + fontData.byteLength,
-  ) as ArrayBuffer;
+  const fontArrayBuffer = await fetch(
+    "https://buddylife.am/fonts/NotoSansArmenian.ttf",
+  ).then((response) => response.arrayBuffer());
   return new ImageResponse(
     <div
       style={{
