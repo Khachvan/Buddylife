@@ -17,6 +17,10 @@ const articleTitles: Record<string, { title: string; label: string }> = {
     title: "Ինչպես տունը դարձնել հետաքրքիր և անվտանգ կատվի համար",
     label: "ԿԱՏՎԻ ԲԱՐԵԿԵՑՈՒԹՅՈՒՆ",
   },
+  "everyday-pet-parent-problems": {
+    title: "5 առօրյա խնդիր, որոնց բախվում են կենդանատերերը Հայաստանում",
+    label: "ԿԱԶՄԱԿԵՐՊՎԱԾ ԽՆԱՄՔ",
+  },
 };
 
 export default async function OpenGraphImage({

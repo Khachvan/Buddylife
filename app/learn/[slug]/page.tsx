@@ -69,6 +69,33 @@ const articles = {
       ["Keep a predictable rhythm", "A reasonably consistent routine for feeding, play, and rest helps many cats feel safer. Contact a veterinarian if you notice sudden behaviour changes, loss of appetite, or signs of pain."],
     ] },
   },
+  "everyday-pet-parent-problems": {
+    image: "/banner-organized.webp",
+    hy: { title: "5 առօրյա խնդիր, որոնց բախվում են կենդանատերերը Հայաստանում", description: "Պարզ կազմակերպման ուղեցույց՝ փաստաթղթերը, խնամքի ամսաթվերը, վստահելի կոնտակտները և ընտանիքի պարտականությունները մեկ հստակ համակարգում պահելու համար։", sections: [
+      ["1․ Կարևոր տեղեկությունները ցրված են", "Պատվաստումների գրքույկը մի տեղ է, բժշկի համարը՝ հաղորդագրությունների մեջ, իսկ սննդի կամ խնամքի նշումները՝ ուրիշ տեղ։ Սկսեք մեկ հիմնական թղթապանակից կամ թվային գրառումից՝ կենդանու անունով, որտեղ կպահեք միայն ամենաանհրաժեշտ տեղեկությունները։"],
+      ["2․ Խնամքի ամսաթվերը հեշտ է մոռանալ", "Գրանցեք մոտակա այցերը, խնամքի գործողությունները և անհրաժեշտ գնումները մեկ օրացույցում։ Յուրաքանչյուր գրառման մեջ նշեք՝ ինչ պետք է անել, երբ և ով է պատասխանատու։ Այս պարզ ձևաչափը նվազեցնում է վերջին պահին հիշելու վտանգը։"],
+      ["3․ Արտակարգ պահին կոնտակտները չեն գտնվում", "Պահեք ձեր սովորական անասնաբույժի, մոտակա շուրջօրյա կլինիկայի և ընտանիքի այն անդամի կոնտակտները, ով կարող է օգնել։ Համոզվեք, որ տեղեկությունը հասանելի է նաև այն մարդուն, ով երբեմն խնամում է կենդանուն։"],
+      ["4․ Ընտանիքում պարտականությունները հստակ չեն", "Սնունդը, զբոսանքը, մաքրությունը կամ անհրաժեշտ գնումները բաժանեք մարդկանց միջև։ Կարճ շաբաթական ցանկը օգնում է տեսնել՝ ինչն է արդեն արված և ինչն է դեռ սպասում։"],
+      ["5․ Նույն տեղեկությունը ամեն անգամ նորից է հավաքվում", "Ստեղծեք կենդանու կարճ պրոֆիլ՝ անուն, տարիք, լուսանկար, հիմնական կոնտակտներ, սովորություններ և առօրյա խնամքի նշումներ։ Թարմացրեք այն միայն փոփոխության դեպքում և կիսվեք վստահելի խնամողի հետ՝ անհրաժեշտության ժամանակ։"],
+      ["Սկսեք փոքր քայլից", "Այսօր ընտրեք միայն մեկ տեղ՝ կենդանու կարևոր տեղեկությունների համար, ավելացրեք երեք հիմնական կոնտակտ և գրանցեք հաջորդ կարևոր ամսաթիվը։ Հստակ համակարգը ստեղծվում է փոքր, կրկնվող քայլերով։"],
+    ] },
+    ru: { title: "5 повседневных проблем владельцев питомцев в Армении", description: "Практическое руководство по организации документов, важных дат, надёжных контактов и семейных обязанностей в одной понятной системе.", sections: [
+      ["1. Важная информация хранится в разных местах", "Ветеринарный паспорт лежит в одном месте, номер врача — в переписке, а заметки об уходе — где-то ещё. Создайте одну основную папку или цифровую запись с именем питомца и храните там только самое необходимое."],
+      ["2. Важные даты легко забыть", "Добавьте предстоящие визиты, задачи по уходу и нужные покупки в один календарь. Для каждой записи укажите, что нужно сделать, когда и кто отвечает. Такой простой формат уменьшает риск вспомнить всё в последний момент."],
+      ["3. В нужный момент не удаётся найти контакты", "Сохраните контакты вашего ветеринара, ближайшей круглосуточной клиники и члена семьи, который может помочь. Убедитесь, что информация доступна и тому, кто иногда присматривает за питомцем."],
+      ["4. Семейные обязанности не распределены", "Распределите кормление, прогулки, уборку и покупки между членами семьи. Короткий недельный список помогает видеть, что уже сделано и что ещё осталось."],
+      ["5. Одни и те же сведения приходится собирать заново", "Создайте короткий профиль питомца: имя, возраст, фото, основные контакты, привычки и повседневные заметки по уходу. Обновляйте его только при изменениях и при необходимости делитесь с доверенным человеком."],
+      ["Начните с малого", "Сегодня выберите одно место для важных сведений о питомце, добавьте три главных контакта и запишите ближайшую важную дату. Понятная система создаётся небольшими повторяемыми шагами."],
+    ] },
+    en: { title: "5 everyday problems pet parents face in Armenia", description: "A practical guide to keeping records, important dates, trusted contacts, and family responsibilities in one clear system.", sections: [
+      ["1. Important information is scattered", "The vaccination booklet is in one place, the veterinarian’s number is buried in messages, and care notes are somewhere else. Create one main folder or digital record named after your pet and keep only the essentials there."],
+      ["2. Care dates are easy to forget", "Put upcoming visits, care tasks, and necessary purchases in one calendar. For every entry, note what needs to happen, when, and who is responsible. This simple format reduces last-minute surprises."],
+      ["3. Trusted contacts are hard to find when needed", "Save the details of your regular veterinarian, a nearby 24-hour clinic, and a family member who can help. Make sure the information is also available to anyone who occasionally cares for your pet."],
+      ["4. Family responsibilities are unclear", "Assign feeding, walks, cleaning, and necessary purchases to specific people. A short weekly checklist makes it easy to see what is complete and what still needs attention."],
+      ["5. The same information gets collected again and again", "Create a short pet profile with a name, age, photo, key contacts, habits, and everyday care notes. Update it only when something changes and share it with a trusted carer when needed."],
+      ["Start with one small step", "Today, choose one place for your pet’s important information, add three key contacts, and record the next important date. A clear system grows through small, repeatable steps."],
+    ] },
+  },
 } as const;
 
 type Slug = keyof typeof articles;
@@ -94,7 +121,7 @@ export default async function LearnArticle({ params, searchParams }: { params: P
   const article: Copy = record[lang];
   const labels = ui[lang];
   const localizedUrl = `https://buddylife.am/learn/${slug}?lang=${lang}`;
-  const schema = { "@context": "https://schema.org", "@type": "Article", headline: article.title, description: article.description, image: `https://buddylife.am${record.image}`, inLanguage: lang, author: { "@type": "Organization", name: "BuddyLife Armenia" }, publisher: { "@id": "https://buddylife.am/#organization" }, mainEntityOfPage: localizedUrl, datePublished: "2026-08-24", dateModified: "2026-08-26", isAccessibleForFree: true };
+  const schema = { "@context": "https://schema.org", "@type": "Article", headline: article.title, description: article.description, image: `https://buddylife.am${record.image}`, inLanguage: lang, author: { "@type": "Organization", name: "BuddyLife Armenia" }, publisher: { "@id": "https://buddylife.am/#organization" }, mainEntityOfPage: localizedUrl, datePublished: slug === "everyday-pet-parent-problems" ? "2026-08-26" : "2026-08-24", dateModified: "2026-08-26", isAccessibleForFree: true };
   return <><ArticleHeader lang={lang} slug={slug} /><main className="articlePage" id="main-content">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
     <article className="articleShell">

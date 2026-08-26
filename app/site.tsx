@@ -466,6 +466,12 @@ const hub = {
         "Թաքստոցները, բարձր տեղերը, մաքուր ռեսուրսները, խաղն ու կանխատեսելի միջավայրը նվազեցնում են սթրեսը։",
         "/learn-cat-enrichment.webp",
       ],
+      [
+        "Կազմակերպված խնամք",
+        "5 առօրյա խնդիր, որոնց բախվում են կենդանատերերը Հայաստանում",
+        "Միավորեք կարևոր տեղեկությունները, ամսաթվերը, վստահելի կոնտակտներն ու ընտանեկան պարտականությունները մեկ պարզ համակարգում։",
+        "/banner-organized.webp",
+      ],
     ],
   },
   ru: {
@@ -496,6 +502,12 @@ const hub = {
         "Укрытия, вертикальные пространства, чистые ресурсы, игра и предсказуемая среда снижают стресс.",
         "/learn-cat-enrichment.webp",
       ],
+      [
+        "Организованный уход",
+        "5 повседневных проблем владельцев питомцев в Армении",
+        "Объедините важные сведения, даты, надёжные контакты и семейные обязанности в одной понятной системе.",
+        "/banner-organized.webp",
+      ],
     ],
   },
   en: {
@@ -525,6 +537,12 @@ const hub = {
         "How to make home engaging and safe for an indoor cat",
         "Hiding places, vertical space, clean resources, play and a predictable environment can reduce stress.",
         "/learn-cat-enrichment.webp",
+      ],
+      [
+        "Organized care",
+        "5 everyday problems pet parents face in Armenia",
+        "Bring important information, dates, trusted contacts, and family responsibilities into one clear system.",
+        "/banner-organized.webp",
       ],
     ],
   },
@@ -587,6 +605,7 @@ const educationSlugs = [
   "preventive-care",
   "summer-safety",
   "indoor-cat-enrichment",
+  "everyday-pet-parent-problems",
 ];
 const parentIcons = [
   HeartPulse,

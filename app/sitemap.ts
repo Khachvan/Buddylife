@@ -9,6 +9,7 @@ const routes = [
   ["/learn/preventive-care", "monthly", 0.8],
   ["/learn/summer-safety", "monthly", 0.8],
   ["/learn/indoor-cat-enrichment", "monthly", 0.8],
+  ["/learn/everyday-pet-parent-problems", "monthly", 0.85],
   ["/verification", "monthly", 0.7],
   ["/privacy", "yearly", 0.3],
   ["/terms", "yearly", 0.3],
@@ -17,7 +18,7 @@ const routes = [
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map(([route, changeFrequency, priority]) => ({
     url: `https://buddylife.am${route}`,
-    lastModified: new Date("2026-08-23"),
+    lastModified: new Date("2026-08-26"),
     changeFrequency,
     priority,
   }));
