@@ -52,7 +52,7 @@ export default async function OpenGraphImage({
       <div style={{ position: "absolute", width: 260, height: 260, borderRadius: 999, right: 120, bottom: -130, background: "#f0b64d", opacity: 0.2 }} />
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: "100%", zIndex: 2 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 17 }}>
-          <img src="https://buddylife.am/buddylife-logo-clean.png" alt="BuddyLife Armenia" width="176" height="74" style={{ objectFit: "contain" }} />
+          <div style={{ display: "flex", fontSize: 30, fontWeight: 700, color: "#7246a7" }}>BuddyLife</div>
           <div style={{ display: "flex", padding: "9px 17px", borderRadius: 999, background: "#ffffffcc", color: "#7246a7", fontSize: 19, fontWeight: 800, letterSpacing: 1 }}>{article.label}</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 18, maxWidth: 930 }}>
