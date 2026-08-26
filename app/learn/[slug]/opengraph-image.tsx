@@ -26,9 +26,14 @@ export default async function OpenGraphImage({
 }) {
   const { slug } = await params;
   const article = articleTitles[slug] || articleTitles["preventive-care"];
-  const fontArrayBuffer = await fetch(
-    "https://buddylife.am/fonts/NotoSansArmenian.ttf",
-  ).then((response) => response.arrayBuffer());
+  const [regularFont, boldFont] = await Promise.all([
+    fetch("https://buddylife.am/fonts/NotoSansArmenian-Regular.ttf").then(
+      (response) => response.arrayBuffer(),
+    ),
+    fetch("https://buddylife.am/fonts/NotoSansArmenian-Bold.ttf").then(
+      (response) => response.arrayBuffer(),
+    ),
+  ]);
   return new ImageResponse(
     <div
       style={{
@@ -63,8 +68,8 @@ export default async function OpenGraphImage({
     {
       ...size,
       fonts: [
-        { name: "Noto Sans Armenian", data: fontArrayBuffer, style: "normal", weight: 400 },
-        { name: "Noto Sans Armenian", data: fontArrayBuffer, style: "normal", weight: 700 },
+        { name: "Noto Sans Armenian", data: regularFont, style: "normal", weight: 400 },
+        { name: "Noto Sans Armenian", data: boldFont, style: "normal", weight: 700 },
       ],
     },
   );
