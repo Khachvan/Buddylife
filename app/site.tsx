@@ -780,7 +780,7 @@ export default function BuddyPage({ view }: { view: View }) {
         <AudiencePage type="business" t={t} open={open} />
       )}{" "}
       {view === "features" && <Features t={t} open={open} />}
-      {view === "learn" && <EducationHub h={h} />}
+      {view === "learn" && <EducationHub h={h} lang={lang} />}
       {(view === "privacy" || view === "terms" || view === "verification") && (
         <LegalPage kind={view} content={legalContent[lang]} />
       )}
@@ -1119,10 +1119,10 @@ function TrustSection({ t }: { t: any }) {
     </section>
   );
 }
-function EducationShare({ title, slug }: { title: string; slug: string }) {
+function EducationShare({ title, slug, lang }: { title: string; slug: string; lang: Lang }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const url = `https://buddylife.am/learn/${slug}`;
+  const url = `https://buddylife.am/learn/${slug}?lang=${lang}`;
   const shareEvent = (channel: string) => vaTrack("education_article_shared", { channel, article: url });
   async function copyLink() {
     await navigator.clipboard.writeText(url);
@@ -1141,7 +1141,7 @@ function EducationShare({ title, slug }: { title: string; slug: string }) {
     </div>
   );
 }
-function EducationCards({ h }: { h: any }) {
+function EducationCards({ h, lang }: { h: any; lang: Lang }) {
   return (
     <div className="educationGrid">
       {h.topics.map((topic: any, index: number) => (
@@ -1149,7 +1149,7 @@ function EducationCards({ h }: { h: any }) {
           className="educationCard"
           key={topic[1]}
         >
-          <a className="educationCardLink" href={`/learn/${educationSlugs[index]}`} aria-label={`${topic[1]} — ${h.read}`}>
+          <a className="educationCardLink" href={`/learn/${educationSlugs[index]}?lang=${lang}`} aria-label={`${topic[1]} — ${h.read}`}>
             <div className="educationImage">
               <Image src={topic[3]} alt={topic[1]} fill sizes="(max-width: 760px) 100vw, 33vw" />
             </div>
@@ -1160,7 +1160,7 @@ function EducationCards({ h }: { h: any }) {
               <small><BookOpen size={15} /> {h.read}</small>
             </div>
           </a>
-          <EducationShare title={topic[1]} slug={educationSlugs[index]} />
+          <EducationShare title={topic[1]} slug={educationSlugs[index]} lang={lang} />
         </article>
       ))}
     </div>
@@ -1188,7 +1188,7 @@ function EducationPreview({ h, lang }: { h: any; lang: Lang }) {
             {h.all} →
           </a>
         </div>
-        <EducationCards h={h} />
+        <EducationCards h={h} lang={lang} />
       </div>
     </section>
   );
@@ -1221,7 +1221,7 @@ function LegalPage({
     </section>
   );
 }
-function EducationHub({ h }: { h: any }) {
+function EducationHub({ h, lang }: { h: any; lang: Lang }) {
   return (
     <>
       <section className="hubHero">
@@ -1236,7 +1236,7 @@ function EducationHub({ h }: { h: any }) {
           <div className="educationHeader compact">
             <h2>{h.latest}</h2>
           </div>
-          <EducationCards h={h} />
+          <EducationCards h={h} lang={lang} />
           <div className="educationDisclaimer">
             <ShieldCheck size={22} />
             <p>{h.disclaimer}</p>
