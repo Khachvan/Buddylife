@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
 import BuddyPage from "../site";
-
-export const metadata: Metadata = {
-  title: "Օգտագործման պայմաններ | BuddyLife Armenia",
-  description:
-    "BuddyLife Armenia կայքի նախամեկնարկային օգտագործման պայմանները։",
-  alternates: { canonical: "/terms" },
-};
-export default function Terms() {
-  return <BuddyPage view="terms" />;
+import { localizedMetadata, resolveLanguage } from "../language";
+type PageProps = { searchParams: Promise<{ lang?: string | string[] }> };
+export async function generateMetadata({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return localizedMetadata("terms", lang);
+}
+export default async function Terms({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return <BuddyPage view="terms" initialLang={lang} />;
 }

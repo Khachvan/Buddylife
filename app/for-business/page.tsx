@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
 import BuddyPage from "../site";
-export const metadata: Metadata = {
-  title: "Կենդանիների բիզնեսներին | BuddyLife Armenia",
-  description:
-    "Կառուցեք վստահություն, տեսանելիություն և կապ Հայաստանի կենդանատերերի հետ։",
-  alternates: { canonical: "/for-business" },
-};
-export default function Business() {
-  return <BuddyPage view="business" />;
+import { localizedMetadata, resolveLanguage } from "../language";
+type PageProps = { searchParams: Promise<{ lang?: string | string[] }> };
+export async function generateMetadata({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return localizedMetadata("business", lang);
+}
+export default async function Business({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return <BuddyPage view="business" initialLang={lang} />;
 }

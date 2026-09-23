@@ -5,13 +5,30 @@ export async function GET() {
   try {
     await ensureSchema();
     const sql = getSql();
+    const registrationRowsPromise = (async () => {
+      try {
+        return await sql`
+          SELECT r.id, r.role, r.name, r.pet_type AS "petType", r.business_name AS "businessName", r.category, r.social,
+                 r.email, r.phone, r.city, r.province, r.source, r.medium, r.campaign, r.venue,
+                 r.is_test AS "isTest", r.created_at AS "createdAt", q.serial AS "qrSerial",
+                 q.display_name AS "qrName", a.label_snapshot AS "qrVenue"
+          FROM registrations r
+          LEFT JOIN qr_codes q ON q.id = r.qr_code_id
+          LEFT JOIN qr_assignments a ON a.id = r.qr_assignment_id
+          ORDER BY r.created_at DESC
+        `;
+      } catch {
+        return sql`
+          SELECT id, role, name, pet_type AS "petType", business_name AS "businessName", category, social,
+                 email, phone, city, province, source, medium, campaign, venue,
+                 is_test AS "isTest", created_at AS "createdAt"
+          FROM registrations ORDER BY created_at DESC
+        `;
+      }
+    })();
     const [contentRows, registrationRows, eventRows] = await Promise.all([
       sql`SELECT key, value FROM cms_content ORDER BY key`,
-      sql`
-        SELECT id, role, name, pet_type AS "petType", business_name AS "businessName", category, social,
-               email, phone, city, province, source, medium, campaign, venue, is_test AS "isTest", created_at AS "createdAt"
-        FROM registrations ORDER BY created_at DESC
-      `,
+      registrationRowsPromise,
       sql`
         SELECT id, event_type AS "eventType", page, language, audience, metadata, created_at AS "createdAt"
         FROM analytics_events ORDER BY created_at DESC LIMIT 5000

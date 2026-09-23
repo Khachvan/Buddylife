@@ -42,8 +42,8 @@ export default function RegistrationsClient({ audienceRole }: { audienceRole: Ro
 
   function downloadCsv() {
     const fields = audienceRole === "parent"
-      ? ["name", "petType", "email", "phone", "city", "province", "source", "campaign", "venue", "isTest", "createdAt"]
-      : ["businessName", "category", "email", "phone", "city", "province", "source", "campaign", "venue", "isTest", "createdAt"];
+      ? ["name", "petType", "email", "phone", "city", "province", "source", "campaign", "venue", "qrSerial", "qrName", "qrVenue", "isTest", "createdAt"]
+      : ["businessName", "category", "email", "phone", "city", "province", "source", "campaign", "venue", "qrSerial", "qrName", "qrVenue", "isTest", "createdAt"];
     const escape = (value: unknown) => `"${String(value || "").replaceAll('"', '""')}"`;
     const csv = [fields.join(","), ...filtered.map((row) => fields.map((field) => escape(row[field])).join(","))].join("\n");
     const link = document.createElement("a");
@@ -82,7 +82,7 @@ export default function RegistrationsClient({ audienceRole }: { audienceRole: Ro
             <div className="tableRow" key={item.id}>
               <span><b>{audienceRole === "parent" ? item.name || "—" : item.businessName || "—"}</b><small>{audienceRole === "parent" ? item.petType || "Pet type not provided" : item.category || "Category not provided"}</small></span>
               <span>{item.email || item.phone || "—"}<small>{item.email && item.phone ? item.phone : ""}</small></span>
-              <span>{[item.city, item.province].filter(Boolean).join(", ") || "—"}<small>{[item.source, item.campaign, item.venue].filter(Boolean).join(" · ") || "Direct"}</small></span>
+              <span>{[item.city, item.province].filter(Boolean).join(", ") || "—"}<small>{[item.qrSerial, item.qrVenue || item.venue, item.source, item.campaign].filter(Boolean).join(" · ") || "Direct"}</small></span>
               <span><b className={item.isTest ? "statusTest" : "statusValid"}>{item.isTest ? "Test" : "Valid"}</b><small>{item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-GB") : "—"}</small><button className="registrationStatusButton" type="button" onClick={() => setTestStatus(item.id, !item.isTest)}>{item.isTest ? "Restore" : "Mark test"}</button></span>
             </div>
           ))}

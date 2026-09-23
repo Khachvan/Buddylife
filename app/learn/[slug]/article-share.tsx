@@ -4,11 +4,12 @@ import { Link2, Share2 } from "lucide-react";
 import { useState } from "react";
 import { track } from "@vercel/analytics";
 
-type Lang = "hy" | "ru" | "en";
+type Lang = "hy" | "ru" | "en" | "fa";
 const labels = {
   hy: { title: "Կիսվել նյութով", help: "Օգնեք այս ուղեցույցը հասնի այլ կենդանատերերի", opened: "Կիսման պատուհանը բացվել է։", failed: "Չհաջողվեց բացել կիսման պատուհանը։ Փորձեք պատճենել հղումը։", copied: "Հղումը պատճենված է։", copyFailed: "Չհաջողվեց պատճենել հղումը։", facebook: "Facebook-ը բացվել է․ ավարտեք հրապարակումը այնտեղ։", telegram: "Telegram-ի կիսման պատուհանը բացվել է։", copy: "Պատճենել հղումը", copiedButton: "Պատճենված է", share: "Կիսվել" },
   ru: { title: "Поделиться материалом", help: "Помогите другим владельцам питомцев увидеть этот материал", opened: "Окно публикации открыто.", failed: "Не удалось открыть окно публикации. Попробуйте скопировать ссылку.", copied: "Ссылка скопирована.", copyFailed: "Не удалось скопировать ссылку.", facebook: "Facebook открыт — завершите публикацию там.", telegram: "Окно публикации Telegram открыто.", copy: "Копировать ссылку", copiedButton: "Скопировано", share: "Поделиться" },
   en: { title: "Share this guide", help: "Help this guide reach other pet parents", opened: "The sharing window is open.", failed: "Could not open the sharing window. Try copying the link.", copied: "Link copied.", copyFailed: "Could not copy the link.", facebook: "Facebook is open—finish publishing there.", telegram: "The Telegram sharing window is open.", copy: "Copy link", copiedButton: "Copied", share: "Share" },
+  fa: { title: "اشتراک‌گذاری راهنما", help: "کمک کنید این راهنما به دست سرپرستان حیوانات بیشتری برسد", opened: "پنجره اشتراک‌گذاری باز شد.", failed: "پنجره اشتراک‌گذاری باز نشد. پیوند را کپی کنید.", copied: "پیوند کپی شد.", copyFailed: "کپی‌کردن پیوند ممکن نشد.", facebook: "فیسبوک باز شد؛ انتشار را آنجا کامل کنید.", telegram: "پنجره اشتراک‌گذاری تلگرام باز شد.", copy: "کپی پیوند", copiedButton: "کپی شد", share: "اشتراک‌گذاری" },
 } as const;
 
 export default function ArticleShare({ title, url, lang }: { title: string; url: string; lang: Lang }) {

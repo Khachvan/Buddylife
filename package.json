@@ -2,6 +2,7 @@
   "name": "site-creator-vinext-starter",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.19.0",
   "engines": {
     "node": ">=22.13.0"
   },
@@ -10,9 +11,19 @@
     "build": "next build",
     "build:sites": "vinext build && node scripts/prepare-sites-worker.mjs",
     "start": "next start",
-    "test": "next build",
+    "test": "node --test tests/*.test.ts",
+    "check:fast": "pnpm test && eslint lib/qr-attribution.ts lib/request-security.ts app/production-analytics.tsx app/meta-pixel-consent.tsx tests/critical-flows.test.ts",
+    "check:release": "pnpm check:fast && pnpm build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "verify": "pnpm check:release",
+    "vercel:pull:local": "vercel pull --yes --environment=development",
+    "vercel:env:local": "vercel env pull .env.local --environment=development --yes",
+    "deploy:preview": "vercel pull --yes --environment=preview && vercel build && vercel deploy --prebuilt",
+    "release:promote": "vercel promote",
+    "release:rollback": "vercel rollback",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node scripts/migrate-database.mjs",
+    "db:migrate:local": "node --env-file=.env.local scripts/migrate-database.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -21,6 +32,7 @@
     "drizzle-orm": "0.45.2",
     "lucide-react": "^1.33.0",
     "next": "16.2.6",
+    "qrcode": "^1.5.4",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
@@ -31,6 +43,7 @@
     "@openai/sites-vite-plugin": "0.1.0",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
@@ -46,6 +59,7 @@
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.59.3",
+    "vercel": "59.6.2",
     "vinext": "1.0.0-beta.2",
     "vite": "8.0.13",
     "wrangler": "4.92.0"

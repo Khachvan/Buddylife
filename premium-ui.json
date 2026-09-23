@@ -1,0 +1,11 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": ["app/admin/qrs"],
+  "locale": "en-GB",
+  "requiredCapabilities": ["Table Selection", "Select/Listbox", "Form"],
+  "ownership": {
+    "Table Selection": "QR card checkbox selection with select-all-shown scope",
+    "Select/Listbox": "native",
+    "Form": "screen-owned forms following DESIGN.md validation contract"
+  }
+}

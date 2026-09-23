@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { headers } from "next/headers";
+import { Suspense } from "react";
+import { resolveLanguage } from "./language";
+import MetaPixelConsent from "./meta-pixel-consent";
+import ProductionAnalytics from "./production-analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,6 +24,9 @@ export const metadata: Metadata = {
     "уход за питомцами Армения",
     "pet care Armenia",
     "pet services Yerevan",
+    "مراقبت از حیوانات در ارمنستان",
+    "خدمات حیوانات در ایروان",
+    "دامپزشک در ارمنستان",
     "BuddyLife Armenia",
   ],
   title: "BuddyLife Armenia — Քո կենդանու կյանքը՝ կազմակերպված",
@@ -72,13 +78,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const lang = resolveLanguage((await headers()).get("x-buddylife-lang") || undefined);
   return (
-    <html lang="hy">
+    <html lang={lang} dir={lang === "fa" ? "rtl" : "ltr"}>
       <body>
         <script
           type="application/ld+json"
@@ -97,11 +104,13 @@ export default function RootLayout({
                     "Կենդանիների խնամք",
                     "Կենդանիների կրթություն",
                     "Կենդանիների ծառայություններ Հայաստանում",
+                    "Уход за питомцами в Армении",
                     "Pet care in Armenia",
+                    "مراقبت از حیوانات در ارمنستان",
                   ],
                   sameAs: [
                     "https://www.instagram.com/buddylifearmenia/",
-                    "https://www.facebook.com/profile.php?id=61593562114437",
+                    "https://www.facebook.com/buddylifearmenia",
                   ],
                 },
                 {
@@ -109,7 +118,7 @@ export default function RootLayout({
                   "@id": "https://buddylife.am/#website",
                   url: "https://buddylife.am",
                   name: "BuddyLife Armenia",
-                  inLanguage: ["hy", "ru", "en"],
+                  inLanguage: ["hy", "ru", "en", "fa"],
                   about: {
                     "@type": "Thing",
                     name: "Կենդանիների խնամք Հայաստանում",
@@ -126,8 +135,12 @@ export default function RootLayout({
           }}
         />
         {children}
-        <Analytics />
-        <SpeedInsights />
+        <Suspense fallback={null}>
+          <MetaPixelConsent pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID} initialLanguage={lang} />
+        </Suspense>
+        <Suspense fallback={null}>
+          <ProductionAnalytics />
+        </Suspense>
       </body>
     </html>
   );

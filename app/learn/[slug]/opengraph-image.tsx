@@ -21,6 +21,34 @@ const articleTitles: Record<string, { title: string; label: string }> = {
     title: "5 առօրյա խնդիր, որոնց բախվում են կենդանատերերը Հայաստանում",
     label: "ԿԱԶՄԱԿԵՐՊՎԱԾ ԽՆԱՄՔ",
   },
+  "organize-pet-information-and-care-dates": {
+    title: "Ինչպես կազմակերպել կենդանուդ կարևոր տեղեկություններն ու ամսաթվերը",
+    label: "ԿԱԶՄԱԿԵՐՊՎԱԾ ԽՆԱՄՔ",
+  },
+  "weekly-pet-care-organization-routine": {
+    title: "Շաբաթական 10 րոպե՝ կենդանուդ խնամքը կազմակերպելու համար",
+    label: "ՇԱԲԱԹԱԿԱՆ ՍՏՈՒԳԱԹԵՐԹ",
+  },
+  "pet-care-handover-note": {
+    title: "Երբ կենդանուդ խնամքը վստահում ես մեկ ուրիշին",
+    label: "ՓՈԽԱՆՑՄԱՆ ՀՈՒՇԱԹԵՐԹ",
+  },
+  "first-week-pet-information-starter-kit": {
+    title: "Կենդանուդ առաջին շաբաթվա կարևոր տեղեկությունների փաթեթը",
+    label: "ԱՌԱՋԻՆ ՇԱԲԱԹՎԱ ՈՒՂԵՑՈՒՅՑ",
+  },
+  "five-minute-pet-admin-reset": {
+    title: "5 րոպե՝ խնամքի գրառումները վերադասավորելու համար",
+    label: "5-ՐՈՊԵԱՆՈՑ ՎԵՐԱԴԱՍԱՎՈՐՈՒՄ",
+  },
+  "help-pet-when-guests-visit": {
+    title: "Ինչպես օգնել կենդանուն, երբ տանը հյուրեր կան",
+    label: "ՎԱՐՔ ԵՎ ՀԱՆԳՍՏՈՒԹՅՈՒՆ",
+  },
+  "moving-home-with-a-pet": {
+    title: "Տեղափոխություն կենդանու հետ․ ինչպես պատրաստել ավելի հանգիստ առաջին օրը",
+    label: "ԱՌՕՐՅԱ ԽՆԱՄՔ",
+  },
 };
 
 export default async function OpenGraphImage({

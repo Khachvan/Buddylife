@@ -32,7 +32,8 @@ import {
   X,
 } from "lucide-react";
 import { track as vaTrack } from "@vercel/analytics";
-type Lang = "hy" | "ru" | "en";
+import { persianHubCopy, persianLegalCopy, persianSiteCopy } from "./persian-copy";
+import type { Lang } from "./language";
 type View =
   | "home"
   | "features"
@@ -138,6 +139,18 @@ const tr = {
     privacy:
       "Ձեր տվյալները կօգտագործվեն միայն մեկնարկի կապի և անանուն հետաքրքրության վերլուծության համար։",
     footer: "Ձեր կենդանին։ Ձեր ընտանիքը։ Մեր հոգատարությունը։",
+    brandEyebrow: "BUDDYLIFE ՀԱՅԱՍՏԱՆ",
+    productEyebrow: "BUDDYLIFE ԱՐՏԱԴՐԱՆՔ",
+    trustEyebrow: "BUDDYLIFE ՎՍՏԱՀՈՒԹՅՈՒՆ",
+    pressEyebrow: "ՄԱՄՈՒԼԻ ՇՆՈՐՀԱՆԴԵՍ",
+    earlyAccess: "ՎԱՂ ՀԱՍԱՆԵԼԻՈՒԹՅՈՒՆ",
+    communityLabel: "Համայնք",
+    preparingLabel: "Վաղ հասանելիության նախապատրաստում",
+    slideLabel: "Սլայդ",
+    languageLabel: "Փոխել լեզուն",
+    menuLabel: "Բացել ընտրացանկը",
+    closeMenuLabel: "Փակել ընտրացանկը",
+    ok: "Լավ",
     parentCards: [
       [
         "Առողջության անձնագիր",
@@ -274,6 +287,18 @@ const tr = {
     privacy:
       "Данные используются только для связи о запуске и обезличенного анализа интереса.",
     footer: "Ваш питомец. Ваша семья. Наша забота.",
+    brandEyebrow: "BUDDYLIFE АРМЕНИЯ",
+    productEyebrow: "ПРОДУКТ BUDDYLIFE",
+    trustEyebrow: "ДОВЕРИЕ BUDDYLIFE",
+    pressEyebrow: "ПРЕСС-ПРЕЗЕНТАЦИЯ",
+    earlyAccess: "РАННИЙ ДОСТУП",
+    communityLabel: "Сообщество",
+    preparingLabel: "Подготовка раннего доступа",
+    slideLabel: "Слайд",
+    languageLabel: "Сменить язык",
+    menuLabel: "Открыть меню",
+    closeMenuLabel: "Закрыть меню",
+    ok: "Хорошо",
     parentCards: [
       [
         "Паспорт здоровья",
@@ -398,6 +423,18 @@ const tr = {
     privacy:
       "Your data is used only for launch communication and anonymous interest analysis.",
     footer: "Your pet. Your family. Our care.",
+    brandEyebrow: "BUDDYLIFE ARMENIA",
+    productEyebrow: "BUDDYLIFE PRODUCT",
+    trustEyebrow: "BUDDYLIFE TRUST",
+    pressEyebrow: "PRESS LAUNCH",
+    earlyAccess: "EARLY ACCESS",
+    communityLabel: "Community",
+    preparingLabel: "Preparing early access",
+    slideLabel: "Slide",
+    languageLabel: "Change language",
+    menuLabel: "Open menu",
+    closeMenuLabel: "Close menu",
+    ok: "OK",
     parentCards: [
       [
         "Health passport",
@@ -436,6 +473,7 @@ const tr = {
       ["Growth insight", "Future insight into demand and client interest."],
     ],
   },
+  fa: persianSiteCopy,
 };
 const hub = {
   hy: {
@@ -452,25 +490,73 @@ const hub = {
         "Կանխարգելում",
         "Ինչու տարեկան զննումն ու անհատական պատվաստումների պլանը կարևոր են",
         "Կանոնավոր զննումները կարող են խնդիրները նկատել ավելի վաղ, իսկ պատվաստումների ճիշտ պլանը կախված է տարիքից, կենսակերպից և տեղական ռիսկերից։",
-        "/learn-preventive-care.webp",
+        "/learn-preventive-care-editorial-v5.jpg",
       ],
       [
         "Սեզոնային անվտանգություն",
         "Շոգ եղանակին անվտանգ զբոսանքի պարզ կանոնները",
         "Ընտրեք զով ժամեր, ապահովեք մաքուր ջուր և ստվեր, ու երբեք կենդանուն մի թողեք փակ մեքենայում։",
-        "/learn-summer-safety.webp",
+        "/learn-summer-safety-editorial-v5.jpg",
       ],
       [
         "Կատուների բարեկեցություն",
         "Ինչպես տունը դարձնել հետաքրքիր և անվտանգ կատվի համար",
         "Թաքստոցները, բարձր տեղերը, մաքուր ռեսուրսները, խաղն ու կանխատեսելի միջավայրը նվազեցնում են սթրեսը։",
-        "/learn-cat-enrichment.webp",
+        "/learn-indoor-cat-enrichment-editorial-v5.jpg",
       ],
       [
         "Կազմակերպված խնամք",
         "5 առօրյա խնդիր, որոնց բախվում են կենդանատերերը Հայաստանում",
         "Միավորեք կարևոր տեղեկությունները, ամսաթվերը, վստահելի կոնտակտներն ու ընտանեկան պարտականությունները մեկ պարզ համակարգում։",
-        "/banner-organized.webp",
+        "/learn-everyday-pet-parent-problems-editorial-v5.jpg",
+      ],
+      [
+        "Կազմակերպված խնամք",
+        "Ինչպես կազմակերպել կենդանուդ կարևոր տեղեկություններն ու ամսաթվերը",
+        "Ստեղծեք կենդանու կարճ տեղեկաթերթ, պահեք երեք վստահելի կոնտակտ և օգտագործեք մեկ հիմնական օրացույց։",
+        "/learn-organize-pet-information-and-care-dates-editorial-v5.jpg",
+      ],
+      [
+        "Կազմակերպված խնամք",
+        "Շաբաթական 10 րոպե՝ կենդանուդ խնամքը կազմակերպելու համար",
+        "Ստուգիր տեղեկությունները, առաջիկա գործերը, պարագաներն ու ընտանեկան պարտականությունները մեկ կարճ շաբաթական սովորությամբ։",
+        "/learn-weekly-pet-care-organization-routine-editorial-v5.jpg",
+      ],
+      [
+        "Կազմակերպված խնամք",
+        "Երբ կենդանուդ խնամքը վստահում ես մեկ ուրիշին",
+        "Փոխանցիր առօրյա ռիթմը, պարագաների տեղը, տան կանոններն ու անհրաժեշտ կոնտակտները մեկ պարզ ու մասնավոր հուշաթերթով։",
+        "/learn-pet-care-handover-note-editorial-v5.jpg",
+      ],
+      [
+        "Կազմակերպված խնամք",
+        "Կենդանու մասին կարևոր տեղեկությունները․ ինչ հավաքել առաջին շաբաթում",
+        "Ստեղծիր մեկ փակ տեղեկաթերթ՝ հիմնական տվյալների, առօրյա ռիթմի, պարագաների, վստահելի կոնտակտների, փաստաթղթերի և հիշեցումների համար։",
+        "/learn-first-week-pet-information-starter-kit-editorial-v5.jpg",
+      ],
+      [
+        "Կազմակերպված խնամք",
+        "5 րոպե՝ կենդանուդ խնամքի գրառումները վերադասավորելու համար",
+        "Ցրված գրառումները վերածիր մեկ կարճ, թարմ և պատասխանատուներով հստակեցված շաբաթական ցանկի։",
+        "/learn-five-minute-pet-admin-reset-editorial-v5.jpg",
+      ],
+      [
+        "Անվտանգություն և կազմակերպում",
+        "Ինչ անել առաջինը, երբ կենդանին կորում է",
+        "Ստուգիր տունն ու մոտակա տարածքը, տեղեկացրու վստահելի կապերին և տարածիր մեկ հստակ ու անվտանգ հայտարարություն։",
+        "/learn-what-to-do-when-pet-goes-missing-editorial-v5.jpg",
+      ],
+      [
+        "Վարք և հանգստություն",
+        "Ինչպես օգնել կենդանուն, երբ տանը հյուրեր կան",
+        "Հինգ պարզ քայլ, որոնք կենդանուդ ընտրության հնարավորություն և հանգիստ անկյուն են տալիս հյուրերի ժամանակ։",
+        "/learn-help-pet-when-guests-visit.jpg",
+      ],
+      [
+        "Առօրյա խնամք",
+        "Տեղափոխություն կենդանու հետ․ ինչպես պատրաստել ավելի հանգիստ առաջին օրը",
+        "Պատրաստիր առաջին օրվա պայուսակը, անվտանգ տեղափոխումը և նոր տան հանգիստ տարածքը նախապես։",
+        "/learn-moving-home-with-a-pet.jpg",
       ],
     ],
   },
@@ -488,25 +574,73 @@ const hub = {
         "Профилактика",
         "Почему важны ежегодный осмотр и индивидуальный план вакцинации",
         "Регулярные осмотры помогают заметить проблемы раньше, а план вакцинации зависит от возраста, образа жизни и местных рисков.",
-        "/learn-preventive-care.webp",
+        "/learn-preventive-care-editorial-v5.jpg",
       ],
       [
         "Сезонная безопасность",
         "Простые правила прогулок в жаркую погоду",
         "Выбирайте прохладные часы, обеспечьте воду и тень и никогда не оставляйте питомца в закрытой машине.",
-        "/learn-summer-safety.webp",
+        "/learn-summer-safety-editorial-v5.jpg",
       ],
       [
         "Благополучие кошек",
         "Как сделать дом интересным и безопасным для кошки",
         "Укрытия, вертикальные пространства, чистые ресурсы, игра и предсказуемая среда снижают стресс.",
-        "/learn-cat-enrichment.webp",
+        "/learn-indoor-cat-enrichment-editorial-v5.jpg",
       ],
       [
         "Организованный уход",
         "5 повседневных проблем владельцев питомцев в Армении",
         "Объедините важные сведения, даты, надёжные контакты и семейные обязанности в одной понятной системе.",
-        "/banner-organized.webp",
+        "/learn-everyday-pet-parent-problems-editorial-v5.jpg",
+      ],
+      [
+        "Организованный уход",
+        "Как хранить сведения о питомце и важные даты в одном месте",
+        "Создайте краткую карточку питомца, сохраните три проверенных контакта и используйте один основной календарь.",
+        "/learn-organize-pet-information-and-care-dates-editorial-v5.jpg",
+      ],
+      [
+        "Организованный уход",
+        "10 минут в неделю, чтобы организовать заботу о питомце",
+        "Проверьте информацию, ближайшие дела, запасы и семейные обязанности с помощью одной короткой еженедельной привычки.",
+        "/learn-weekly-pet-care-organization-routine-editorial-v5.jpg",
+      ],
+      [
+        "Организованный уход",
+        "Простая памятка для временного ухода за питомцем",
+        "Передайте распорядок, расположение принадлежностей, домашние правила и необходимые контакты в одной закрытой памятке.",
+        "/learn-pet-care-handover-note-editorial-v5.jpg",
+      ],
+      [
+        "Организованный уход",
+        "Что записать о питомце в первую неделю",
+        "Создайте одну закрытую карточку с основными данными, распорядком, принадлежностями, доверенными контактами, документами и напоминаниями.",
+        "/learn-first-week-pet-information-starter-kit-editorial-v5.jpg",
+      ],
+      [
+        "Организованный уход",
+        "Пять минут, чтобы привести в порядок заметки об уходе",
+        "Превратите разрозненные записи в один короткий актуальный список на неделю с понятными ответственными.",
+        "/learn-five-minute-pet-admin-reset-editorial-v5.jpg",
+      ],
+      [
+        "Безопасность и организация",
+        "Что делать в первую очередь, если питомец пропал",
+        "Проверьте дом и ближайшую территорию, предупредите проверенные контакты и безопасно распространите одно ясное объявление.",
+        "/learn-what-to-do-when-pet-goes-missing-editorial-v5.jpg",
+      ],
+      [
+        "Поведение и спокойствие",
+        "Как помочь питомцу, когда дома гости",
+        "Пять простых шагов, которые дают питомцу выбор и спокойное место во время визита гостей.",
+        "/learn-help-pet-when-guests-visit.jpg",
+      ],
+      [
+        "Повседневный уход",
+        "Переезд с питомцем: как подготовить более спокойный первый день",
+        "Заранее соберите сумку первого дня, организуйте безопасный переезд и подготовьте тихое место в новом доме.",
+        "/learn-moving-home-with-a-pet.jpg",
       ],
     ],
   },
@@ -524,34 +658,84 @@ const hub = {
         "Preventive care",
         "Why annual checkups and an individual vaccination plan matter",
         "Regular exams can identify concerns earlier, while vaccination plans should reflect age, lifestyle and local risk.",
-        "/learn-preventive-care.webp",
+        "/learn-preventive-care-editorial-v5.jpg",
       ],
       [
         "Seasonal safety",
         "Simple rules for safer walks in hot weather",
         "Choose cooler hours, provide fresh water and shade, and never leave a pet inside a closed car.",
-        "/learn-summer-safety.webp",
+        "/learn-summer-safety-editorial-v5.jpg",
       ],
       [
         "Cat wellbeing",
         "How to make home engaging and safe for an indoor cat",
         "Hiding places, vertical space, clean resources, play and a predictable environment can reduce stress.",
-        "/learn-cat-enrichment.webp",
+        "/learn-indoor-cat-enrichment-editorial-v5.jpg",
       ],
       [
         "Organized care",
         "5 everyday problems pet parents face in Armenia",
         "Bring important information, dates, trusted contacts, and family responsibilities into one clear system.",
-        "/banner-organized.webp",
+        "/learn-everyday-pet-parent-problems-editorial-v5.jpg",
+      ],
+      [
+        "Organized care",
+        "How to organize your pet’s important information and care dates",
+        "Create a short pet information card, keep three trusted contacts and use one main calendar.",
+        "/learn-organize-pet-information-and-care-dates-editorial-v5.jpg",
+      ],
+      [
+        "Organized care",
+        "A 10-minute weekly routine for organizing your pet’s care",
+        "Review information, upcoming tasks, supplies and shared responsibilities through one short weekly habit.",
+        "/learn-weekly-pet-care-organization-routine-editorial-v5.jpg",
+      ],
+      [
+        "Organized care",
+        "A simple handover note for your pet’s temporary caregiver",
+        "Share the familiar routine, supply locations, household rules and essential contacts in one clear private note.",
+        "/learn-pet-care-handover-note-editorial-v5.jpg",
+      ],
+      [
+        "Organized care",
+        "Important pet information to collect in the first week",
+        "Create one private sheet for identity basics, daily routine, supplies, trusted contacts, documents and reminders.",
+        "/learn-first-week-pet-information-starter-kit-editorial-v5.jpg",
+      ],
+      [
+        "Organized care",
+        "A five-minute reset for your pet-care notes",
+        "Turn scattered notes into one short, current weekly list with a clear owner for every task.",
+        "/learn-five-minute-pet-admin-reset-editorial-v5.jpg",
+      ],
+      [
+        "Safety and organization",
+        "What to do first when a pet goes missing",
+        "Search home and nearby, alert verified contacts, and share one clear privacy-safe notice.",
+        "/learn-what-to-do-when-pet-goes-missing-editorial-v5.jpg",
+      ],
+      [
+        "Behaviour and calm",
+        "How to help your pet when guests visit",
+        "Five simple steps that give your pet choice and a calm retreat during a visit.",
+        "/learn-help-pet-when-guests-visit.jpg",
+      ],
+      [
+        "Everyday care",
+        "Moving home with a pet: planning a calmer first day",
+        "Pack a first-day bag, manage the move safely and prepare one quiet space in the new home.",
+        "/learn-moving-home-with-a-pet.jpg",
       ],
     ],
   },
+  fa: persianHubCopy,
 };
 const legalContent = {
   hy: {
+    brandEyebrow: "BUDDYLIFE ՀԱՅԱՍՏԱՆ",
     privacy: [
       "Գաղտնիության քաղաքականություն",
-      "BuddyLife-ը հավաքում է միայն վաղ հասանելիության գրանցման համար անհրաժեշտ տվյալները՝ անուն, կոնտակտ, օգտատիրոջ տեսակ և կամավոր տեղադրություն։ Տվյալներն օգտագործվում են մեկնարկի մասին կապի, ծառայության պլանավորման և անանուն պահանջարկի վերլուծության համար։ Մենք չենք վաճառում անձնական տվյալներ։ Դուք կարող եք խնդրել տվյալների ուղղում կամ հեռացում՝ կապվելով մեր պաշտոնական սոցիալական էջերի միջոցով։",
+      "BuddyLife-ը հավաքում է միայն վաղ հասանելիության գրանցման համար անհրաժեշտ տվյալները՝ անուն, կոնտակտ, օգտատիրոջ տեսակ և կամավոր տեղադրություն։ Տվյալներն օգտագործվում են մեկնարկի մասին կապի, ծառայության պլանավորման և անանուն պահանջարկի վերլուծության համար։ Ձեր առանձին համաձայնությամբ Meta Pixel-ը կարող է չափել էջերի դիտումները, կրթական նյութերի դիտումները և հաջող գրանցման փաստը՝ առանց գրանցման ձևում մուտքագրված անվան, հեռախոսի կամ էլ. հասցեի փոխանցման։ Չափումները կարող եք մերժել կամ փոխել կայքի «Չափումների կարգավորումներ» կոճակով։ Մենք չենք վաճառում անձնական տվյալներ։ Դուք կարող եք խնդրել տվյալների ուղղում կամ հեռացում՝ կապվելով մեր պաշտոնական սոցիալական էջերի միջոցով։",
     ],
     terms: [
       "Օգտագործման պայմաններ",
@@ -564,9 +748,10 @@ const legalContent = {
     contact: "Պաշտոնական կապ՝ BuddyLife Armenia-ի Instagram և Facebook էջերով։",
   },
   ru: {
+    brandEyebrow: "BUDDYLIFE АРМЕНИЯ",
     privacy: [
       "Политика конфиденциальности",
-      "BuddyLife собирает только данные, необходимые для ранней регистрации: имя, контакт, тип пользователя и необязательное местоположение. Они используются для связи о запуске, планирования сервиса и обезличенного анализа спроса. Мы не продаём персональные данные. Запросить исправление или удаление можно через наши официальные социальные страницы.",
+      "BuddyLife собирает только данные, необходимые для ранней регистрации: имя, контакт, тип пользователя и необязательное местоположение. Они используются для связи о запуске, планирования сервиса и обезличенного анализа спроса. С отдельного согласия Meta Pixel может измерять просмотры страниц и материалов, а также факт успешной регистрации, не передавая имя, телефон или email из формы. От аналитики можно отказаться или изменить выбор через кнопку «Настройки аналитики». Мы не продаём персональные данные. Запросить исправление или удаление можно через наши официальные социальные страницы.",
     ],
     terms: [
       "Условия использования",
@@ -580,9 +765,10 @@ const legalContent = {
       "Официальная связь — через страницы BuddyLife Armenia в Instagram и Facebook.",
   },
   en: {
+    brandEyebrow: "BUDDYLIFE ARMENIA",
     privacy: [
       "Privacy policy",
-      "BuddyLife collects only the information needed for early-access registration: name, contact details, audience type and optional location. We use it for launch communication, service planning and aggregated demand analysis. We do not sell personal data. You may request correction or deletion through our official social channels.",
+      "BuddyLife collects only the information needed for early-access registration: name, contact details, audience type and optional location. We use it for launch communication, service planning and aggregated demand analysis. With separate consent, Meta Pixel may measure page and educational-content views and whether a registration succeeded; it does not receive the name, phone number or email entered in the form. You can decline measurement or change your choice through the Measurement settings button. We do not sell personal data. You may request correction or deletion through our official social channels.",
     ],
     terms: [
       "Terms of use",
@@ -595,6 +781,7 @@ const legalContent = {
     contact:
       "Official contact is available through BuddyLife Armenia on Instagram and Facebook.",
   },
+  fa: persianLegalCopy,
 };
 const images = [
   "/banner-organized.webp",
@@ -606,6 +793,14 @@ const educationSlugs = [
   "summer-safety",
   "indoor-cat-enrichment",
   "everyday-pet-parent-problems",
+  "organize-pet-information-and-care-dates",
+  "weekly-pet-care-organization-routine",
+  "pet-care-handover-note",
+  "first-week-pet-information-starter-kit",
+  "five-minute-pet-admin-reset",
+  "what-to-do-when-pet-goes-missing",
+  "help-pet-when-guests-visit",
+  "moving-home-with-a-pet",
 ];
 const parentIcons = [
   HeartPulse,
@@ -629,7 +824,10 @@ function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
     document.documentElement.classList.add("isNavigating");
     window.setTimeout(() => document.documentElement.classList.remove("isNavigating"), 4000);
     window.setTimeout(() => {
-      window.location.href = new URL(href, window.location.origin).href;
+      const destination = new URL(href, window.location.origin);
+      const language = new URLSearchParams(window.location.search).get("lang") || localStorage.getItem("buddylife-lang");
+      if (language && tr[language as Lang]) destination.searchParams.set("lang", language);
+      window.location.assign(destination.href);
     }, 120);
   }
 }
@@ -646,6 +844,13 @@ function track(
   } catch {
     sessionId = "unavailable";
   }
+  const params = new URLSearchParams(window.location.search);
+  const attribution = {
+    source: params.get("utm_source") || "direct",
+    medium: params.get("utm_medium") || "none",
+    campaign: params.get("utm_campaign") || "none",
+    content: params.get("utm_content") || "none",
+  };
   fetch("/api/track", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -654,13 +859,13 @@ function track(
       page: window.location.pathname,
       language,
       audience,
-      metadata: { ...metadata, sessionId },
+      metadata: { ...attribution, ...metadata, sessionId },
     }),
     keepalive: true,
   }).catch(() => {});
 }
-export default function BuddyPage({ view }: { view: View }) {
-  const [lang, setLang] = useState<Lang>("hy"),
+export default function BuddyPage({ view, initialLang = "hy" }: { view: View; initialLang?: Lang }) {
+  const [lang, setLang] = useState<Lang>(initialLang),
     [slide, setSlide] = useState(0),
     [modal, setModal] = useState(false),
     [role, setRole] = useState<"parent" | "business">("parent"),
@@ -677,10 +882,17 @@ export default function BuddyPage({ view }: { view: View }) {
     window.addEventListener("popstate", clearNavigationState);
     const visible = () => { if (document.visibilityState === "visible") clearNavigationState(); };
     document.addEventListener("visibilitychange", visible);
-    const s = localStorage.getItem("buddylife-lang") as Lang | null;
+    const requested = new URLSearchParams(window.location.search).get("lang") as Lang | null;
+    const stored = localStorage.getItem("buddylife-lang") as Lang | null;
+    const s = requested && tr[requested] ? requested : stored;
     if (s && tr[s]) {
-      setLang(s);
+      queueMicrotask(() => setLang(s));
+      localStorage.setItem("buddylife-lang", s);
       document.documentElement.lang = s;
+      document.documentElement.dir = s === "fa" ? "rtl" : "ltr";
+    } else {
+      document.documentElement.lang = "hy";
+      document.documentElement.dir = "ltr";
     }
     fetch("/api/content")
       .then((r) => r.json())
@@ -706,7 +918,12 @@ export default function BuddyPage({ view }: { view: View }) {
   const change = (v: Lang) => {
     setLang(v);
     document.documentElement.lang = v;
+    document.documentElement.dir = v === "fa" ? "rtl" : "ltr";
     localStorage.setItem("buddylife-lang", v);
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set("lang", v);
+    window.history.replaceState({}, "", nextUrl);
+    window.dispatchEvent(new Event("buddylife:language"));
     track("language_changed", v, role);
   };
   const open = (r?: "parent" | "business") => {
@@ -737,7 +954,7 @@ export default function BuddyPage({ view }: { view: View }) {
   }, [lang, view]);
   const title = cms[`banner_${slide + 1}_${lang}`] || t.slides[slide][0];
   return (
-    <main id="main-content">
+    <main id="main-content" lang={lang} dir={lang === "fa" ? "rtl" : "ltr"}>
       <div className="routeLoader" aria-live="polite">
         <div className="loaderOrbit">
           <PawPrint />
@@ -769,7 +986,7 @@ export default function BuddyPage({ view }: { view: View }) {
             </div>
             <div className="carouselShade" />
             <div className="shell carouselCopy">
-              <p className="eyebrow">BUDDYLIFE ARMENIA</p>
+              <p className="eyebrow">{t.brandEyebrow}</p>
               <h1>{title}</h1>
               <p>{t.slides[slide][1]}</p>
               <button className="button" onClick={() => open()}>
@@ -778,7 +995,7 @@ export default function BuddyPage({ view }: { view: View }) {
               <div className="carouselDots">
                 {images.map((_, i) => (
                   <button
-                    aria-label={`Slide ${i + 1}`}
+                    aria-label={`${t.slideLabel} ${i + 1}`}
                     className={i === slide ? "active" : ""}
                     onClick={() => setSlide(i)}
                     key={i}
@@ -896,11 +1113,11 @@ function Header({
         <div className="languageMenu">
           <button
             className="languageTrigger"
-            aria-label="Change language"
+            aria-label={t.languageLabel}
             aria-expanded={languageOpen}
             onClick={() => setLanguageOpen(!languageOpen)}
           >
-            <span>{lang === "hy" ? "🇦🇲" : lang === "ru" ? "🇷🇺" : "🇬🇧"}</span>
+            <span>{lang === "hy" ? "🇦🇲" : lang === "ru" ? "🇷🇺" : lang === "fa" ? "🇮🇷" : "🇬🇧"}</span>
             <ChevronDown size={13} />
           </button>
           {languageOpen && (
@@ -910,6 +1127,7 @@ function Header({
                   ["hy", "🇦🇲", "Հայերեն"],
                   ["ru", "🇷🇺", "Русский"],
                   ["en", "🇬🇧", "English"],
+                  ["fa", "🇮🇷", "فارسی"],
                 ] as const
               ).map(([code, flag, label]) => (
                 <button
@@ -932,7 +1150,7 @@ function Header({
         </button>
         <button
           className="mobileMenuButton"
-          aria-label="Open menu"
+          aria-label={t.menuLabel}
           onClick={() => setMobileOpen(true)}
         >
           <Menu size={22} />
@@ -942,7 +1160,7 @@ function Header({
         <div className="mobileDrawer">
           <button
             className="drawerClose"
-            aria-label="Close menu"
+            aria-label={t.closeMenuLabel}
             onClick={() => setMobileOpen(false)}
           >
             <X />
@@ -984,6 +1202,7 @@ function Header({
                 ["hy", "🇦🇲"],
                 ["ru", "🇷🇺"],
                 ["en", "🇬🇧"],
+                ["fa", "🇮🇷"],
               ] as const
             ).map(([code, flag]) => (
               <button
@@ -1073,7 +1292,7 @@ function FeaturePreview({ t }: { t: any }) {
     <section className="section featurePreview">
       <div className="shell">
         <div className="sectionIntro centered">
-          <p className="eyebrow">BUDDYLIFE PRODUCT</p>
+          <p className="eyebrow">{t.productEyebrow}</p>
           <h2>{t.featureTitle}</h2>
           <p>{t.featureLead}</p>
         </div>
@@ -1110,7 +1329,7 @@ function TrustSection({ t }: { t: any }) {
     <section className="section trustSection">
       <div className="shell">
         <div className="sectionIntro centered">
-          <p className="eyebrow">BUDDYLIFE TRUST</p>
+          <p className="eyebrow">{t.trustEyebrow}</p>
           <h2>{t.verificationTitle}</h2>
           <p>{t.verificationLead}</p>
         </div>
@@ -1141,6 +1360,12 @@ function TrustSection({ t }: { t: any }) {
 function EducationShare({ title, slug, lang }: { title: string; slug: string; lang: Lang }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const labels = {
+    hy: { share: "Կիսվել", link: "Հղումը", copied: "Պատճենված է" },
+    ru: { share: "Поделиться", link: "Скопировать ссылку", copied: "Скопировано" },
+    en: { share: "Share", link: "Copy link", copied: "Copied" },
+    fa: { share: "اشتراک‌گذاری", link: "کپی پیوند", copied: "کپی شد" },
+  }[lang];
   const url = `https://buddylife.am/learn/${slug}?lang=${lang}`;
   const shareEvent = (channel: string) => vaTrack("education_article_shared", { channel, article: url });
   async function copyLink() {
@@ -1151,24 +1376,28 @@ function EducationShare({ title, slug, lang }: { title: string; slug: string; la
   }
   return (
     <div className={`cardShare ${open ? "open" : ""}`} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}>
-      <button type="button" className="cardShareTrigger" aria-label={`Կիսվել՝ ${title}`} aria-expanded={open} onClick={() => setOpen(!open)}><Share2 aria-hidden="true" /></button>
+      <button type="button" className="cardShareTrigger" aria-label={`${labels.share}: ${title}`} aria-expanded={open} onClick={() => setOpen(!open)}><Share2 aria-hidden="true" /></button>
       {open && <div className="cardShareMenu" role="menu">
         <a role="menuitem" href={`https://www.facebook.com/sharer/sharer.php?display=popup&u=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" onClick={() => shareEvent("facebook")}><span className="facebookMark">f</span><span>Facebook</span></a>
         <a role="menuitem" href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer" onClick={() => shareEvent("telegram")}><Send aria-hidden="true" /><span>Telegram</span></a>
-        <button type="button" role="menuitem" onClick={copyLink}><Link2 aria-hidden="true" /><span>{copied ? "Պատճենված է" : "Հղումը"}</span></button>
+        <button type="button" role="menuitem" onClick={copyLink}><Link2 aria-hidden="true" /><span>{copied ? labels.copied : labels.link}</span></button>
       </div>}
     </div>
   );
 }
-function EducationCards({ h, lang }: { h: any; lang: Lang }) {
+function EducationCards({ h, lang, newestFirst = false }: { h: any; lang: Lang; newestFirst?: boolean }) {
+  const cards = h.topics
+    .map((topic: any, index: number) => ({ topic, slug: educationSlugs[index] }));
+  const orderedCards = newestFirst ? cards.reverse() : cards;
+
   return (
     <div className="educationGrid">
-      {h.topics.map((topic: any, index: number) => (
+      {orderedCards.map(({ topic, slug }: { topic: any; slug: string }) => (
         <article
           className="educationCard"
           key={topic[1]}
         >
-          <a className="educationCardLink" href={`/learn/${educationSlugs[index]}?lang=${lang}`} aria-label={`${topic[1]} — ${h.read}`}>
+          <a className="educationCardLink" href={`/learn/${slug}?lang=${lang}`} aria-label={`${topic[1]} — ${h.read}`}>
             <div className="educationImage">
               <Image src={topic[3]} alt={topic[1]} fill sizes="(max-width: 760px) 100vw, 33vw" />
             </div>
@@ -1179,7 +1408,7 @@ function EducationCards({ h, lang }: { h: any; lang: Lang }) {
               <small><BookOpen size={15} /> {h.read}</small>
             </div>
           </a>
-          <EducationShare title={topic[1]} slug={educationSlugs[index]} lang={lang} />
+          <EducationShare title={topic[1]} slug={slug} lang={lang} />
         </article>
       ))}
     </div>
@@ -1207,7 +1436,7 @@ function EducationPreview({ h, lang }: { h: any; lang: Lang }) {
             {h.all} →
           </a>
         </div>
-        <EducationCards h={h} lang={lang} />
+        <EducationCards h={h} lang={lang} newestFirst />
       </div>
     </section>
   );
@@ -1223,7 +1452,7 @@ function LegalPage({
   return (
     <section className="legalPage">
       <div className="shell">
-        <p className="eyebrow">BUDDYLIFE ARMENIA</p>
+        <p className="eyebrow">{content.brandEyebrow}</p>
         <h1>{item[0]}</h1>
         <div className="legalCard">
           <p>{item[1]}</p>
@@ -1231,7 +1460,7 @@ function LegalPage({
           <p>{content.contact}</p>
           <div className="legalContacts">
             <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://www.facebook.com/people/BuddyLife-Armenia/61593562114437/" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.facebook.com/buddylifearmenia" target="_blank" rel="noopener noreferrer">
               Facebook
             </a>
           </div>
@@ -1255,7 +1484,7 @@ function EducationHub({ h, lang }: { h: any; lang: Lang }) {
           <div className="educationHeader compact">
             <h2>{h.latest}</h2>
           </div>
-          <EducationCards h={h} lang={lang} />
+          <EducationCards h={h} lang={lang} newestFirst />
           <div className="educationDisclaimer">
             <ShieldCheck size={22} />
             <p>{h.disclaimer}</p>
@@ -1270,7 +1499,7 @@ function Press({ t, open }: { t: any; open: () => void }) {
     <section className="pressBand">
       <div className="shell">
         <div>
-          <p className="eyebrow light">PRESS LAUNCH</p>
+          <p className="eyebrow light">{t.pressEyebrow}</p>
           <h2>{t.press}</h2>
         </div>
         <button className="button whiteButton" onClick={open}>
@@ -1336,7 +1565,7 @@ function Features({ t, open }: { t: any; open: () => void }) {
     <section className="innerPage">
       <div className="shell">
         <div className="pageIntro">
-          <p className="eyebrow">BUDDYLIFE PRODUCT</p>
+          <p className="eyebrow">{t.productEyebrow}</p>
           <h1>{t.featureTitle}</h1>
           <p className="lead">{t.featureLead}</p>
         </div>
@@ -1542,6 +1771,14 @@ function JoinModal({
     if (res.ok) {
       setSent(true);
       track("registration_completed", lang, role, { view });
+      window.dispatchEvent(new CustomEvent("buddylife:meta", {
+        detail: { name: "Lead", parameters: { content_category: role, content_name: view } },
+      }));
+      if (role === "business") {
+        window.dispatchEvent(new CustomEvent("buddylife:meta", {
+          detail: { name: "ProviderLead", custom: true, parameters: { content_name: view } },
+        }));
+      }
     }
   }
   return (
@@ -1565,17 +1802,17 @@ function JoinModal({
               <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">
                 Instagram
               </a>
-              <a href="https://www.facebook.com/people/BuddyLife-Armenia/61593562114437/" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.facebook.com/buddylifearmenia" target="_blank" rel="noopener noreferrer">
                 Facebook
               </a>
             </div>
             <button className="button" onClick={close}>
-              OK
+              {t.ok}
             </button>
           </div>
         ) : (
           <>
-            <p className="eyebrow">EARLY ACCESS</p>
+            <p className="eyebrow">{t.earlyAccess}</p>
             <h2 id="join-dialog-title">{t.join}</h2>
             <div className="eventInvite">
               <Image
@@ -1811,7 +2048,7 @@ function Footer({ t }: { t: any }) {
           </a>
         </div>
         <div className="footerColumn">
-          <b>Community</b>
+          <b>{t.communityLabel}</b>
           <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">
             <svg className="socialMiniIcon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -1820,14 +2057,14 @@ function Footer({ t }: { t: any }) {
             </svg>{" "}
             Instagram
           </a>
-          <a href="https://www.facebook.com/people/BuddyLife-Armenia/61593562114437/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.facebook.com/buddylifearmenia" target="_blank" rel="noopener noreferrer">
             <span className="facebookLetter">f</span> Facebook
           </a>
         </div>
         <div className="footerColumn footerStatus">
           <b>{t.launchStatus}</b>
           <span>
-            <i /> Early access preparation
+            <i /> {t.preparingLabel}
           </span>
           <p>{t.press}</p>
         </div>

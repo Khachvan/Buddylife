@@ -47,6 +47,22 @@ export default function AdminClient() {
   const conversion = joins
     ? `${Math.round((completions / joins) * 100)}%`
     : "—";
+  const campaignRows = Array.from(data.events.reduce((map: Map<string, any>, event: any) => {
+    const campaign = String(event.metadata?.campaign || "").trim();
+    if (!campaign || campaign === "none") return map;
+    const current = map.get(campaign) || { campaign, contentViews: new Set(), joins: new Set(), completions: new Set() };
+    const session = event.metadata?.sessionId || event.id;
+    if (event.eventType === "view_content") current.contentViews.add(session);
+    if (event.eventType === "join_opened") current.joins.add(session);
+    if (event.eventType === "registration_completed") current.completions.add(session);
+    map.set(campaign, current);
+    return map;
+  }, new Map()).values()).map((row: any) => ({
+    campaign: row.campaign,
+    contentViews: row.contentViews.size,
+    joins: row.joins.size,
+    completions: row.completions.size,
+  })).sort((a: any, b: any) => b.contentViews - a.contentViews || b.joins - a.joins);
   return (
     <main className="adminPage">
       <div className="adminTop">
@@ -89,8 +105,17 @@ export default function AdminClient() {
         </article>
       </section>
       <p className="adminMetricNote">Test records are excluded. Duplicate contacts count once. A join session is counted once per browser session.</p>
+      <section className="adminPanel">
+        <h2>Organic campaign funnel</h2>
+        <p>First-party Learn views, join openings and completed registrations grouped by campaign. Internal admin and backoffice page views are not included.</p>
+        <div className="adminTable">
+          <div className="tableRow tableHead"><span>Campaign</span><span>Learn views</span><span>Join opens</span><span>Completed</span></div>
+          {campaignRows.length ? campaignRows.map((row: any) => <div className="tableRow" key={row.campaign}><span>{row.campaign}</span><span>{row.contentViews}</span><span>{row.joins}</span><span>{row.completions}</span></div>) : <p className="adminEmpty">Campaign activity will appear after the updated tracking is live.</p>}
+        </div>
+      </section>
       {loadError && <section className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p><button type="button" onClick={() => window.location.reload()}>Reload</button></section>}
       <section className="adminRegistrationLinks">
+        <a href="/admin/qrs"><span>▦</span><div><b>QR sticker tracking</b><small>Assign venues and measure scans, visitors and registrations</small></div><strong>Open →</strong></a>
         <a href="/admin/seo"><span>↗</span><div><b>SEO performance</b><small>Indexing readiness, search visibility and Vercel performance</small></div><strong>Open →</strong></a>
         <a href="/admin/registrations/parents"><span>🐾</span><div><b>Pet parent registrations</b><small>Search, review locations and export contacts</small></div><strong>Open →</strong></a>
         <a href="/admin/registrations/businesses"><span>✦</span><div><b>Business registrations</b><small>Review business interest, categories and regions</small></div><strong>Open →</strong></a>

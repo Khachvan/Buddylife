@@ -10,6 +10,14 @@ const routes = [
   ["/learn/summer-safety", "monthly", 0.8],
   ["/learn/indoor-cat-enrichment", "monthly", 0.8],
   ["/learn/everyday-pet-parent-problems", "monthly", 0.85],
+  ["/learn/organize-pet-information-and-care-dates", "monthly", 0.85],
+  ["/learn/weekly-pet-care-organization-routine", "monthly", 0.85],
+  ["/learn/pet-care-handover-note", "monthly", 0.85],
+  ["/learn/first-week-pet-information-starter-kit", "monthly", 0.85],
+  ["/learn/five-minute-pet-admin-reset", "monthly", 0.85],
+  ["/learn/what-to-do-when-pet-goes-missing", "monthly", 0.9],
+  ["/learn/help-pet-when-guests-visit", "monthly", 0.85],
+  ["/learn/moving-home-with-a-pet", "monthly", 0.85],
   ["/verification", "monthly", 0.7],
   ["/privacy", "yearly", 0.3],
   ["/terms", "yearly", 0.3],
@@ -18,7 +26,7 @@ const routes = [
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map(([route, changeFrequency, priority]) => ({
     url: `https://buddylife.am${route}`,
-    lastModified: new Date("2026-08-26"),
+    lastModified: new Date("2026-09-23"),
     changeFrequency,
     priority,
   }));

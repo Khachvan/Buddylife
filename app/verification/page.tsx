@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
 import BuddyPage from "../site";
-
-export const metadata: Metadata = {
-  title: "Ինչպես է աշխատելու ստուգումը | BuddyLife Armenia",
-  description:
-    "BuddyLife-ի բիզնես պրոֆիլների ստուգման և շարունակական վստահության մոտեցումը։",
-  alternates: { canonical: "/verification" },
-};
-export default function Verification() {
-  return <BuddyPage view="verification" />;
+import { localizedMetadata, resolveLanguage } from "../language";
+type PageProps = { searchParams: Promise<{ lang?: string | string[] }> };
+export async function generateMetadata({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return localizedMetadata("verification", lang);
+}
+export default async function Verification({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return <BuddyPage view="verification" initialLang={lang} />;
 }

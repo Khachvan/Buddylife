@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
 import BuddyPage from "../site";
-export const metadata: Metadata = {
-  title: "Կրթական հարթակ | BuddyLife Armenia",
-  description:
-    "Կարճ, տեսողական և պատասխանատու նյութեր կենդանիների առողջության, անվտանգության և բարեկեցության մասին։",
-  alternates: { canonical: "/learn" },
-};
-export default function Learn() {
-  return <BuddyPage view="learn" />;
+import { localizedMetadata, resolveLanguage } from "../language";
+type PageProps = { searchParams: Promise<{ lang?: string | string[] }> };
+export async function generateMetadata({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return localizedMetadata("learn", lang);
+}
+export default async function Learn({ searchParams }: PageProps) {
+  const lang = resolveLanguage((await searchParams).lang);
+  return <BuddyPage view="learn" initialLang={lang} />;
 }
