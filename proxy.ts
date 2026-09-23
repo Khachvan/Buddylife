@@ -1,16 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validBackofficeSession } from "./lib/backoffice-auth";
+import { DEFAULT_LOCALE, isLocale, localePath, splitLocale } from "./lib/locale";
 
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const host = request.headers.get("host")?.split(":")[0] || "";
+  const isBackofficeHost = host === "backoffice.buddylife.am";
+  const isPublicAsset = /\.(?:avif|gif|ico|jpe?g|png|svg|webp)$/i.test(path);
+  const isStaticFile = /\.[a-z0-9]+$/i.test(path);
+  const { locale: pathLocale, path: barePath } = splitLocale(path);
+  // Locale handling applies to public pages only. The checks run on the path
+  // with any language prefix removed, so /ru/admin can never bypass auth below.
+  const isLocalizablePage =
+    !isBackofficeHost &&
+    !isStaticFile &&
+    !barePath.startsWith("/api/") &&
+    !barePath.startsWith("/_next/") &&
+    !barePath.startsWith("/q/") &&
+    !barePath.startsWith("/admin") &&
+    !barePath.startsWith("/backoffice") &&
+    !barePath.includes("/opengraph-image");
+
+  if (isLocalizablePage) {
+    const legacyLanguage = request.nextUrl.searchParams.get("lang");
+    const isRead = request.method === "GET" || request.method === "HEAD";
+
+    // /hy/... and legacy ?lang=xx links move permanently to the canonical path.
+    if (isRead && (pathLocale === DEFAULT_LOCALE || (legacyLanguage !== null && pathLocale === null))) {
+      const target = pathLocale === DEFAULT_LOCALE ? DEFAULT_LOCALE : isLocale(legacyLanguage) ? legacyLanguage : DEFAULT_LOCALE;
+      const destination = new URL(localePath(target, `${barePath}${request.nextUrl.search}`), request.url);
+      return NextResponse.redirect(destination, 308);
+    }
+
+    // /ru/learn is served by the /learn page with lang=ru.
+    if (pathLocale && pathLocale !== DEFAULT_LOCALE) {
+      const rewritten = request.nextUrl.clone();
+      rewritten.pathname = barePath;
+      rewritten.searchParams.set("lang", pathLocale);
+      const localizedHeaders = new Headers(request.headers);
+      localizedHeaders.set("x-buddylife-lang", pathLocale);
+      return NextResponse.rewrite(rewritten, { request: { headers: localizedHeaders } });
+    }
+  }
+
   const requestedLanguage = request.nextUrl.searchParams.get("lang");
-  const language = requestedLanguage === "ru" || requestedLanguage === "en" || requestedLanguage === "fa" ? requestedLanguage : "hy";
+  const language = isLocale(requestedLanguage) ? requestedLanguage : DEFAULT_LOCALE;
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-buddylife-lang", language);
   const continueRequest = () => NextResponse.next({ request: { headers: requestHeaders } });
-  const isBackofficeHost = host === "backoffice.buddylife.am";
-  const isPublicAsset = /\.(?:avif|gif|ico|jpe?g|png|svg|webp)$/i.test(path);
   const backofficePublic =
     path === "/backoffice" ||
     path === "/api/backoffice-login" ||
