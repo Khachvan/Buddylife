@@ -49,6 +49,10 @@ const articleTitles: Record<string, { title: string; label: string }> = {
     title: "Տեղափոխություն կենդանու հետ․ ինչպես պատրաստել ավելի հանգիստ առաջին օրը",
     label: "ԱՌՕՐՅԱ ԽՆԱՄՔ",
   },
+  "help-pet-adjust-to-changed-daily-routine": {
+    title: "Ինչպես օգնել կենդանուն հարմարվել փոխված օրվա ռեժիմին",
+    label: "ԱՌՕՐՅԱ ԽՆԱՄՔ",
+  },
 };
 
 export default async function OpenGraphImage({

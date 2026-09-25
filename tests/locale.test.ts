@@ -35,6 +35,7 @@ test("alternates and absolute URLs", () => {
 
 test("content dates are real per article", () => {
   assert.equal(articlePublished("what-to-do-when-pet-goes-missing"), "2026-09-23");
+  assert.equal(articlePublished("help-pet-adjust-to-changed-daily-routine"), "2026-09-25");
   assert.equal(articlePublished("preventive-care"), "2026-08-24");
-  assert.equal(newestArticleDate(), "2026-09-23");
+  assert.equal(newestArticleDate(), "2026-09-25");
 });

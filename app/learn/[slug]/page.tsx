@@ -316,6 +316,30 @@ const articleBase = {
       ["When to seek help", "If fear is intense, behaviour changes persist or your pet does not return to their usual routine, contact a veterinarian or qualified animal behaviour professional."],
     ] },
   },
+  "help-pet-adjust-to-changed-daily-routine": {
+    image: "/learn-help-pet-adjust-to-changed-daily-routine.jpg",
+    hy: { title: "Ինչպես օգնել կենդանուն հարմարվել փոխված օրվա ռեժիմին", description: "Հինգ պարզ քայլ՝ փոխված գրաֆիկի ընթացքում կենդանու համար ծանոթ վայրերն ու հանգիստ պահերը պահպանելու համար։", sections: [
+      ["1․ Նշիր՝ ինչն է փոխվում", "Գրիր՝ ով է այդ օրը հոգալու սնունդը, ջուրը, զբոսանքը կամ խաղը։ Եթե խնամքը փոխանցվում է մեկ ուրիշին, համաձայնեցրեք նույն պարզ հերթականությունը։"],
+      ["2․ Պահիր ծանոթ միջավայրը", "Ջրի ամանը, հանգստի վայրը և սիրելի իրերը թող մնան հասանելի։ Կատվի համար մի փոխիր զուգարանի տեղը միայն նոր գրաֆիկի պատճառով. շան համար նախապես կազմակերպիր զբոսանքի պատասխանատուին։"],
+      ["3․ Ժամերը փոխիր փոքր քայլերով", "Եթե կերակրման, զբոսանքի կամ խաղի ժամը պիտի փոխվի, հնարավորության դեպքում անցիր նոր ժամանակացույցին աստիճանաբար՝ պահպանելով կենդանու անհրաժեշտ խնամքը։ Մի փորձիր բոլոր սովորությունները փոխել նույն օրը։"],
+      ["4․ Թող լինի մեկ հանգիստ, ծանոթ պահ", "Կարճ խաղը կամ հանգիստ շփումը կարող են պահպանել ծանոթ կապը։ Թող կենդանին նաև հանգստանալու ընտրություն ունենա. մի ստիպիր շփվել կամ խաղալ։"],
+      ["5․ Դիտիր և հարմարեցրու", "Նկատիր՝ ինչն է օգնում, և փոխանցիր դիտարկումները խնամքին մասնակցող մարդկանց։ Եթե վարքի փոփոխությունը շարունակվում է կամ առողջության նշաններ են անհանգստացնում, դիմիր անասնաբույժի։"],
+    ] },
+    ru: { title: "Как помочь питомцу привыкнуть к изменившемуся распорядку", description: "Пять простых шагов, чтобы сохранить знакомые места и спокойные моменты, когда домашний график меняется.", sections: [
+      ["1. Уточните, что меняется", "Заранее договоритесь, кто отвечает за еду, воду, прогулку и спокойное общение. Если уход переходит другому человеку, согласуйте простой порядок действий."],
+      ["2. Сохраните знакомую обстановку", "Оставьте доступными воду, место отдыха и любимые предметы. Не переносите кошачий лоток только из-за нового расписания; для собаки заранее определите ответственного за прогулку."],
+      ["3. Меняйте время небольшими шагами", "Если возможно, сдвигайте кормление, прогулку или игру постепенно, не пропуская необходимый уход. Не меняйте все привычки в один день."],
+      ["4. Оставьте один спокойный знакомый момент", "Короткая игра или тихое общение могут сохранить знакомый ритм, если питомец сам готов. Не навязывайте контакт."],
+      ["5. Наблюдайте и корректируйте", "Делитесь наблюдениями со всеми, кто помогает ухаживать. Если изменения поведения сохраняются или появились тревожные признаки здоровья, обратитесь к ветеринару."],
+    ] },
+    en: { title: "Helping a pet adjust to a changed daily routine", description: "Five simple steps for keeping familiar places and calm moments when a household schedule changes.", sections: [
+      ["1. Name what is changing", "Agree who will handle food, water, walks, and calm interaction each day. If care is handed to someone else, share the same simple sequence."],
+      ["2. Keep familiar places available", "Preserve access to water, a resting spot, and favorite belongings. Do not move a cat’s litter box solely because your schedule changed; arrange a dog’s walk caregiver in advance."],
+      ["3. Shift timing in small steps", "When possible, move meals, walks, or play gradually while maintaining necessary care. Avoid changing every habit on the same day."],
+      ["4. Keep one calm, familiar moment", "A short game or quiet time together can preserve a familiar rhythm if your pet chooses to engage. Do not force interaction."],
+      ["5. Observe and adjust", "Share observations with everyone involved in care. Contact a veterinarian if a behavior change persists or a health sign worries you."],
+    ] },
+  },
   "moving-home-with-a-pet": {
     image: "/learn-moving-home-with-a-pet.jpg",
     hy: { title: "Տեղափոխություն կենդանու հետ․ ինչպես պատրաստել ավելի հանգիստ առաջին օրը", description: "Գործնական քայլեր՝ առաջին օրվա պայուսակը, անվտանգ տեղափոխումը և նոր տան հանգիստ տարածքը նախապես պատրաստելու համար։", sections: [

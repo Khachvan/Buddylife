@@ -14,6 +14,7 @@ export const ARTICLE_PUBLISHED: Record<string, string> = {
   "help-pet-when-guests-visit": "2026-09-16",
   "moving-home-with-a-pet": "2026-09-18",
   "what-to-do-when-pet-goes-missing": "2026-09-23",
+  "help-pet-adjust-to-changed-daily-routine": "2026-09-25",
 };
 
 // Last material copy change for the non-article pages.
