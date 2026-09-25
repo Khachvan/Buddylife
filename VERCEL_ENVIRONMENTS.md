@@ -1,6 +1,8 @@
 # BuddyLife Vercel environment and release process
 
-BuddyLife uses the existing Vercel project `buddylife-landing`, connected to the GitHub repository `Khachvan/buddylife-landing`.
+BuddyLife uses the existing Vercel project `buddylife-landing`, connected to the GitHub repository `Khachvan/Buddylife`. The Production branch is `main`.
+
+As of 2026-09-23, the repository connection is verified, but the last live Production deployment was made by CLI before this migration. Leave it serving until a Git-triggered Preview has passed human QA; then merge the verified branch to `main`. Do not make another CLI deployment or promote a CLI Preview as the normal release path.
 
 ## Environment model
 
@@ -37,7 +39,7 @@ The expected variables are documented in `.env.example`. Actual values belong in
 
 1. Create a branch from current `main`.
 2. Make and test changes locally.
-3. Run `pnpm lint` to review lint debt, then run the production-blocking `pnpm verify` build before pushing.
+3. Run `pnpm lint` to review lint debt, then run the production-blocking `pnpm check:release` build before pushing.
 4. Push the branch and open a pull request. Vercel Git integration creates a Preview deployment with its own URL.
 5. Validate the Preview URL:
    - home, Learn listing, and every changed Learn detail route;
@@ -49,23 +51,11 @@ The expected variables are documented in `.env.example`. Actual values belong in
 7. The merge to `main` creates the Production deployment and updates the production domains.
 8. Smoke-test `buddylife.am` and `backoffice.buddylife.am`; record the deployment URL and result.
 
-## Manual preview and controlled promotion
+## Git-only deployments
 
-BuddyLife QR QA uses the stable Preview-only alias `https://buddylife-qr-preview.vercel.app`. Point this alias to the newest verified Preview deployment after each QR release so administrators do not reuse immutable generated Preview URLs with obsolete environment snapshots.
+Create Preview deployments by pushing a non-`main` branch to `Khachvan/Buddylife`. Create Production deployments only by merging a human-approved, verified branch into `main`. Do not run `vercel deploy`, `vercel deploy --prod`, `vercel promote`, or the former `deploy:preview` and `release:promote` scripts for routine releases.
 
-For a local Preview deployment:
-
-```bash
-pnpm deploy:preview
-```
-
-For a release that must reuse the exact tested artifact, disable automatic production promotion in Vercel first, then promote the validated Preview URL:
-
-```bash
-pnpm release:promote -- https://validated-preview-url.vercel.app
-```
-
-Do not enable manual promotion casually: it changes the current Git-based release behavior and should be agreed before changing the Vercel project setting.
+BuddyLife QR QA uses the stable Preview-only alias `https://buddylife-qr-preview.vercel.app`. Point this alias to the newest verified Git Preview deployment after each QR release so administrators do not reuse immutable generated Preview URLs with obsolete environment snapshots. Reassigning a Preview alias is not a Production release.
 
 ## Rollback
 
