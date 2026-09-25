@@ -1,7 +1,9 @@
 import { ensureSchema, getSql } from "../../../lib/database";
 import { logEvent } from "../../../lib/logging";
+import { hasSameOrigin } from "../../../lib/request-security";
 
 export async function PATCH(request: Request) {
+  if (!hasSameOrigin(request)) return Response.json({ error: "Invalid request origin" }, { status: 403 });
   try {
     const body = await request.json();
     const id = String(body.id || "");

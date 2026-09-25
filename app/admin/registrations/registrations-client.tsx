@@ -4,9 +4,10 @@ import { Download, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 type Role = "parent" | "business";
+type Registration = Record<string, string | number | boolean | null | undefined> & { id: string; role: Role; isTest?: boolean };
 
 export default function RegistrationsClient({ audienceRole }: { audienceRole: Role }) {
-  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -17,7 +18,7 @@ export default function RegistrationsClient({ audienceRole }: { audienceRole: Ro
         if (!response.ok) throw new Error(`CMS service returned ${response.status}`);
         return response.json();
       })
-      .then((data) => setRegistrations((data.registrations || []).filter((item: any) => item.role === audienceRole)))
+      .then((data) => setRegistrations((data.registrations || []).filter((item: Registration) => item.role === audienceRole)))
       .catch(() => setLoadError("Registration data is temporarily unavailable. Please reload after the secure connection is restored."))
       .finally(() => setLoading(false));
   }, [audienceRole]);
@@ -83,7 +84,7 @@ export default function RegistrationsClient({ audienceRole }: { audienceRole: Ro
               <span><b>{audienceRole === "parent" ? item.name || "—" : item.businessName || "—"}</b><small>{audienceRole === "parent" ? item.petType || "Pet type not provided" : item.category || "Category not provided"}</small></span>
               <span>{item.email || item.phone || "—"}<small>{item.email && item.phone ? item.phone : ""}</small></span>
               <span>{[item.city, item.province].filter(Boolean).join(", ") || "—"}<small>{[item.qrSerial, item.qrVenue || item.venue, item.source, item.campaign].filter(Boolean).join(" · ") || "Direct"}</small></span>
-              <span><b className={item.isTest ? "statusTest" : "statusValid"}>{item.isTest ? "Test" : "Valid"}</b><small>{item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-GB") : "—"}</small><button className="registrationStatusButton" type="button" onClick={() => setTestStatus(item.id, !item.isTest)}>{item.isTest ? "Restore" : "Mark test"}</button></span>
+              <span><b className={item.isTest ? "statusTest" : "statusValid"}>{item.isTest ? "Test" : "Valid"}</b><small>{item.createdAt ? new Date(String(item.createdAt)).toLocaleDateString("en-GB") : "—"}</small><button className="registrationStatusButton" type="button" onClick={() => setTestStatus(item.id, !item.isTest)}>{item.isTest ? "Restore" : "Mark test"}</button></span>
             </div>
           ))}
         </div>

@@ -1,6 +1,6 @@
 # BuddyLife testing and model-routing guide
 
-Updated: 23 September 2026 (Asia/Yerevan)
+Updated: 25 September 2026 (Asia/Yerevan)
 
 ## Runtime and commands
 
@@ -10,7 +10,7 @@ Updated: 23 September 2026 (Asia/Yerevan)
 - Release gate: `pnpm check:release`.
 - Full legacy lint inventory: `pnpm lint`; this remains diagnostic until pre-existing repository-wide debt is resolved.
 
-The fast gate runs deterministic Node tests and focused lint for the critical acquisition/security modules. The release gate repeats the fast gate and then performs the full Next.js production build. A failed release gate blocks only the affected release.
+The fast gate runs deterministic Node tests and focused lint for the critical acquisition/security modules, including `lib/tracking.ts`. The release gate repeats the fast gate and then performs the full Next.js production build. A failed release gate blocks only the affected release.
 
 ## Covered behavior
 
@@ -18,7 +18,9 @@ The fast gate runs deterministic Node tests and focused lint for the critical ac
 - signed QR attribution round-trip, missing-secret fail-closed behavior and tamper detection;
 - public QR token constraints;
 - bot and device classification used by acquisition measurement;
-- same-origin mutation protection, including missing-origin and mismatched-origin failures;
+- same-origin mutation protection, including missing-origin and mismatched-origin failures (enforced centrally in `proxy.ts` for every backoffice mutation);
+- first-party tracking input sanitizing: only known event types, whitelisted metadata keys and bounded value lengths reach the database;
+- the public `/api/content` cache rule ordering in `next.config.ts`;
 - Next.js compilation, type checking and route generation through the production build.
 
 Fixtures are synthetic and local. Tests do not use Production registrations, customer contacts, publishing accounts, payment data or deployment secrets.

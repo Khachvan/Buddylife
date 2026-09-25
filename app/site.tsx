@@ -44,6 +44,10 @@ type View =
   | "privacy"
   | "terms"
   | "verification";
+type Role = "parent" | "business";
+type SiteCopy = (typeof tr)[Lang];
+type HubCopy = (typeof hub)[Lang];
+type LegalCopy = (typeof legalContent)[Lang];
 const tr = {
   hy: {
     nav: [
@@ -941,9 +945,11 @@ export default function BuddyPage({ view, initialLang = "hy" }: { view: View; in
     const params = new URLSearchParams(window.location.search);
     if (params.get("join") !== "parent") return;
     qrJoinHandled.current = true;
-    setRole("parent");
-    setSent(false);
-    setModal(true);
+    queueMicrotask(() => {
+      setRole("parent");
+      setSent(false);
+      setModal(true);
+    });
     track("join_opened", lang, "parent", {
       view,
       source: params.get("utm_source") || "qr",
@@ -1042,7 +1048,7 @@ function Header({
   join,
   view,
 }: {
-  t: any;
+  t: SiteCopy;
   lang: Lang;
   change: (v: Lang) => void;
   join: () => void;
@@ -1218,7 +1224,7 @@ function Header({
     </header>
   );
 }
-function AudienceSplit({ t, lang }: { t: any; lang: Lang }) {
+function AudienceSplit({ t, lang }: { t: SiteCopy; lang: Lang }) {
   return (
     <section className="audienceSplit shell">
       <article className="parentCard">
@@ -1286,7 +1292,7 @@ function AudienceSplit({ t, lang }: { t: any; lang: Lang }) {
     </section>
   );
 }
-function FeaturePreview({ t, lang }: { t: any; lang: Lang }) {
+function FeaturePreview({ t, lang }: { t: SiteCopy; lang: Lang }) {
   return (
     <section className="section featurePreview">
       <div className="shell">
@@ -1296,7 +1302,7 @@ function FeaturePreview({ t, lang }: { t: any; lang: Lang }) {
           <p>{t.featureLead}</p>
         </div>
         <div className="previewCards">
-          {t.parentCards.slice(0, 4).map((x: any, i: number) => (
+          {t.parentCards.slice(0, 4).map((x, i) => (
             <article key={x[0]}>
               <span>
                 {(() => {
@@ -1322,7 +1328,7 @@ function FeaturePreview({ t, lang }: { t: any; lang: Lang }) {
     </section>
   );
 }
-function TrustSection({ t, lang }: { t: any; lang: Lang }) {
+function TrustSection({ t, lang }: { t: SiteCopy; lang: Lang }) {
   const icons = [BadgeCheck, ShieldCheck, UsersRound];
   return (
     <section className="section trustSection">
@@ -1333,7 +1339,7 @@ function TrustSection({ t, lang }: { t: any; lang: Lang }) {
           <p>{t.verificationLead}</p>
         </div>
         <div className="trustGrid">
-          {t.verificationCards.map((card: string[], i: number) => {
+          {t.verificationCards.map((card, i) => {
             const Icon = icons[i];
             return (
               <article key={card[0]}>
@@ -1384,14 +1390,14 @@ function EducationShare({ title, slug, lang }: { title: string; slug: string; la
     </div>
   );
 }
-function EducationCards({ h, lang, newestFirst = false }: { h: any; lang: Lang; newestFirst?: boolean }) {
+function EducationCards({ h, lang, newestFirst = false }: { h: HubCopy; lang: Lang; newestFirst?: boolean }) {
   const cards = h.topics
-    .map((topic: any, index: number) => ({ topic, slug: educationSlugs[index] }));
+    .map((topic, index) => ({ topic, slug: educationSlugs[index] }));
   const orderedCards = newestFirst ? cards.reverse() : cards;
 
   return (
     <div className="educationGrid">
-      {orderedCards.map(({ topic, slug }: { topic: any; slug: string }) => (
+      {orderedCards.map(({ topic, slug }) => (
         <article
           className="educationCard"
           key={topic[1]}
@@ -1413,7 +1419,7 @@ function EducationCards({ h, lang, newestFirst = false }: { h: any; lang: Lang; 
     </div>
   );
 }
-function EducationPreview({ h, lang }: { h: any; lang: Lang }) {
+function EducationPreview({ h, lang }: { h: HubCopy; lang: Lang }) {
   return (
     <section className="section educationPreview">
       <div className="shell">
@@ -1445,7 +1451,7 @@ function LegalPage({
   content,
 }: {
   kind: "privacy" | "terms" | "verification";
-  content: any;
+  content: LegalCopy;
 }) {
   const item = content[kind];
   return (
@@ -1468,7 +1474,7 @@ function LegalPage({
     </section>
   );
 }
-function EducationHub({ h, lang }: { h: any; lang: Lang }) {
+function EducationHub({ h, lang }: { h: HubCopy; lang: Lang }) {
   return (
     <>
       <section className="hubHero">
@@ -1493,7 +1499,7 @@ function EducationHub({ h, lang }: { h: any; lang: Lang }) {
     </>
   );
 }
-function Press({ t, open }: { t: any; open: () => void }) {
+function Press({ t, open }: { t: SiteCopy; open: () => void }) {
   return (
     <section className="pressBand">
       <div className="shell">
@@ -1513,9 +1519,9 @@ function AudiencePage({
   t,
   open,
 }: {
-  type: "parent" | "business";
-  t: any;
-  open: (r: any) => void;
+  type: Role;
+  t: SiteCopy;
+  open: (r?: Role) => void;
 }) {
   const cards = type === "parent" ? t.parentCards : t.businessCards;
   const cardIcons = type === "parent" ? parentIcons : businessIcons;
@@ -1538,7 +1544,7 @@ function AudiencePage({
             <h2>{type === "parent" ? t.ownerTitle : t.businessTitle}</h2>
           </div>
           <div className="benefitGrid">
-            {cards.map((x: any, i: number) => (
+            {cards.map((x, i) => (
               <article key={x[0]}>
                 <span>
                   {(() => {
@@ -1558,7 +1564,7 @@ function AudiencePage({
     </>
   );
 }
-function Features({ t, open }: { t: any; open: () => void }) {
+function Features({ t, open }: { t: SiteCopy; open: () => void }) {
   const visible = t.parentCards.slice(0, 4);
   return (
     <section className="innerPage">
@@ -1569,7 +1575,7 @@ function Features({ t, open }: { t: any; open: () => void }) {
           <p className="lead">{t.featureLead}</p>
         </div>
         <div className="featureRoadmap">
-          {visible.map((x: any, i: number) => (
+          {visible.map((x, i) => (
             <article key={x[0]}>
               <span>
                 {(() => {
@@ -1613,7 +1619,7 @@ function VisualSelect({
   onChoose,
 }: {
   name: string;
-  options: string[];
+  options: readonly string[];
   onChoose: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -1671,9 +1677,9 @@ function JoinModal({
   lang,
   view,
 }: {
-  t: any;
-  role: "parent" | "business";
-  setRole: (r: any) => void;
+  t: SiteCopy;
+  role: Role;
+  setRole: (r: Role) => void;
   close: () => void;
   sent: boolean;
   setSent: (x: boolean) => void;
@@ -1981,7 +1987,7 @@ function JoinModal({
     </div>
   );
 }
-function Footer({ t, lang }: { t: any; lang: Lang }) {
+function Footer({ t, lang }: { t: SiteCopy; lang: Lang }) {
   return (
     <footer className="trustFooter">
       <div className="shell footerMain">

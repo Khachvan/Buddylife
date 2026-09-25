@@ -57,6 +57,10 @@ Create Preview deployments by pushing a non-`main` branch to `Khachvan/Buddylife
 
 BuddyLife QR QA uses the stable Preview-only alias `https://buddylife-qr-preview.vercel.app`. Point this alias to the newest verified Git Preview deployment after each QR release so administrators do not reuse immutable generated Preview URLs with obsolete environment snapshots. Reassigning a Preview alias is not a Production release.
 
+## Secret rotation
+
+Rotating `BACKOFFICE_*` or `QR_ATTRIBUTION_SECRET` values in Vercel does not change Git. Apply the new values with `vercel redeploy <current production deployment> --target production`, which rebuilds nothing and only restarts the already-verified build with the new environment. This is the one accepted CLI production action; it must never be used to deploy new code.
+
 ## Rollback
 
 If Production fails its smoke test, use Vercel's instant rollback and then investigate the failed change on a branch:
@@ -70,8 +74,6 @@ Rollback changes which deployment serves the production domains; it does not rev
 ## Required Vercel environment separation
 
 - `DATABASE_URL`: currently separated: Preview/Development use `buddylife-development-preview`; Production uses `buddylife-registrations`. Preserve this mapping.
-- `SITE_PIN`: separate non-production value; never reuse the production PIN in Preview.
-- `SITES_BYPASS_TOKEN`: scope tightly and rotate if exposed.
 - `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`: normally Production only unless Preview verification is explicitly needed.
 - `QR_ATTRIBUTION_SECRET`: a different high-entropy value in Development, Preview and Production. Rotating it expires existing anonymous QR attribution cookies but does not affect stored scans.
 - `QR_PUBLIC_BASE_URL`: `https://buddylife.am` in Production and `https://buddylife-qr-preview.vercel.app` in Preview. QR artwork, copied links and manifests must never derive their public destination from the backoffice request host.

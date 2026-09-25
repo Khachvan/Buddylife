@@ -19,4 +19,8 @@ test("every route gets the security header baseline and private areas are noinde
     assert.ok(rule, `${source} has private headers`);
     assert.ok(rule.headers.some((header) => header.key === "X-Robots-Tag" && header.value.includes("noindex")));
   }
+  const cms = rules.find((candidate) => candidate.source === "/api/content");
+  assert.ok(cms, "/api/content has its own cache rule");
+  assert.match(cms.headers.find((header) => header.key === "Cache-Control")?.value || "", /s-maxage=60/);
+  assert.ok(rules.indexOf(cms) > rules.indexOf(rules.find((rule) => rule.source === "/api/:path*")!), "cache rule comes after the private catch-all so it wins");
 });
