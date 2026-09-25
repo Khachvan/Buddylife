@@ -35,6 +35,7 @@ import { track as vaTrack } from "@vercel/analytics";
 import { persianHubCopy, persianLegalCopy, persianSiteCopy } from "./persian-copy";
 import type { Lang } from "./language";
 import { isLocale, localePath, localeUrl, splitLocale } from "../lib/locale";
+import type { PublicPost } from "../lib/posts";
 type View =
   | "home"
   | "features"
@@ -867,7 +868,7 @@ function track(
     keepalive: true,
   }).catch(() => {});
 }
-export default function BuddyPage({ view, initialLang = "hy" }: { view: View; initialLang?: Lang }) {
+export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { view: View; initialLang?: Lang; posts?: PublicPost[] }) {
   const [lang, setLang] = useState<Lang>(initialLang),
     [slide, setSlide] = useState(0),
     [modal, setModal] = useState(false),
@@ -1012,7 +1013,7 @@ export default function BuddyPage({ view, initialLang = "hy" }: { view: View; in
           <AudienceSplit t={t} lang={lang} />
           <FeaturePreview t={t} lang={lang} />
           <TrustSection t={t} lang={lang} />
-          <EducationPreview h={h} lang={lang} />
+          <EducationPreview h={h} lang={lang} posts={posts} />
           <Press t={t} open={open} />
         </>
       )}
@@ -1021,7 +1022,7 @@ export default function BuddyPage({ view, initialLang = "hy" }: { view: View; in
         <AudiencePage type="business" t={t} open={open} />
       )}{" "}
       {view === "features" && <Features t={t} open={open} />}
-      {view === "learn" && <EducationHub h={h} lang={lang} />}
+      {view === "learn" && <EducationHub h={h} lang={lang} posts={posts} />}
       {(view === "privacy" || view === "terms" || view === "verification") && (
         <LegalPage kind={view} content={legalContent[lang]} />
       )}
@@ -1390,13 +1391,31 @@ function EducationShare({ title, slug, lang }: { title: string; slug: string; la
     </div>
   );
 }
-function EducationCards({ h, lang, newestFirst = false }: { h: HubCopy; lang: Lang; newestFirst?: boolean }) {
+function EducationCards({ h, lang, posts = [], newestFirst = false }: { h: HubCopy; lang: Lang; posts?: PublicPost[]; newestFirst?: boolean }) {
   const cards = h.topics
     .map((topic, index) => ({ topic, slug: educationSlugs[index] }));
   const orderedCards = newestFirst ? cards.reverse() : cards;
+  // Posts written in the backoffice appear first, newest publish date at the top.
+  const cmsCards = posts.filter((post) => post.language === lang);
 
   return (
     <div className="educationGrid">
+      {cmsCards.map((post) => (
+        <article className="educationCard" key={post.id}>
+          <a className="educationCardLink" href={localePath(lang, `/learn/${post.slug}`)} aria-label={`${post.title} — ${h.read}`}>
+            <div className="educationImage">
+              <Image src={post.coverUrl} alt={post.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized={post.coverUrl.startsWith("/media/")} />
+            </div>
+            <div className="educationBody">
+              {post.category && <span className="topicTag">{post.category}</span>}
+              <h3>{post.title}</h3>
+              <p>{post.excerpt}</p>
+              <small><BookOpen size={15} /> {h.read}</small>
+            </div>
+          </a>
+          <EducationShare title={post.title} slug={post.slug} lang={lang} />
+        </article>
+      ))}
       {orderedCards.map(({ topic, slug }) => (
         <article
           className="educationCard"
@@ -1419,7 +1438,7 @@ function EducationCards({ h, lang, newestFirst = false }: { h: HubCopy; lang: La
     </div>
   );
 }
-function EducationPreview({ h, lang }: { h: HubCopy; lang: Lang }) {
+function EducationPreview({ h, lang, posts = [] }: { h: HubCopy; lang: Lang; posts?: PublicPost[] }) {
   return (
     <section className="section educationPreview">
       <div className="shell">
@@ -1441,7 +1460,7 @@ function EducationPreview({ h, lang }: { h: HubCopy; lang: Lang }) {
             {h.all} →
           </a>
         </div>
-        <EducationCards h={h} lang={lang} newestFirst />
+        <EducationCards h={h} lang={lang} posts={posts.slice(0, 3)} newestFirst />
       </div>
     </section>
   );
@@ -1474,7 +1493,7 @@ function LegalPage({
     </section>
   );
 }
-function EducationHub({ h, lang }: { h: HubCopy; lang: Lang }) {
+function EducationHub({ h, lang, posts = [] }: { h: HubCopy; lang: Lang; posts?: PublicPost[] }) {
   return (
     <>
       <section className="hubHero">
@@ -1489,7 +1508,7 @@ function EducationHub({ h, lang }: { h: HubCopy; lang: Lang }) {
           <div className="educationHeader compact">
             <h2>{h.latest}</h2>
           </div>
-          <EducationCards h={h} lang={lang} newestFirst />
+          <EducationCards h={h} lang={lang} posts={posts} newestFirst />
           <div className="educationDisclaimer">
             <ShieldCheck size={22} />
             <p>{h.disclaimer}</p>

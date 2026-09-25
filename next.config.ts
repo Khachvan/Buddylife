@@ -39,6 +39,12 @@ const privateHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Keep the hand-written AGENTS.md; do not let the dev server append generated rules.
+  agentRules: false,
+  // The local development database engine is loaded at runtime only; never bundle it.
+  serverExternalPackages: ["@electric-sql/pglite"],
+  // The backoffice applies drizzle/*.sql migrations at runtime, so ship them with that function.
+  outputFileTracingIncludes: { "/api/admin-database": ["./drizzle/**/*"] },
   async headers() {
     return [
       { source: "/:path*", headers: baseHeaders },

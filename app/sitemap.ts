@@ -1,6 +1,10 @@
 import type { MetadataRoute } from "next";
 import { ARTICLE_PUBLISHED, PAGE_UPDATED, newestArticleDate } from "../lib/content-dates";
 import { LOCALES, localeUrl } from "../lib/locale";
+import { loadPublicPosts } from "../lib/posts-store";
+
+// Re-read CMS posts at most once an hour so scheduled posts join the sitemap after they go live.
+export const revalidate = 3600;
 
 type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
 
@@ -19,8 +23,8 @@ const pages: Array<[route: string, changeFrequency: ChangeFrequency, priority: n
 ];
 
 // One entry per page per language, each listing all language versions (hreflang).
-export default function sitemap(): MetadataRoute.Sitemap {
-  return pages.flatMap(([route, changeFrequency, priority, lastModified]) => {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticEntries = pages.flatMap(([route, changeFrequency, priority, lastModified]) => {
     const href = route || "/";
     const languages = Object.fromEntries(LOCALES.map((locale) => [locale, localeUrl(locale, href)]));
     return LOCALES.map((locale) => ({
@@ -31,4 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: { languages: { ...languages, "x-default": localeUrl("hy", href) } },
     }));
   });
+  const posts = await loadPublicPosts();
+  const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: localeUrl(post.language, `/learn/${post.slug}`),
+    lastModified: new Date(post.publishAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+  return [...staticEntries, ...postEntries];
 }

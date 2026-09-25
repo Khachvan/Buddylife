@@ -7,6 +7,8 @@ import ArticleHeader from "./article-header";
 import ArticleViewTracker from "./article-view-tracker";
 import { localeAlternates, localePath, localeUrl } from "../../../lib/locale";
 import { articlePublished } from "../../../lib/content-dates";
+import { renderBody } from "../../../lib/posts";
+import { loadPublishedPost } from "../../../lib/posts-store";
 import { persianArticles, persianLearnUi } from "../../persian-copy";
 
 type Lang = "hy" | "ru" | "en" | "fa";
@@ -360,9 +362,16 @@ export function generateStaticParams() { return Object.keys(articles).map((slug)
 export async function generateMetadata({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ lang?: string }> }): Promise<Metadata> {
   const [{ slug }, query] = await Promise.all([params, searchParams]);
   const record = articles[slug as Slug];
-  if (!record) return {};
   const requestedLang = typeof query.lang === "string" ? query.lang : undefined;
-  const lang: Lang = validLang(requestedLang) ? requestedLang : "hy";
+  const requested: Lang = validLang(requestedLang) ? requestedLang : "hy";
+  if (!record) {
+    const post = await loadPublishedPost(slug, requested);
+    if (!post) return {};
+    const postLocale = post.language === "hy" ? "hy_AM" : post.language === "ru" ? "ru_RU" : post.language === "fa" ? "fa_IR" : "en_US";
+    const postUrl = localePath(post.language, `/learn/${slug}`);
+    return { title: `${post.title} | BuddyLife Armenia`, description: post.excerpt, alternates: { canonical: postUrl }, openGraph: { title: post.title, description: post.excerpt, type: "article", locale: postLocale, url: postUrl, images: [{ url: post.coverUrl || "/og.webp" }] }, twitter: { card: "summary_large_image", title: post.title, description: post.excerpt } };
+  }
+  const lang = requested;
   const article: Copy = record[lang];
   const locale = lang === "hy" ? "hy_AM" : lang === "ru" ? "ru_RU" : lang === "fa" ? "fa_IR" : "en_US";
   return { title: `${article.title} | BuddyLife Armenia`, description: article.description, alternates: { canonical: localePath(lang, `/learn/${slug}`), languages: localeAlternates(`/learn/${slug}`) }, openGraph: { title: article.title, description: article.description, type: "article", locale, url: localePath(lang, `/learn/${slug}`) }, twitter: { card: "summary_large_image", title: article.title, description: article.description } };
@@ -371,9 +380,14 @@ export async function generateMetadata({ params, searchParams }: { params: Promi
 export default async function LearnArticle({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [{ slug }, query] = await Promise.all([params, searchParams]);
   const record = articles[slug as Slug];
-  if (!record) notFound();
   const requestedLang = typeof query.lang === "string" ? query.lang : undefined;
-  const lang: Lang = validLang(requestedLang) ? requestedLang : "hy";
+  const requested: Lang = validLang(requestedLang) ? requestedLang : "hy";
+  if (!record) {
+    const post = await loadPublishedPost(slug, requested);
+    if (!post) notFound();
+    return <CmsArticle slug={slug} post={post} query={query} />;
+  }
+  const lang = requested;
   const article: Copy = record[lang];
   const labels = ui[lang];
   const joinParams = new URLSearchParams({ join: "parent" });
@@ -398,6 +412,42 @@ export default async function LearnArticle({ params, searchParams }: { params: P
         <Link className="button" href={localePath(lang, `/?${joinParams.toString()}`)}>{labels.cta}</Link>
       </section>
       <ArticleShare title={article.title} url={localizedUrl} lang={lang} />
+    </article>
+  </main></>;
+}
+
+type CmsPost = NonNullable<Awaited<ReturnType<typeof loadPublishedPost>>>;
+
+function CmsArticle({ slug, post, query }: { slug: string; post: CmsPost; query: Record<string, string | string[] | undefined> }) {
+  const lang = post.language;
+  const labels = ui[lang];
+  const joinParams = new URLSearchParams({ join: "parent" });
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
+    const value = query[key];
+    if (typeof value === "string" && value) joinParams.set(key, value);
+  }
+  joinParams.set("origin", `learn_${slug}`);
+  const localizedUrl = localeUrl(lang, `/learn/${slug}`);
+  const publishedAt = post.publishAt || post.createdAt;
+  const image = post.coverUrl || "/og.webp";
+  const schema = { "@context": "https://schema.org", "@type": "Article", headline: post.title, description: post.excerpt, image: `https://buddylife.am${image}`, inLanguage: lang, author: { "@type": "Organization", name: "BuddyLife Armenia" }, publisher: { "@id": "https://buddylife.am/#organization" }, mainEntityOfPage: localizedUrl, datePublished: publishedAt, dateModified: post.updatedAt || publishedAt, isAccessibleForFree: true };
+  const blocks = renderBody(post.body);
+  return <><ArticleHeader lang={lang} slug={slug} /><main className="articlePage" id="main-content" lang={lang} dir={lang === "fa" ? "rtl" : "ltr"}>
+    <ArticleViewTracker slug={slug} language={lang} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
+    <article className="articleShell">
+      <Link className="articleBack" href={localePath(lang, "/learn")}>← {labels.back}</Link>
+      <p className="eyebrow">{post.category || labels.eyebrow}</p><h1>{post.title}</h1>{post.excerpt && <p className="articleDeck">{post.excerpt}</p>}
+      <Image className="articleHero" src={image} alt={post.title} width={1200} height={800} priority unoptimized={image.startsWith("/media/")} />
+      <div className="articleBody">
+        {blocks.map((block, index) => block.type === "heading" ? <h2 key={index}>{block.text}</h2> : block.type === "list" ? <ul key={index}>{block.items.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}</ul> : <p key={index}>{block.text}</p>)}
+        <p className="articleDisclaimer">{labels.disclaimer}</p>
+      </div>
+      <section className="articleConversionCta" aria-labelledby="article-join-title">
+        <div><p className="eyebrow">{labels.ctaEyebrow}</p><h2 id="article-join-title">{labels.ctaTitle}</h2><p>{labels.ctaBody}</p></div>
+        <Link className="button" href={localePath(lang, `/?${joinParams.toString()}`)}>{labels.cta}</Link>
+      </section>
+      <ArticleShare title={post.title} url={localizedUrl} lang={lang} />
     </article>
   </main></>;
 }

@@ -51,6 +51,10 @@ The expected variables are documented in `.env.example`. Actual values belong in
 7. The merge to `main` creates the Production deployment and updates the production domains.
 8. Smoke-test `buddylife.am` and `backoffice.buddylife.am`; record the deployment URL and result.
 
+## Applying database migrations
+
+Schema changes are SQL files in `drizzle/`. They are additive and idempotent. After a deployment that ships a new migration, sign in to the backoffice of that environment and open **Database** (`/admin/database`): it lists every file with its applied date and offers **Apply pending**. Apply on Preview first, verify the feature there, then apply on Production right after the production merge. Applying a migration is a data change and needs the owner’s explicit go-ahead for Production, exactly like the QR guardrails require.
+
 ## Git-only deployments
 
 Create Preview deployments by pushing a non-`main` branch to `Khachvan/Buddylife`. Create Production deployments only by merging a human-approved, verified branch into `main`. Do not run `vercel deploy`, `vercel deploy --prod`, `vercel promote`, or the former `deploy:preview` and `release:promote` scripts for routine releases.
