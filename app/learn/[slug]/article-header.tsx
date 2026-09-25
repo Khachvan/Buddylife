@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { localePath } from "../../../lib/locale";
 
 type Lang = "hy" | "ru" | "en" | "fa";
 const copy = {
@@ -27,23 +28,23 @@ export default function ArticleHeader({ lang, slug }: { lang: Lang; slug: string
     return () => { document.documentElement.classList.remove("menuOpen"); document.body.style.position = ""; document.body.style.top = ""; document.body.style.width = ""; window.scrollTo(0, scrollY); };
   }, [mobileOpen]);
 
-  const changeLanguage = (next: Lang) => { localStorage.setItem("buddylife-lang", next); window.location.assign(`/learn/${slug}?lang=${next}`); };
+  const changeLanguage = (next: Lang) => { localStorage.setItem("buddylife-lang", next); window.location.assign(localePath(next, `/learn/${slug}`)); };
   return <header className="nav shell articleNav">
-    <Link className="brand" href={`/?lang=${lang}`} aria-label={t.home}><Image src="/buddylife-logo-clean.webp" alt="BuddyLife" width={132} height={132} priority /></Link>
-    <nav className="navLinks" aria-label={t.nav}>{t.links.map(([href, label]) => <Link key={href} href={`${href}?lang=${lang}`} className={href === "/learn" ? "active" : ""} aria-current={href === "/learn" ? "page" : undefined}>{label}</Link>)}</nav>
+    <Link className="brand" href={localePath(lang, "/")} aria-label={t.home}><Image src="/buddylife-logo-clean.webp" alt="BuddyLife" width={132} height={132} priority /></Link>
+    <nav className="navLinks" aria-label={t.nav}>{t.links.map(([href, label]) => <Link key={href} href={localePath(lang, href)} className={href === "/learn" ? "active" : ""} aria-current={href === "/learn" ? "page" : undefined}>{label}</Link>)}</nav>
     <div className="navRight">
       <div className="languageMenu">
         <button className="languageTrigger" aria-label={t.language} aria-expanded={languageOpen} onClick={() => setLanguageOpen(!languageOpen)}><span>{lang === "hy" ? "🇦🇲" : lang === "ru" ? "🇷🇺" : lang === "fa" ? "🇮🇷" : "🇬🇧"}</span><ChevronDown size={13} /></button>
         {languageOpen && <div className="languagePopover">{([ ["hy", "🇦🇲", "Հայերեն"], ["ru", "🇷🇺", "Русский"], ["en", "🇬🇧", "English"], ["fa", "🇮🇷", "فارسی"] ] as const).map(([code, flag, label]) => <button key={code} className={lang === code ? "active" : ""} onClick={() => changeLanguage(code)}><span>{flag}</span>{label}</button>)}</div>}
       </div>
-      <Link className="button buttonSmall" href={`/?join=parent&lang=${lang}`}>{t.join}</Link>
+      <Link className="button buttonSmall" href={localePath(lang, "/?join=parent")}>{t.join}</Link>
       <button className="mobileMenuButton" aria-label={t.menu} aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}><Menu size={22} /></button>
     </div>
     {mobileOpen && <div className="mobileDrawer">
       <button className="drawerClose" aria-label={t.close} onClick={() => setMobileOpen(false)}><X /></button>
       <Image src="/buddylife-logo-clean.webp" alt="BuddyLife" width={120} height={120} />
-      <nav aria-label={t.nav}>{t.links.map(([href, label]) => <Link key={href} href={`${href}?lang=${lang}`} className={href === "/learn" ? "active" : ""}>{label}</Link>)}</nav>
-      <Link className="button" href={`/?join=parent&lang=${lang}`}>{t.join}</Link>
+      <nav aria-label={t.nav}>{t.links.map(([href, label]) => <Link key={href} href={localePath(lang, href)} className={href === "/learn" ? "active" : ""}>{label}</Link>)}</nav>
+      <Link className="button" href={localePath(lang, "/?join=parent")}>{t.join}</Link>
       <div className="drawerLanguages">{([ ["hy", "🇦🇲"], ["ru", "🇷🇺"], ["en", "🇬🇧"], ["fa", "🇮🇷"] ] as const).map(([code, flag]) => <button key={code} className={lang === code ? "active" : ""} onClick={() => changeLanguage(code)}>{flag} {code.toUpperCase()}</button>)}</div>
     </div>}
   </header>;

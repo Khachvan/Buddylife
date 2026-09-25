@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import ArticleShare from "./article-share";
 import ArticleHeader from "./article-header";
 import ArticleViewTracker from "./article-view-tracker";
+import { localeAlternates, localePath, localeUrl } from "../../../lib/locale";
+import { articlePublished } from "../../../lib/content-dates";
 import { persianArticles, persianLearnUi } from "../../persian-copy";
 
 type Lang = "hy" | "ru" | "en" | "fa";
@@ -363,7 +365,7 @@ export async function generateMetadata({ params, searchParams }: { params: Promi
   const lang: Lang = validLang(requestedLang) ? requestedLang : "hy";
   const article: Copy = record[lang];
   const locale = lang === "hy" ? "hy_AM" : lang === "ru" ? "ru_RU" : lang === "fa" ? "fa_IR" : "en_US";
-  return { title: `${article.title} | BuddyLife Armenia`, description: article.description, alternates: { canonical: `/learn/${slug}?lang=${lang}`, languages: { hy: `/learn/${slug}?lang=hy`, ru: `/learn/${slug}?lang=ru`, en: `/learn/${slug}?lang=en`, fa: `/learn/${slug}?lang=fa` } }, openGraph: { title: article.title, description: article.description, type: "article", locale, url: `/learn/${slug}?lang=${lang}` }, twitter: { card: "summary_large_image", title: article.title, description: article.description } };
+  return { title: `${article.title} | BuddyLife Armenia`, description: article.description, alternates: { canonical: localePath(lang, `/learn/${slug}`), languages: localeAlternates(`/learn/${slug}`) }, openGraph: { title: article.title, description: article.description, type: "article", locale, url: localePath(lang, `/learn/${slug}`) }, twitter: { card: "summary_large_image", title: article.title, description: article.description } };
 }
 
 export default async function LearnArticle({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
@@ -374,26 +376,26 @@ export default async function LearnArticle({ params, searchParams }: { params: P
   const lang: Lang = validLang(requestedLang) ? requestedLang : "hy";
   const article: Copy = record[lang];
   const labels = ui[lang];
-  const joinParams = new URLSearchParams({ join: "parent", lang });
+  const joinParams = new URLSearchParams({ join: "parent" });
   for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
     const value = query[key];
     if (typeof value === "string" && value) joinParams.set(key, value);
   }
   joinParams.set("origin", `learn_${slug}`);
-  const localizedUrl = `https://buddylife.am/learn/${slug}?lang=${lang}`;
-  const publicationDate = slug === "what-to-do-when-pet-goes-missing" ? "2026-09-23" : slug === "moving-home-with-a-pet" ? "2026-09-18" : slug === "help-pet-when-guests-visit" ? "2026-09-16" : slug === "five-minute-pet-admin-reset" ? "2026-09-11" : slug === "first-week-pet-information-starter-kit" ? "2026-09-09" : slug === "pet-care-handover-note" ? "2026-09-06" : slug === "weekly-pet-care-organization-routine" ? "2026-08-30" : slug === "organize-pet-information-and-care-dates" ? "2026-08-28" : slug === "everyday-pet-parent-problems" ? "2026-08-26" : "2026-08-24";
+  const localizedUrl = localeUrl(lang, `/learn/${slug}`);
+  const publicationDate = articlePublished(slug);
   const schema = { "@context": "https://schema.org", "@type": "Article", headline: article.title, description: article.description, image: `https://buddylife.am${record.image}`, inLanguage: lang, author: { "@type": "Organization", name: "BuddyLife Armenia" }, publisher: { "@id": "https://buddylife.am/#organization" }, mainEntityOfPage: localizedUrl, datePublished: publicationDate, dateModified: publicationDate, isAccessibleForFree: true };
   return <><ArticleHeader lang={lang} slug={slug} /><main className="articlePage" id="main-content" lang={lang} dir={lang === "fa" ? "rtl" : "ltr"}>
     <ArticleViewTracker slug={slug} language={lang} />
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
     <article className="articleShell">
-      <Link className="articleBack" href={`/learn?lang=${lang}`}>← {labels.back}</Link>
+      <Link className="articleBack" href={localePath(lang, "/learn")}>← {labels.back}</Link>
       <p className="eyebrow">{labels.eyebrow}</p><h1>{article.title}</h1><p className="articleDeck">{article.description}</p>
       <Image className="articleHero" src={record.image} alt={article.title} width={1200} height={800} priority />
       <div className="articleBody">{article.sections.map(([heading, body]) => <section key={heading}><h2>{heading}</h2><p>{body}</p></section>)}<p className="articleDisclaimer">{labels.disclaimer}</p></div>
       <section className="articleConversionCta" aria-labelledby="article-join-title">
         <div><p className="eyebrow">{labels.ctaEyebrow}</p><h2 id="article-join-title">{labels.ctaTitle}</h2><p>{labels.ctaBody}</p></div>
-        <Link className="button" href={`/?${joinParams.toString()}`}>{labels.cta}</Link>
+        <Link className="button" href={localePath(lang, `/?${joinParams.toString()}`)}>{labels.cta}</Link>
       </section>
       <ArticleShare title={article.title} url={localizedUrl} lang={lang} />
     </article>
