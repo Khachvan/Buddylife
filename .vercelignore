@@ -1,0 +1,18 @@
+# Never upload local-only files when deploying from a local CLI.
+# Git deployments already exclude these via .gitignore; this is a safety net.
+.env*
+!.env.example
+.vercel
+.next
+.vinext
+node_modules
+dist
+out
+.wrangler
+outputs
+work
+coverage
+*.tsbuildinfo
+*.pem
+.DS_Store
+.openai
