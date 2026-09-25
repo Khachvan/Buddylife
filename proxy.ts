@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validBackofficeSession } from "./lib/backoffice-auth";
+import { hasSameOrigin } from "./lib/request-security";
 import { DEFAULT_LOCALE, isLocale, localePath, splitLocale } from "./lib/locale";
 
 export function proxy(request: NextRequest) {
@@ -57,6 +58,15 @@ export function proxy(request: NextRequest) {
     path.startsWith("/admin/") ||
     path.startsWith("/api/admin-") ||
     path === "/api/seo-health";
+
+  // Every state-changing backoffice request must come from the page itself.
+  const isMutation = !["GET", "HEAD", "OPTIONS"].includes(request.method);
+  if (
+    isMutation &&
+    (isBackofficeHost || backofficeProtected || path === "/api/backoffice-login") &&
+    !hasSameOrigin(request)
+  )
+    return NextResponse.json({ error: "Invalid request origin" }, { status: 403 });
 
   if (isBackofficeHost && path.startsWith("/q/")) {
     const publicQrUrl = new URL(path, "https://buddylife.am");

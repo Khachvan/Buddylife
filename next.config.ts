@@ -46,6 +46,15 @@ const nextConfig: NextConfig = {
       { source: "/admin", headers: privateHeaders },
       { source: "/admin/:path*", headers: privateHeaders },
       { source: "/api/:path*", headers: privateHeaders },
+      // The public CMS banner read is safe to cache at the edge for a minute.
+      {
+        source: "/api/content",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=60, stale-while-revalidate=300" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      },
       // Everything served from the backoffice subdomain is private.
       {
         source: "/:path*",

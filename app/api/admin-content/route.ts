@@ -1,5 +1,6 @@
 import { ensureSchema, getSql } from "../../../lib/database";
 import { logEvent } from "../../../lib/logging";
+import { hasSameOrigin } from "../../../lib/request-security";
 
 export async function GET() {
   try {
@@ -46,6 +47,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!hasSameOrigin(request)) return Response.json({ error: "Invalid request origin" }, { status: 403 });
   try {
     const { key, value } = await request.json();
     const safeKey = String(key || "").trim();

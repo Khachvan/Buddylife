@@ -2,12 +2,17 @@ import { ensureSchema, getSql } from "../../../lib/database";
 import { logEvent } from "../../../lib/logging";
 import { cookies } from "next/headers";
 import { decodeScanReference, QR_LAST_COOKIE } from "../../../lib/qr-attribution";
+import { MAX_TRACKING_BODY_BYTES, sanitizeTrackingEvent } from "../../../lib/tracking";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const eventType = String(body.eventType || "").trim();
-    if (!eventType) return Response.json({ error: "Missing event type" }, { status: 400 });
+    const declaredLength = Number(request.headers.get("content-length") || 0);
+    if (declaredLength > MAX_TRACKING_BODY_BYTES) return Response.json({ error: "Event too large" }, { status: 413 });
+    const raw = await request.text();
+    if (raw.length > MAX_TRACKING_BODY_BYTES) return Response.json({ error: "Event too large" }, { status: 413 });
+    const event = sanitizeTrackingEvent(JSON.parse(raw));
+    if (!event) return Response.json({ error: "Unsupported event" }, { status: 400 });
+
     await ensureSchema();
     const sql = getSql();
     const jar = await cookies();
@@ -30,10 +35,9 @@ export async function POST(request: Request) {
         trustedQrMetadata = {};
       }
     }
-    const safeMetadata = body.metadata && typeof body.metadata === "object" ? body.metadata : {};
     await sql`
       INSERT INTO analytics_events (id, event_type, page, language, audience, metadata)
-      VALUES (${crypto.randomUUID()}, ${eventType}, ${String(body.page || "") || null}, ${String(body.language || "") || null}, ${String(body.audience || "") || null}, ${JSON.stringify({ ...safeMetadata, ...trustedQrMetadata })}::jsonb)
+      VALUES (${crypto.randomUUID()}, ${event.eventType}, ${event.page}, ${event.language}, ${event.audience}, ${JSON.stringify({ ...event.metadata, ...trustedQrMetadata })}::jsonb)
     `;
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {

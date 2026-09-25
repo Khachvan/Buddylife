@@ -9,7 +9,9 @@ export default function ArticleViewTracker({ slug, language }: { slug: string; l
     try {
       sessionId = sessionStorage.getItem("buddylife_session") || crypto.randomUUID();
       sessionStorage.setItem("buddylife_session", sessionId);
-    } catch {}
+    } catch {
+      // sessionStorage can be unavailable in private browsing; the view still counts.
+    }
 
     fetch("/api/track", {
       method: "POST",
