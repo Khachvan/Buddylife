@@ -18,6 +18,7 @@ export function proxy(request: NextRequest) {
     !barePath.startsWith("/api/") &&
     !barePath.startsWith("/_next/") &&
     !barePath.startsWith("/q/") &&
+    !barePath.startsWith("/media/") &&
     !barePath.startsWith("/admin") &&
     !barePath.startsWith("/backoffice") &&
     !barePath.includes("/opengraph-image");

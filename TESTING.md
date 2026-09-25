@@ -21,6 +21,9 @@ The fast gate runs deterministic Node tests and focused lint for the critical ac
 - same-origin mutation protection, including missing-origin and mismatched-origin failures (enforced centrally in `proxy.ts` for every backoffice mutation);
 - first-party tracking input sanitizing: only known event types, whitelisted metadata keys and bounded value lengths reach the database;
 - the public `/api/content` cache rule ordering in `next.config.ts`;
+- CMS post helpers: slug rules, draft/scheduled/live/archived state from status and publish time, body rendering, input validation;
+- media upload validation, safe file names and header-based image dimensions;
+- migration file statement splitting;
 - Next.js compilation, type checking and route generation through the production build.
 
 Fixtures are synthetic and local. Tests do not use Production registrations, customer contacts, publishing accounts, payment data or deployment secrets.
@@ -40,9 +43,13 @@ Fixtures are synthetic and local. Tests do not use Production registrations, cus
 
 `.github/workflows/quality.yml` is configured for pull requests and pushes to `main`, with read-only repository permissions, locked dependency installation and a 15-minute job timeout. Configuration in the working tree is not proof that remote CI ran or that branch protection requires it. Remote execution and required-check enforcement remain pending until the owner’s normal commit/push/repository-settings workflow activates them.
 
+## Local end-to-end harness
+
+Set `DATABASE_URL=pglite:.data/pglite` plus test `BACKOFFICE_*` hashes and QR secrets in `.env.local`, run `pnpm dev`, sign in at `/backoffice`, and apply migrations from `/admin/database`. This gives a complete local database for exercising posts, scheduling, media uploads, QR creation, the `/q/<token>` redirect, form-open tracking and attributed registration without touching Neon. Verified on 25 September 2026: migrations 0000 to 0004 applied, image upload and serving, scheduled post going live at its publish time, QR scan → registration attribution with venue and serial recorded, printable SVG encoding the configured public origin.
+
 ## Known gaps
 
-- no isolated integration database harness for registration persistence and attribution joins;
+- the PGlite harness is manual; CI still runs only the deterministic unit tests and the build;
 - no automated browser test for consent choice, Learn CTA UTM preservation, form validation, success/recovery UI or backoffice-host redirects;
 - no automated rendered-image safe-zone/readability test;
 - repository-wide lint has substantial pre-existing debt, so the blocking lint scope is intentionally focused and must not silently expand without a cleanup plan;

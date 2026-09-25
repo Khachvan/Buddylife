@@ -40,3 +40,9 @@ yarn-error.log*
 /outputs/
 /work/
 *.tsbuildinfo
+
+# local editor/agent config
+/.claude/
+
+# local PGlite development database
+/.data/

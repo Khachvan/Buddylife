@@ -17,6 +17,27 @@ banner copy, early registrations and venue QR stickers.
 - Node.js 22.13 or newer (CI uses Node 24)
 - pnpm 11 (`corepack enable` picks the version from `package.json`)
 
+## Backoffice
+
+The backoffice at `backoffice.buddylife.am` (locally `/backoffice`) is protected by the
+`BACKOFFICE_*` environment variables and offers:
+
+- **Posts** (`/admin/posts`): write Learn articles in Armenian, Russian, English or Persian, keep
+  them as drafts, publish immediately, schedule a publish date and time, or archive them. Scheduled
+  posts go live on their own at the chosen time and appear on the Learn hub, the home page preview,
+  their own `/learn/<slug>` page and the sitemap.
+- **Media library** (`/admin/media`): upload JPEG, PNG, WebP or GIF images up to 4 MB. Files are
+  stored in the database and served from `/media/<id>` with long CDN caching.
+- **Banner copy** (`/admin`): the rotating home-page headlines per language.
+- **Registrations** (`/admin/registrations/*`): early-access sign-ups with CSV export and test
+  flags.
+- **QR sticker tracking** (`/admin/qrs`): create QR codes on the rectangle, circle or paw artwork,
+  assign them to venues, download print-ready SVGs, and see scans, visitors, form opens and
+  attributed registrations per sticker.
+- **Database** (`/admin/database`): environment, connected Neon host, table counts, and a
+  one-click way to apply pending SQL migrations from `drizzle/`, with links to the Vercel storage
+  and Neon dashboards.
+
 ## Local development
 
 ```bash
@@ -26,6 +47,10 @@ pnpm dev
 ```
 
 `.env.example` lists every variable the app reads. Never commit `.env.local`.
+
+Without access to Neon, set `DATABASE_URL=pglite:.data/pglite` in `.env.local`. The app then runs
+PGlite, a file-based Postgres engine, in-process; open `/admin/database` and apply the migrations to
+create every table. The `.data/` folder is gitignored and PGlite is never bundled into deployments.
 
 ## Checks
 
@@ -46,11 +71,11 @@ rollback are in [VERCEL_ENVIRONMENTS.md](./VERCEL_ENVIRONMENTS.md); testing rule
 ## Project layout
 
 - `app/` routes, layouts and the client site component (`app/site.tsx` holds the multilingual copy)
-- `app/api/` public endpoints (`register`, `track`, `content`) and backoffice endpoints (`admin-*`)
+- `app/api/` public endpoints (`register`, `track`, `content`) and backoffice endpoints (`admin-*`); `app/media/[id]` serves uploaded images
 - `app/q/[token]` QR sticker redirect with signed attribution cookies
-- `lib/` auth, database, locale, QR attribution, QR image rendering and tracking helpers
+- `lib/` auth, database (Neon plus the local PGlite adapter), migrations, posts, media, locale, QR attribution, QR image rendering and tracking helpers
 - `proxy.ts` locale rewrites, backoffice session and same-origin enforcement
-- `drizzle/` ordered SQL migrations applied with `pnpm db:migrate`
+- `drizzle/` ordered SQL migrations, applied from `/admin/database` or with `pnpm db:migrate`
 - `scripts/` image rendering and migration utilities
 
 ## Further reading

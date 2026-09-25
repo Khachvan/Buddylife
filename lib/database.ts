@@ -1,10 +1,36 @@
-import { neon } from "@neondatabase/serverless";
+import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
+import { createLocalSql } from "./database-local";
+
+export type Sql = NeonQueryFunction<false, false>;
 
 let schemaReady: Promise<void> | null = null;
+let localSql: Sql | null = null;
 
-export function getSql() {
+const LOCAL_PREFIX = "pglite:";
+
+export function isLocalDatabase() {
+  return (process.env.DATABASE_URL || "").startsWith(LOCAL_PREFIX);
+}
+
+/** Host name of the configured database, never the credentials. */
+export function databaseHost() {
+  const url = process.env.DATABASE_URL || "";
+  if (!url) return null;
+  if (url.startsWith(LOCAL_PREFIX)) return "PGlite (local development engine)";
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return "unrecognised connection string";
+  }
+}
+
+export function getSql(): Sql {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not configured");
+  if (url.startsWith(LOCAL_PREFIX)) {
+    if (!localSql) localSql = createLocalSql(url.slice(LOCAL_PREFIX.length)) as unknown as Sql;
+    return localSql;
+  }
   return neon(url);
 }
 
