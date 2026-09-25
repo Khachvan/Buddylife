@@ -2442,61 +2442,6 @@ button {
   outline: 3px solid rgba(111, 66, 193, 0.38);
   outline-offset: 3px;
 }
-.accessPage {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: radial-gradient(circle at top, #f2e8fb, #fff 58%, #fdeaf3);
-}
-.accessCard {
-  width: min(480px, 100%);
-  padding: 42px;
-  text-align: center;
-  border: 1px solid #e8deed;
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 30px 90px rgba(45, 22, 63, 0.14);
-}
-.accessCard img {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-}
-.accessCard h1 {
-  margin: 4px 0 12px;
-  font-size: 42px;
-}
-.accessCard > p:not(.eyebrow) {
-  color: var(--muted);
-  line-height: 1.6;
-}
-.accessCard form,
-.accessCard label {
-  display: grid;
-  gap: 10px;
-  text-align: left;
-}
-.accessCard form {
-  margin-top: 26px;
-}
-.accessCard input {
-  border: 1px solid #dcd1e3;
-  border-radius: 14px;
-  padding: 14px 15px;
-  font: inherit;
-}
-.accessCard button {
-  border: 0;
-  cursor: pointer;
-  margin-top: 8px;
-}
-.accessError {
-  color: #b42318;
-  margin: 0;
-  font-size: 13px;
-  font-weight: 750;
-}
 .infoHint [role="tooltip"] {
   position: absolute;
   z-index: 5;
