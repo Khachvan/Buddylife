@@ -558,6 +558,12 @@ const hub = {
         "Պատրաստիր առաջին օրվա պայուսակը, անվտանգ տեղափոխումը և նոր տան հանգիստ տարածքը նախապես։",
         "/learn-moving-home-with-a-pet.jpg",
       ],
+      [
+        "Առօրյա խնամք",
+        "Ինչպես օգնել կենդանուն հարմարվել փոխված օրվա ռեժիմին",
+        "Պահիր ծանոթ վայրերը, փոխիր ժամերը փոքր քայլերով և թող օրվա մեջ մեկ հանգիստ պահ։",
+        "/learn-help-pet-adjust-to-changed-daily-routine.jpg",
+      ],
     ],
   },
   ru: {
@@ -641,6 +647,12 @@ const hub = {
         "Переезд с питомцем: как подготовить более спокойный первый день",
         "Заранее соберите сумку первого дня, организуйте безопасный переезд и подготовьте тихое место в новом доме.",
         "/learn-moving-home-with-a-pet.jpg",
+      ],
+      [
+        "Повседневный уход",
+        "Как помочь питомцу привыкнуть к изменившемуся распорядку",
+        "Сохраните знакомые места, меняйте время небольшими шагами и оставьте один спокойный момент.",
+        "/learn-help-pet-adjust-to-changed-daily-routine.jpg",
       ],
     ],
   },
@@ -726,6 +738,12 @@ const hub = {
         "Pack a first-day bag, manage the move safely and prepare one quiet space in the new home.",
         "/learn-moving-home-with-a-pet.jpg",
       ],
+      [
+        "Everyday care",
+        "Helping a pet adjust to a changed daily routine",
+        "Keep familiar places, shift timing in small steps, and preserve one calm moment.",
+        "/learn-help-pet-adjust-to-changed-daily-routine.jpg",
+      ],
     ],
   },
   fa: persianHubCopy,
@@ -801,6 +819,7 @@ const educationSlugs = [
   "what-to-do-when-pet-goes-missing",
   "help-pet-when-guests-visit",
   "moving-home-with-a-pet",
+  "help-pet-adjust-to-changed-daily-routine",
 ];
 const parentIcons = [
   HeartPulse,
