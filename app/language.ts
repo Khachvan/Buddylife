@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeAlternates, localePath } from "../lib/locale";
 
 export type Lang = "hy" | "ru" | "en" | "fa";
 export type PublicView = "home" | "features" | "owners" | "business" | "learn" | "privacy" | "terms" | "verification";
@@ -75,20 +76,15 @@ export function localizedMetadata(view: PublicView, lang: Lang): Metadata {
           ? ["مراقبت از حیوانات در ارمنستان", "خدمات حیوانات در ایروان", "BuddyLife Armenia"]
           : ["pet care Armenia", "pet services Yerevan", "BuddyLife Armenia"],
     alternates: {
-      canonical: `${route}?lang=${lang}`,
-      languages: {
-        hy: `${route}?lang=hy`,
-        ru: `${route}?lang=ru`,
-        en: `${route}?lang=en`,
-        fa: `${route}?lang=fa`,
-      },
+      canonical: localePath(lang, route),
+      languages: localeAlternates(route),
     },
     openGraph: {
       title: copy.title,
       description: copy.description,
       type: "website",
       locale: lang === "hy" ? "hy_AM" : lang === "ru" ? "ru_RU" : lang === "fa" ? "fa_IR" : "en_US",
-      url: `${route}?lang=${lang}`,
+      url: localePath(lang, route),
       images: [{ url: "/og.webp", width: 1200, height: 630, alt: "BuddyLife Armenia" }],
     },
     twitter: {

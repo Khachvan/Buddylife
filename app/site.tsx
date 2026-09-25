@@ -34,6 +34,7 @@ import {
 import { track as vaTrack } from "@vercel/analytics";
 import { persianHubCopy, persianLegalCopy, persianSiteCopy } from "./persian-copy";
 import type { Lang } from "./language";
+import { isLocale, localePath, localeUrl, splitLocale } from "../lib/locale";
 type View =
   | "home"
   | "features"
@@ -839,14 +840,12 @@ const businessIcons = [
 ];
 function openRoute(e: MouseEvent<HTMLAnchorElement>, href: string) {
   e.preventDefault();
-  if (window.location.pathname !== href) {
+  if (splitLocale(window.location.pathname).path !== splitLocale(new URL(href, window.location.origin).pathname).path) {
     document.documentElement.classList.add("isNavigating");
     window.setTimeout(() => document.documentElement.classList.remove("isNavigating"), 4000);
     window.setTimeout(() => {
-      const destination = new URL(href, window.location.origin);
-      const language = new URLSearchParams(window.location.search).get("lang") || localStorage.getItem("buddylife-lang");
-      if (language && tr[language as Lang]) destination.searchParams.set("lang", language);
-      window.location.assign(destination.href);
+      const language = splitLocale(window.location.pathname).locale || localStorage.getItem("buddylife-lang");
+      window.location.assign(localePath(isLocale(language) ? language : "hy", href));
     }, 120);
   }
 }
@@ -901,10 +900,12 @@ export default function BuddyPage({ view, initialLang = "hy" }: { view: View; in
     window.addEventListener("popstate", clearNavigationState);
     const visible = () => { if (document.visibilityState === "visible") clearNavigationState(); };
     document.addEventListener("visibilitychange", visible);
-    const requested = new URLSearchParams(window.location.search).get("lang") as Lang | null;
-    const stored = localStorage.getItem("buddylife-lang") as Lang | null;
-    const s = requested && tr[requested] ? requested : stored;
+    const { locale: requested, path: barePath } = splitLocale(window.location.pathname);
+    const stored = localStorage.getItem("buddylife-lang");
+    const s = requested || (isLocale(stored) ? stored : null);
     if (s && tr[s]) {
+      // An unprefixed (Armenian) URL with a saved non-Armenian preference: show the matching URL.
+      if (!requested && s !== "hy") window.history.replaceState({}, "", localePath(s, `${barePath}${window.location.search}${window.location.hash}`));
       queueMicrotask(() => setLang(s));
       localStorage.setItem("buddylife-lang", s);
       document.documentElement.lang = s;
@@ -939,9 +940,7 @@ export default function BuddyPage({ view, initialLang = "hy" }: { view: View; in
     document.documentElement.lang = v;
     document.documentElement.dir = v === "fa" ? "rtl" : "ltr";
     localStorage.setItem("buddylife-lang", v);
-    const nextUrl = new URL(window.location.href);
-    nextUrl.searchParams.set("lang", v);
-    window.history.replaceState({}, "", nextUrl);
+    window.history.replaceState({}, "", localePath(v, `${window.location.pathname}${window.location.search}${window.location.hash}`));
     window.dispatchEvent(new Event("buddylife:language"));
     track("language_changed", v, role);
   };
@@ -1023,9 +1022,9 @@ export default function BuddyPage({ view, initialLang = "hy" }: { view: View; in
               </div>
             </div>
           </section>
-          <AudienceSplit t={t} />
-          <FeaturePreview t={t} />
-          <TrustSection t={t} />
+          <AudienceSplit t={t} lang={lang} />
+          <FeaturePreview t={t} lang={lang} />
+          <TrustSection t={t} lang={lang} />
           <EducationPreview h={h} lang={lang} />
           <Press t={t} open={open} />
         </>
@@ -1039,7 +1038,7 @@ export default function BuddyPage({ view, initialLang = "hy" }: { view: View; in
       {(view === "privacy" || view === "terms" || view === "verification") && (
         <LegalPage kind={view} content={legalContent[lang]} />
       )}
-      <Footer t={t} />
+      <Footer t={t} lang={lang} />
       {modal && (
         <JoinModal
           t={t}
@@ -1103,7 +1102,7 @@ function Header({
     <header className="nav shell">
       <a
         className="brand"
-        href="/"
+        href={localePath(lang, "/")}
         target="_top"
         onClick={(e) => openRoute(e, "/")}
       >
@@ -1118,7 +1117,7 @@ function Header({
         {links.map(([key, href, label]) => (
           <a
             key={key}
-            href={href}
+            href={localePath(lang, href)}
             target="_top"
             className={view === key ? "active" : ""}
             aria-current={view === key ? "page" : undefined}
@@ -1194,7 +1193,7 @@ function Header({
             {links.map(([key, href, label]) => (
               <a
                 key={key}
-                href={href}
+                href={localePath(lang, href)}
                 target="_top"
                 className={view === key ? "active" : ""}
                 onClick={(e) => {
@@ -1238,7 +1237,7 @@ function Header({
     </header>
   );
 }
-function AudienceSplit({ t }: { t: any }) {
+function AudienceSplit({ t, lang }: { t: any; lang: Lang }) {
   return (
     <section className="audienceSplit shell">
       <article className="parentCard">
@@ -1263,7 +1262,7 @@ function AudienceSplit({ t }: { t: any }) {
           </div>
           <div className="audienceActions">
             <a
-              href="/pet-parents"
+              href={localePath(lang, "/pet-parents")}
               target="_top"
               onClick={(e) => openRoute(e, "/pet-parents")}
             >
@@ -1294,7 +1293,7 @@ function AudienceSplit({ t }: { t: any }) {
           </div>
           <div className="audienceActions">
             <a
-              href="/for-business"
+              href={localePath(lang, "/for-business")}
               target="_top"
               onClick={(e) => openRoute(e, "/for-business")}
             >
@@ -1306,7 +1305,7 @@ function AudienceSplit({ t }: { t: any }) {
     </section>
   );
 }
-function FeaturePreview({ t }: { t: any }) {
+function FeaturePreview({ t, lang }: { t: any; lang: Lang }) {
   return (
     <section className="section featurePreview">
       <div className="shell">
@@ -1332,7 +1331,7 @@ function FeaturePreview({ t }: { t: any }) {
         </div>
         <a
           className="centerLink"
-          href="/features"
+          href={localePath(lang, "/features")}
           target="_top"
           onClick={(e) => openRoute(e, "/features")}
         >
@@ -1342,7 +1341,7 @@ function FeaturePreview({ t }: { t: any }) {
     </section>
   );
 }
-function TrustSection({ t }: { t: any }) {
+function TrustSection({ t, lang }: { t: any; lang: Lang }) {
   const icons = [BadgeCheck, ShieldCheck, UsersRound];
   return (
     <section className="section trustSection">
@@ -1366,7 +1365,7 @@ function TrustSection({ t }: { t: any }) {
         </div>
         <a
           className="centerLink"
-          href="/verification"
+          href={localePath(lang, "/verification")}
           target="_top"
           onClick={(e) => openRoute(e, "/verification")}
         >
@@ -1385,7 +1384,7 @@ function EducationShare({ title, slug, lang }: { title: string; slug: string; la
     en: { share: "Share", link: "Copy link", copied: "Copied" },
     fa: { share: "اشتراک‌گذاری", link: "کپی پیوند", copied: "کپی شد" },
   }[lang];
-  const url = `https://buddylife.am/learn/${slug}?lang=${lang}`;
+  const url = localeUrl(lang, `/learn/${slug}`);
   const shareEvent = (channel: string) => vaTrack("education_article_shared", { channel, article: url });
   async function copyLink() {
     await navigator.clipboard.writeText(url);
@@ -1416,7 +1415,7 @@ function EducationCards({ h, lang, newestFirst = false }: { h: any; lang: Lang; 
           className="educationCard"
           key={topic[1]}
         >
-          <a className="educationCardLink" href={`/learn/${slug}?lang=${lang}`} aria-label={`${topic[1]} — ${h.read}`}>
+          <a className="educationCardLink" href={localePath(lang, `/learn/${slug}`)} aria-label={`${topic[1]} — ${h.read}`}>
             <div className="educationImage">
               <Image src={topic[3]} alt={topic[1]} fill sizes="(max-width: 760px) 100vw, 33vw" />
             </div>
@@ -1445,7 +1444,7 @@ function EducationPreview({ h, lang }: { h: any; lang: Lang }) {
           </div>
           <a
             className="educationLink"
-            href="/learn"
+            href={localePath(lang, "/learn")}
             target="_top"
             onClick={(e) => {
               track("education_opened", lang);
@@ -2001,7 +2000,7 @@ function JoinModal({
     </div>
   );
 }
-function Footer({ t }: { t: any }) {
+function Footer({ t, lang }: { t: any; lang: Lang }) {
   return (
     <footer className="trustFooter">
       <div className="shell footerMain">
@@ -2017,7 +2016,7 @@ function Footer({ t }: { t: any }) {
           <p>{t.footer}</p>
           <div className="trustMarks">
             <a
-              href="/privacy"
+              href={localePath(lang, "/privacy")}
               target="_top"
               onClick={(e) => openRoute(e, "/privacy")}
             >
@@ -2031,35 +2030,35 @@ function Footer({ t }: { t: any }) {
         <div className="footerColumn">
           <b>BuddyLife</b>
           <a
-            href="/features"
+            href={localePath(lang, "/features")}
             target="_top"
             onClick={(e) => openRoute(e, "/features")}
           >
             {t.nav[1]}
           </a>
           <a
-            href="/pet-parents"
+            href={localePath(lang, "/pet-parents")}
             target="_top"
             onClick={(e) => openRoute(e, "/pet-parents")}
           >
             {t.nav[2]}
           </a>
           <a
-            href="/for-business"
+            href={localePath(lang, "/for-business")}
             target="_top"
             onClick={(e) => openRoute(e, "/for-business")}
           >
             {t.nav[3]}
           </a>
           <a
-            href="/learn"
+            href={localePath(lang, "/learn")}
             target="_top"
             onClick={(e) => openRoute(e, "/learn")}
           >
             {t.nav[4]}
           </a>
           <a
-            href="/verification"
+            href={localePath(lang, "/verification")}
             target="_top"
             onClick={(e) => openRoute(e, "/verification")}
           >
@@ -2090,7 +2089,7 @@ function Footer({ t }: { t: any }) {
       </div>
       <div className="shell footerBottom">
         <small>© 2026 BuddyLife Armenia</small>
-        <a href="/terms" target="_top" onClick={(e) => openRoute(e, "/terms")}>
+        <a href={localePath(lang, "/terms")} target="_top" onClick={(e) => openRoute(e, "/terms")}>
           {t.termsLabel}
         </a>
       </div>

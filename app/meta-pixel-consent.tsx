@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { localePath, splitLocale } from "../lib/locale";
 
 type Consent = "accepted" | "declined" | null;
 type Language = "hy" | "ru" | "en" | "fa";
@@ -54,8 +55,8 @@ const copy = {
 } as const;
 
 function currentLanguage(): Language {
-  const requested = new URLSearchParams(window.location.search).get("lang");
-  if (requested === "ru" || requested === "en" || requested === "fa" || requested === "hy") return requested;
+  const fromPath = splitLocale(window.location.pathname).locale;
+  if (fromPath) return fromPath;
   const language = document.documentElement.lang;
   return language === "ru" || language === "en" || language === "fa" ? language : "hy";
 }
@@ -137,7 +138,7 @@ export default function MetaPixelConsent({ pixelId, initialLanguage = "hy" }: { 
         <aside className="measurementConsent" role="dialog" aria-modal="false" aria-labelledby="measurement-title">
           <div>
             <strong id="measurement-title">{t.title}</strong>
-            <p>{t.body} <Link href={`/privacy?lang=${language}`}>{t.privacy}</Link></p>
+            <p>{t.body} <Link href={localePath(language, "/privacy")}>{t.privacy}</Link></p>
           </div>
           <div className="measurementActions">
             <button type="button" className="measurementDecline" onClick={() => choose("declined")}>{t.decline}</button>
