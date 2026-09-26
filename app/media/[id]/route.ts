@@ -22,8 +22,9 @@ export async function GET(_request: Request, { params }: RouteContext) {
       headers: {
         "Content-Type": contentType,
         "Content-Length": String(bytes.byteLength),
-        // Media ids never change content, so browsers and the CDN may keep them for a year.
-        "Cache-Control": "public, max-age=86400, s-maxage=31536000, immutable",
+        // Cached for an hour at the edge and in browsers: fast for visitors, and a
+        // deleted image disappears from the CDN within the hour instead of a year.
+        "Cache-Control": "public, max-age=3600, s-maxage=3600",
         "Content-Disposition": `inline; filename="${String(media.fileName).replace(/[^A-Za-z0-9._-]+/g, "-")}"`,
         "X-Content-Type-Options": "nosniff",
       },
