@@ -9,7 +9,8 @@ import { localeAlternates, localePath, localeUrl } from "../../../lib/locale";
 import { articlePublished } from "../../../lib/content-dates";
 import { renderBody } from "../../../lib/posts";
 import { isShort, videoEmbed, type PostVideo } from "../../../lib/content-posts";
-import { loadPublishedPost } from "../../../lib/posts-store";
+import { loadPublicPosts, loadPublishedPost } from "../../../lib/posts-store";
+import { educationSlugs, hub } from "../../learn-copy";
 import { persianArticles, persianLearnUi } from "../../persian-copy";
 
 type Lang = "hy" | "ru" | "en" | "fa";
@@ -436,6 +437,7 @@ export default async function LearnArticle({ params, searchParams }: { params: P
         <div><p className="eyebrow">{labels.ctaEyebrow}</p><h2 id="article-join-title">{labels.ctaTitle}</h2><p>{labels.ctaBody}</p></div>
         <Link className="button" href={localePath(lang, `/?${joinParams.toString()}`)}>{labels.cta}</Link>
       </section>
+      <RelatedGuides lang={lang} currentSlug={slug} />
       <ArticleShare title={article.title} url={localizedUrl} lang={lang} />
     </article>
   </main></>;
@@ -472,6 +474,7 @@ function CmsArticle({ slug, post, query }: { slug: string; post: CmsPost; query:
         <div><p className="eyebrow">{labels.ctaEyebrow}</p><h2 id="article-join-title">{labels.ctaTitle}</h2><p>{labels.ctaBody}</p></div>
         <Link className="button" href={localePath(lang, `/?${joinParams.toString()}`)}>{labels.cta}</Link>
       </section>
+      <RelatedGuides lang={lang} currentSlug={slug} />
       <ArticleShare title={post.title} url={localizedUrl} lang={lang} />
     </article>
   </main></>;
@@ -487,4 +490,41 @@ function PostVideoBlock({ video, title }: { video: PostVideo; title: string }) {
     return <div className={`articleVideo ${orientation}`}><video controls preload="metadata" playsInline src={embed.src} title={video.title || title}><track kind="captions" src={video.captions} label="Captions" /></video></div>;
   }
   return <a className="articleVideoLink" href={embed.href} target="_blank" rel="noopener noreferrer">▶ {video.title || `Watch on ${embed.provider}`}</a>;
+}
+
+const relatedLabel: Record<Lang, string> = { hy: "Առնչվող ուղեցույցներ", ru: "Похожие материалы", en: "Related guides", fa: "راهنماهای مرتبط" };
+
+async function RelatedGuides({ lang, currentSlug }: { lang: Lang; currentSlug: string }) {
+  const posts = (await loadPublicPosts()).filter((post) => post.language === lang && post.slug !== currentSlug);
+  const copy = hub[lang];
+  const staticCards = copy.topics
+    .map((topic, index) => ({ slug: educationSlugs[index], category: topic[0], title: topic[1], excerpt: topic[2], image: topic[3] }))
+    .filter((card) => card.slug && card.slug !== currentSlug)
+    .reverse();
+  const cards = [
+    ...posts.map((post) => ({ slug: post.slug, category: post.category, title: post.title, excerpt: post.excerpt, image: post.coverUrl })),
+    ...staticCards,
+  ].slice(0, 3);
+  if (!cards.length) return null;
+  return (
+    <section className="relatedGuides" aria-labelledby="related-guides-title">
+      <h2 id="related-guides-title">{relatedLabel[lang]}</h2>
+      <div className="educationGrid">
+        {cards.map((card) => (
+          <article className="educationCard" key={card.slug}>
+            <Link className="educationCardLink" href={localePath(lang, `/learn/${card.slug}`)}>
+              <div className="educationImage">
+                <Image src={card.image} alt={card.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized={card.image.startsWith("/media/") || !card.image.startsWith("/")} />
+              </div>
+              <div className="educationBody">
+                {card.category && <span className="topicTag">{card.category}</span>}
+                <h3>{card.title}</h3>
+                <p>{card.excerpt}</p>
+              </div>
+            </Link>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }

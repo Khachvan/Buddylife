@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:sites": "vinext build && node scripts/prepare-sites-worker.mjs",
     "start": "next start",
     "test": "node --test tests/*.test.ts",
     "check:fast": "pnpm test && pnpm content && eslint lib/qr-attribution.ts lib/request-security.ts lib/tracking.ts lib/content-posts.ts app/production-analytics.tsx app/meta-pixel-consent.tsx tests/critical-flows.test.ts tests/tracking.test.ts tests/content-posts.test.ts",
@@ -37,18 +36,14 @@
     "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.37.1",
     "@electric-sql/pglite": "^0.5.8",
     "@eslint/js": "9.39.4",
     "@next/eslint-plugin-next": "16.3.6",
-    "@openai/sites-vite-plugin": "0.1.0",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/qrcode": "^1.5.6",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2",
-    "@vitejs/plugin-rsc": "0.5.26",
     "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
     "eslint-plugin-jsx-a11y": "6.10.2",
@@ -56,15 +51,11 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "16.4.0",
     "prettier": "^3.9.6",
-    "react-server-dom-webpack": "19.2.6",
     "sharp": "^0.35.0",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.59.3",
-    "vercel": "59.6.2",
-    "vinext": "1.0.0-beta.2",
-    "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "vercel": "59.6.2"
   },
   "type": "module"
 }

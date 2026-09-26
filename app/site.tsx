@@ -32,7 +32,8 @@ import {
   X,
 } from "lucide-react";
 import { track as vaTrack } from "@vercel/analytics";
-import { persianHubCopy, persianLegalCopy, persianSiteCopy } from "./persian-copy";
+import { persianLegalCopy, persianSiteCopy } from "./persian-copy";
+import { educationSlugs, hub } from "./learn-copy";
 import type { Lang } from "./language";
 import { isLocale, localePath, localeUrl, splitLocale } from "../lib/locale";
 import type { PublicPost } from "../lib/posts";
@@ -481,279 +482,6 @@ const tr = {
   },
   fa: persianSiteCopy,
 };
-const hub = {
-  hy: {
-    kicker: "BUDDYLIFE ԿՐԹԱԿԱՆ ՀԱԲ",
-    title: "Ավելի տեղեկացված խնամք՝ ամեն օր։",
-    lead: "Կարճ, հստակ և տեսողական ուղեցույցներ՝ ստեղծված վստահելի անասնաբուժական աղբյուրների հիման վրա։",
-    latest: "Ընտրված ուղեցույցներ",
-    all: "Տեսնել բոլոր թեմաները",
-    disclaimer:
-      "Կրթական նյութերը չեն փոխարինում անասնաբույժի ախտորոշմանը կամ բուժմանը։ Արտակարգ իրավիճակում անմիջապես դիմեք մասնագետի։",
-    read: "4 րոպե ընթերցում",
-    topics: [
-      [
-        "Կանխարգելում",
-        "Ինչու տարեկան զննումն ու անհատական պատվաստումների պլանը կարևոր են",
-        "Կանոնավոր զննումները կարող են խնդիրները նկատել ավելի վաղ, իսկ պատվաստումների ճիշտ պլանը կախված է տարիքից, կենսակերպից և տեղական ռիսկերից։",
-        "/learn-preventive-care-editorial-v5.jpg",
-      ],
-      [
-        "Սեզոնային անվտանգություն",
-        "Շոգ եղանակին անվտանգ զբոսանքի պարզ կանոնները",
-        "Ընտրեք զով ժամեր, ապահովեք մաքուր ջուր և ստվեր, ու երբեք կենդանուն մի թողեք փակ մեքենայում։",
-        "/learn-summer-safety-editorial-v5.jpg",
-      ],
-      [
-        "Կատուների բարեկեցություն",
-        "Ինչպես տունը դարձնել հետաքրքիր և անվտանգ կատվի համար",
-        "Թաքստոցները, բարձր տեղերը, մաքուր ռեսուրսները, խաղն ու կանխատեսելի միջավայրը նվազեցնում են սթրեսը։",
-        "/learn-indoor-cat-enrichment-editorial-v5.jpg",
-      ],
-      [
-        "Կազմակերպված խնամք",
-        "5 առօրյա խնդիր, որոնց բախվում են կենդանատերերը Հայաստանում",
-        "Միավորեք կարևոր տեղեկությունները, ամսաթվերը, վստահելի կոնտակտներն ու ընտանեկան պարտականությունները մեկ պարզ համակարգում։",
-        "/learn-everyday-pet-parent-problems-editorial-v5.jpg",
-      ],
-      [
-        "Կազմակերպված խնամք",
-        "Ինչպես կազմակերպել կենդանուդ կարևոր տեղեկություններն ու ամսաթվերը",
-        "Ստեղծեք կենդանու կարճ տեղեկաթերթ, պահեք երեք վստահելի կոնտակտ և օգտագործեք մեկ հիմնական օրացույց։",
-        "/learn-organize-pet-information-and-care-dates-editorial-v5.jpg",
-      ],
-      [
-        "Կազմակերպված խնամք",
-        "Շաբաթական 10 րոպե՝ կենդանուդ խնամքը կազմակերպելու համար",
-        "Ստուգիր տեղեկությունները, առաջիկա գործերը, պարագաներն ու ընտանեկան պարտականությունները մեկ կարճ շաբաթական սովորությամբ։",
-        "/learn-weekly-pet-care-organization-routine-editorial-v5.jpg",
-      ],
-      [
-        "Կազմակերպված խնամք",
-        "Երբ կենդանուդ խնամքը վստահում ես մեկ ուրիշին",
-        "Փոխանցիր առօրյա ռիթմը, պարագաների տեղը, տան կանոններն ու անհրաժեշտ կոնտակտները մեկ պարզ ու մասնավոր հուշաթերթով։",
-        "/learn-pet-care-handover-note-editorial-v5.jpg",
-      ],
-      [
-        "Կազմակերպված խնամք",
-        "Կենդանու մասին կարևոր տեղեկությունները․ ինչ հավաքել առաջին շաբաթում",
-        "Ստեղծիր մեկ փակ տեղեկաթերթ՝ հիմնական տվյալների, առօրյա ռիթմի, պարագաների, վստահելի կոնտակտների, փաստաթղթերի և հիշեցումների համար։",
-        "/learn-first-week-pet-information-starter-kit-editorial-v5.jpg",
-      ],
-      [
-        "Կազմակերպված խնամք",
-        "5 րոպե՝ կենդանուդ խնամքի գրառումները վերադասավորելու համար",
-        "Ցրված գրառումները վերածիր մեկ կարճ, թարմ և պատասխանատուներով հստակեցված շաբաթական ցանկի։",
-        "/learn-five-minute-pet-admin-reset-editorial-v5.jpg",
-      ],
-      [
-        "Անվտանգություն և կազմակերպում",
-        "Ինչ անել առաջինը, երբ կենդանին կորում է",
-        "Ստուգիր տունն ու մոտակա տարածքը, տեղեկացրու վստահելի կապերին և տարածիր մեկ հստակ ու անվտանգ հայտարարություն։",
-        "/learn-what-to-do-when-pet-goes-missing-editorial-v5.jpg",
-      ],
-      [
-        "Վարք և հանգստություն",
-        "Ինչպես օգնել կենդանուն, երբ տանը հյուրեր կան",
-        "Հինգ պարզ քայլ, որոնք կենդանուդ ընտրության հնարավորություն և հանգիստ անկյուն են տալիս հյուրերի ժամանակ։",
-        "/learn-help-pet-when-guests-visit.jpg",
-      ],
-      [
-        "Առօրյա խնամք",
-        "Տեղափոխություն կենդանու հետ․ ինչպես պատրաստել ավելի հանգիստ առաջին օրը",
-        "Պատրաստիր առաջին օրվա պայուսակը, անվտանգ տեղափոխումը և նոր տան հանգիստ տարածքը նախապես։",
-        "/learn-moving-home-with-a-pet.jpg",
-      ],
-      [
-        "Առօրյա խնամք",
-        "Ինչպես օգնել կենդանուն հարմարվել փոխված օրվա ռեժիմին",
-        "Պահիր ծանոթ վայրերը, փոխիր ժամերը փոքր քայլերով և թող օրվա մեջ մեկ հանգիստ պահ։",
-        "/learn-help-pet-adjust-to-changed-daily-routine.jpg",
-      ],
-    ],
-  },
-  ru: {
-    kicker: "ОБРАЗОВАТЕЛЬНЫЙ ХАБ BUDDYLIFE",
-    title: "Более осознанная забота — каждый день.",
-    lead: "Короткие, понятные и визуальные материалы на основе надёжных ветеринарных источников.",
-    latest: "Избранные материалы",
-    all: "Все темы",
-    disclaimer:
-      "Материалы носят образовательный характер и не заменяют диагностику или лечение ветеринара. В экстренной ситуации немедленно обратитесь к специалисту.",
-    read: "4 минуты",
-    topics: [
-      [
-        "Профилактика",
-        "Почему важны ежегодный осмотр и индивидуальный план вакцинации",
-        "Регулярные осмотры помогают заметить проблемы раньше, а план вакцинации зависит от возраста, образа жизни и местных рисков.",
-        "/learn-preventive-care-editorial-v5.jpg",
-      ],
-      [
-        "Сезонная безопасность",
-        "Простые правила прогулок в жаркую погоду",
-        "Выбирайте прохладные часы, обеспечьте воду и тень и никогда не оставляйте питомца в закрытой машине.",
-        "/learn-summer-safety-editorial-v5.jpg",
-      ],
-      [
-        "Благополучие кошек",
-        "Как сделать дом интересным и безопасным для кошки",
-        "Укрытия, вертикальные пространства, чистые ресурсы, игра и предсказуемая среда снижают стресс.",
-        "/learn-indoor-cat-enrichment-editorial-v5.jpg",
-      ],
-      [
-        "Организованный уход",
-        "5 повседневных проблем владельцев питомцев в Армении",
-        "Объедините важные сведения, даты, надёжные контакты и семейные обязанности в одной понятной системе.",
-        "/learn-everyday-pet-parent-problems-editorial-v5.jpg",
-      ],
-      [
-        "Организованный уход",
-        "Как хранить сведения о питомце и важные даты в одном месте",
-        "Создайте краткую карточку питомца, сохраните три проверенных контакта и используйте один основной календарь.",
-        "/learn-organize-pet-information-and-care-dates-editorial-v5.jpg",
-      ],
-      [
-        "Организованный уход",
-        "10 минут в неделю, чтобы организовать заботу о питомце",
-        "Проверьте информацию, ближайшие дела, запасы и семейные обязанности с помощью одной короткой еженедельной привычки.",
-        "/learn-weekly-pet-care-organization-routine-editorial-v5.jpg",
-      ],
-      [
-        "Организованный уход",
-        "Простая памятка для временного ухода за питомцем",
-        "Передайте распорядок, расположение принадлежностей, домашние правила и необходимые контакты в одной закрытой памятке.",
-        "/learn-pet-care-handover-note-editorial-v5.jpg",
-      ],
-      [
-        "Организованный уход",
-        "Что записать о питомце в первую неделю",
-        "Создайте одну закрытую карточку с основными данными, распорядком, принадлежностями, доверенными контактами, документами и напоминаниями.",
-        "/learn-first-week-pet-information-starter-kit-editorial-v5.jpg",
-      ],
-      [
-        "Организованный уход",
-        "Пять минут, чтобы привести в порядок заметки об уходе",
-        "Превратите разрозненные записи в один короткий актуальный список на неделю с понятными ответственными.",
-        "/learn-five-minute-pet-admin-reset-editorial-v5.jpg",
-      ],
-      [
-        "Безопасность и организация",
-        "Что делать в первую очередь, если питомец пропал",
-        "Проверьте дом и ближайшую территорию, предупредите проверенные контакты и безопасно распространите одно ясное объявление.",
-        "/learn-what-to-do-when-pet-goes-missing-editorial-v5.jpg",
-      ],
-      [
-        "Поведение и спокойствие",
-        "Как помочь питомцу, когда дома гости",
-        "Пять простых шагов, которые дают питомцу выбор и спокойное место во время визита гостей.",
-        "/learn-help-pet-when-guests-visit.jpg",
-      ],
-      [
-        "Повседневный уход",
-        "Переезд с питомцем: как подготовить более спокойный первый день",
-        "Заранее соберите сумку первого дня, организуйте безопасный переезд и подготовьте тихое место в новом доме.",
-        "/learn-moving-home-with-a-pet.jpg",
-      ],
-      [
-        "Повседневный уход",
-        "Как помочь питомцу привыкнуть к изменившемуся распорядку",
-        "Сохраните знакомые места, меняйте время небольшими шагами и оставьте один спокойный момент.",
-        "/learn-help-pet-adjust-to-changed-daily-routine.jpg",
-      ],
-    ],
-  },
-  en: {
-    kicker: "BUDDYLIFE EDUCATION HUB",
-    title: "Better-informed care, every day.",
-    lead: "Short, clear and visual guides grounded in trusted veterinary sources.",
-    latest: "Featured guides",
-    all: "Explore every topic",
-    disclaimer:
-      "Educational content does not replace veterinary diagnosis or treatment. Contact a professional immediately in an emergency.",
-    read: "4 min read",
-    topics: [
-      [
-        "Preventive care",
-        "Why annual checkups and an individual vaccination plan matter",
-        "Regular exams can identify concerns earlier, while vaccination plans should reflect age, lifestyle and local risk.",
-        "/learn-preventive-care-editorial-v5.jpg",
-      ],
-      [
-        "Seasonal safety",
-        "Simple rules for safer walks in hot weather",
-        "Choose cooler hours, provide fresh water and shade, and never leave a pet inside a closed car.",
-        "/learn-summer-safety-editorial-v5.jpg",
-      ],
-      [
-        "Cat wellbeing",
-        "How to make home engaging and safe for an indoor cat",
-        "Hiding places, vertical space, clean resources, play and a predictable environment can reduce stress.",
-        "/learn-indoor-cat-enrichment-editorial-v5.jpg",
-      ],
-      [
-        "Organized care",
-        "5 everyday problems pet parents face in Armenia",
-        "Bring important information, dates, trusted contacts, and family responsibilities into one clear system.",
-        "/learn-everyday-pet-parent-problems-editorial-v5.jpg",
-      ],
-      [
-        "Organized care",
-        "How to organize your pet’s important information and care dates",
-        "Create a short pet information card, keep three trusted contacts and use one main calendar.",
-        "/learn-organize-pet-information-and-care-dates-editorial-v5.jpg",
-      ],
-      [
-        "Organized care",
-        "A 10-minute weekly routine for organizing your pet’s care",
-        "Review information, upcoming tasks, supplies and shared responsibilities through one short weekly habit.",
-        "/learn-weekly-pet-care-organization-routine-editorial-v5.jpg",
-      ],
-      [
-        "Organized care",
-        "A simple handover note for your pet’s temporary caregiver",
-        "Share the familiar routine, supply locations, household rules and essential contacts in one clear private note.",
-        "/learn-pet-care-handover-note-editorial-v5.jpg",
-      ],
-      [
-        "Organized care",
-        "Important pet information to collect in the first week",
-        "Create one private sheet for identity basics, daily routine, supplies, trusted contacts, documents and reminders.",
-        "/learn-first-week-pet-information-starter-kit-editorial-v5.jpg",
-      ],
-      [
-        "Organized care",
-        "A five-minute reset for your pet-care notes",
-        "Turn scattered notes into one short, current weekly list with a clear owner for every task.",
-        "/learn-five-minute-pet-admin-reset-editorial-v5.jpg",
-      ],
-      [
-        "Safety and organization",
-        "What to do first when a pet goes missing",
-        "Search home and nearby, alert verified contacts, and share one clear privacy-safe notice.",
-        "/learn-what-to-do-when-pet-goes-missing-editorial-v5.jpg",
-      ],
-      [
-        "Behaviour and calm",
-        "How to help your pet when guests visit",
-        "Five simple steps that give your pet choice and a calm retreat during a visit.",
-        "/learn-help-pet-when-guests-visit.jpg",
-      ],
-      [
-        "Everyday care",
-        "Moving home with a pet: planning a calmer first day",
-        "Pack a first-day bag, manage the move safely and prepare one quiet space in the new home.",
-        "/learn-moving-home-with-a-pet.jpg",
-      ],
-      [
-        "Everyday care",
-        "Helping a pet adjust to a changed daily routine",
-        "Keep familiar places, shift timing in small steps, and preserve one calm moment.",
-        "/learn-help-pet-adjust-to-changed-daily-routine.jpg",
-      ],
-    ],
-  },
-  fa: persianHubCopy,
-};
 const legalContent = {
   hy: {
     brandEyebrow: "BUDDYLIFE ՀԱՅԱՍՏԱՆ",
@@ -811,21 +539,6 @@ const images = [
   "/banner-organized.webp",
   "/banner-trusted-care.webp",
   "/banner-community.webp",
-];
-const educationSlugs = [
-  "preventive-care",
-  "summer-safety",
-  "indoor-cat-enrichment",
-  "everyday-pet-parent-problems",
-  "organize-pet-information-and-care-dates",
-  "weekly-pet-care-organization-routine",
-  "pet-care-handover-note",
-  "first-week-pet-information-starter-kit",
-  "five-minute-pet-admin-reset",
-  "what-to-do-when-pet-goes-missing",
-  "help-pet-when-guests-visit",
-  "moving-home-with-a-pet",
-  "help-pet-adjust-to-changed-daily-routine",
 ];
 const parentIcons = [
   HeartPulse,
@@ -886,6 +599,10 @@ function track(
     }),
     keepalive: true,
   }).catch(() => {});
+  // Mirror the funnel steps into Vercel Web Analytics so conversion sits next to traffic.
+  if (["join_opened", "registration_completed", "language_changed", "audience_selected"].includes(eventType)) {
+    vaTrack(eventType, { language, audience: audience || "none", source: attribution.source, campaign: attribution.campaign });
+  }
 }
 export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { view: View; initialLang?: Lang; posts?: PublicPost[] }) {
   const [lang, setLang] = useState<Lang>(initialLang),
@@ -907,7 +624,9 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
     document.addEventListener("visibilitychange", visible);
     const { locale: requested, path: barePath } = splitLocale(window.location.pathname);
     const stored = localStorage.getItem("buddylife-lang");
-    const s = requested || (isLocale(stored) ? stored : null);
+    // Only follow the stored preference when arriving from inside the site; a shared or typed link keeps its own language.
+    const internalNavigation = document.referrer.startsWith(window.location.origin);
+    const s = requested || (internalNavigation && isLocale(stored) ? stored : null);
     if (s && tr[s]) {
       // An unprefixed (Armenian) URL with a saved non-Armenian preference: show the matching URL.
       if (!requested && s !== "hy") window.history.replaceState({}, "", localePath(s, `${barePath}${window.location.search}${window.location.hash}`));
@@ -933,13 +652,6 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
     const id = setInterval(() => setSlide((x) => (x + 1) % 3), 6000);
     return () => clearInterval(id);
   }, []);
-  useEffect(() => {
-    const id = window.setTimeout(() => {
-      const preload = document.createElement("img");
-      preload.src = images[(slide + 1) % images.length];
-    }, 1500);
-    return () => window.clearTimeout(id);
-  }, [slide]);
   const change = (v: Lang) => {
     setLang(v);
     document.documentElement.lang = v;
@@ -999,15 +711,18 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
         <>
           <section className="carousel">
             <div className="carouselImage">
-              <Image
-                key={images[slide]}
-                src={images[slide]}
-                alt="BuddyLife Armenia"
-                fill
-                priority={slide === 0}
-                className="active"
-                sizes="100vw"
-              />
+              {images.map((src, index) => (
+                <Image
+                  key={src}
+                  src={src}
+                  alt="BuddyLife Armenia"
+                  fill
+                  priority={index === 0}
+                  loading={index === 0 ? undefined : "eager"}
+                  className={index === slide ? "active" : ""}
+                  sizes="100vw"
+                />
+              ))}
             </div>
             <div className="carouselShade" />
             <div className="shell carouselCopy">
@@ -1410,12 +1125,14 @@ function EducationShare({ title, slug, lang }: { title: string; slug: string; la
     </div>
   );
 }
-function EducationCards({ h, lang, posts = [], newestFirst = false }: { h: HubCopy; lang: Lang; posts?: PublicPost[]; newestFirst?: boolean }) {
+function EducationCards({ h, lang, posts = [], newestFirst = false, limit }: { h: HubCopy; lang: Lang; posts?: PublicPost[]; newestFirst?: boolean; limit?: number }) {
   const cards = h.topics
     .map((topic, index) => ({ topic, slug: educationSlugs[index] }));
-  const orderedCards = newestFirst ? cards.reverse() : cards;
-  // Posts written in the backoffice appear first, newest publish date at the top.
-  const cmsCards = posts.filter((post) => post.language === lang);
+  const allStaticCards = newestFirst ? cards.reverse() : cards;
+  // Posts written in the backoffice or the repository appear first, newest publish date at the top.
+  const allCmsCards = posts.filter((post) => post.language === lang);
+  const cmsCards = limit ? allCmsCards.slice(0, limit) : allCmsCards;
+  const orderedCards = limit ? allStaticCards.slice(0, Math.max(0, limit - cmsCards.length)) : allStaticCards;
 
   return (
     <div className="educationGrid">
@@ -1479,7 +1196,7 @@ function EducationPreview({ h, lang, posts = [] }: { h: HubCopy; lang: Lang; pos
             {h.all} →
           </a>
         </div>
-        <EducationCards h={h} lang={lang} posts={posts.slice(0, 3)} newestFirst />
+        <EducationCards h={h} lang={lang} posts={posts} newestFirst limit={3} />
       </div>
     </section>
   );
@@ -1626,17 +1343,17 @@ function Features({ t, open }: { t: SiteCopy; open: () => void }) {
               <p>{x[1]}</p>
             </article>
           ))}
-          {[0, 1, 2].map((i) => (
-            <article className="secretFeature" key={i}>
-              <div>
-                <span>?</span>
-                <b>{t.future}</b>
-                <h3>BuddyLife</h3>
-                <p>{t.blur}</p>
-              </div>
-              <span className="secretPaw">
-                <PawPrint aria-hidden="true" />
+          {t.parentCards.slice(4, 6).map((x, i) => (
+            <article className="upcomingFeature" key={x[0]}>
+              <span>
+                {(() => {
+                  const Icon = parentIcons[4 + i];
+                  return <Icon size={25} />;
+                })()}
               </span>
+              <b>{t.soon}</b>
+              <h3>{x[0]}</h3>
+              <p>{x[1]}</p>
               <strong className="soonLabel">{t.soon}</strong>
             </article>
           ))}
@@ -1738,6 +1455,7 @@ function JoinModal({
   };
   useEffect(() => {
     const scrollY = window.scrollY;
+    document.documentElement.classList.add("joinOpen");
     const previous = {
       position: document.body.style.position,
       top: document.body.style.top,
@@ -1781,6 +1499,7 @@ function JoinModal({
       document.body.style.width = previous.width;
       document.body.style.overflow = previous.overflow;
       window.scrollTo(0, scrollY);
+      document.documentElement.classList.remove("joinOpen");
     };
   }, [close]);
   async function submit(e: FormEvent<HTMLFormElement>) {

@@ -4,15 +4,12 @@
 !.env.example
 .vercel
 .next
-.vinext
 node_modules
 dist
 out
-.wrangler
 outputs
 work
 coverage
 *.tsbuildinfo
 *.pem
 .DS_Store
-.openai

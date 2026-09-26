@@ -6,7 +6,7 @@ Before BuddyLife work, read [`README.md`](./README.md), [`TESTING.md`](./TESTING
 
 ## Content publishing from chat — 26 September 2026
 
-Articles, visuals, shorts, videos and their scheduling are produced from chat sessions (Codex or Claude) as repository content, following [`docs/CONTENT-PLAYBOOK.md`](./docs/CONTENT-PLAYBOOK.md): one JSON file per post and language under `content/posts/`, images under `public/posts/<date>/`, videos as YouTube/Vimeo links, `publishAt` for scheduling. Validate with `pnpm content` and `pnpm check:fast`, open a pull request, and merge into `main` the same day; the site publishes at the scheduled time without any deploy step. Backoffice posts remain the manual channel at backoffice.buddylife.am. Development work stays separate from content pull requests.
+Codex owns content; Claude Code owns code and product. Codex follows [`docs/CODEX-BRIEF.md`](./docs/CODEX-BRIEF.md) and must not change application code. Articles, visuals, shorts, videos, social drafts and their scheduling are produced from chat sessions as repository content, following [`docs/CONTENT-PLAYBOOK.md`](./docs/CONTENT-PLAYBOOK.md): one JSON file per post and language under `content/posts/`, images under `public/posts/<date>/`, videos as YouTube/Vimeo links, `publishAt` for scheduling. Validate with `pnpm content` and `pnpm check:fast`, open a pull request, and merge into `main` the same day; the site publishes at the scheduled time without any deploy step. Backoffice posts remain the manual channel at backoffice.buddylife.am. Development work stays separate from content pull requests.
 
 ## Delivery reliability — 8 September 2026
 
