@@ -13,7 +13,8 @@ const contentSecurityPolicy = [
   "img-src 'self' data: blob: https://www.facebook.com",
   "font-src 'self' data:",
   "connect-src 'self' https://www.facebook.com https://connect.facebook.net https://vitals.vercel-insights.com https://va.vercel-scripts.com",
-  "frame-src 'none'",
+  "frame-src https://www.youtube-nocookie.com https://player.vimeo.com",
+  "media-src 'self' https:",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
@@ -44,7 +45,7 @@ const nextConfig: NextConfig = {
   // The local development database engine is loaded at runtime only; never bundle it.
   serverExternalPackages: ["@electric-sql/pglite"],
   // The backoffice applies drizzle/*.sql migrations at runtime, so ship them with that function.
-  outputFileTracingIncludes: { "/api/admin-database": ["./drizzle/**/*"] },
+  outputFileTracingIncludes: { "/api/admin-database": ["./drizzle/**/*"], "/**/*": ["./content/posts/**/*"] },
   async headers() {
     return [
       { source: "/:path*", headers: baseHeaders },

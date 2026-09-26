@@ -38,6 +38,14 @@ The backoffice at `backoffice.buddylife.am` (locally `/backoffice`) is protected
   one-click way to apply pending SQL migrations from `drizzle/`, with links to the Vercel storage
   and Neon dashboards.
 
+## Content from chat
+
+Codex or Claude publish articles, visuals, shorts and videos by committing files:
+`content/posts/<date>-<slug>.<lang>.json` plus covers under `public/posts/`, with
+`publishAt` for scheduling and `video.url` for YouTube, Shorts or Vimeo. Validate with
+`pnpm content`, open a pull request, merge. Full rules in
+[docs/CONTENT-PLAYBOOK.md](./docs/CONTENT-PLAYBOOK.md).
+
 ## Local development
 
 ```bash
@@ -56,7 +64,8 @@ create every table. The `.data/` folder is gitignored and PGlite is never bundle
 
 | Command              | What it does                                                        |
 | -------------------- | ------------------------------------------------------------------- |
-| `pnpm test`          | Unit tests for QR attribution, request security, locales, tracking  |
+| `pnpm test`          | Unit tests for QR attribution, request security, locales, tracking, content |
+| `pnpm content`       | Validates every post file under `content/posts` and its assets       |
 | `pnpm check:fast`    | Tests plus focused lint on the security-critical modules            |
 | `pnpm check:release` | `check:fast` plus the full production build; required before a PR   |
 | `pnpm lint`          | Repository-wide lint (diagnostic)                                   |

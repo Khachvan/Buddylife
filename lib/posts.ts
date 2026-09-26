@@ -21,6 +21,10 @@ export type PostRecord = PostInput & {
   coverUrl: string | null;
   createdAt: string;
   updatedAt: string;
+  video?: PostVideo | null;
+  source?: PostSource;
+  /** File name under content/posts for repository-managed posts. */
+  file?: string;
 };
 
 export type PublicPost = {
@@ -32,7 +36,11 @@ export type PublicPost = {
   excerpt: string;
   coverUrl: string;
   publishAt: string;
+  source?: PostSource;
 };
+
+export type PostVideo = { url: string; title?: string; orientation?: "landscape" | "portrait"; captions?: string };
+export type PostSource = "cms" | "repository";
 
 export type BodyBlock =
   | { type: "heading"; text: string }
@@ -164,6 +172,8 @@ export function toPostRecord(row: PostRow): PostRecord {
     publishAt: iso(row.publishAt),
     createdAt: iso(row.createdAt) || "",
     updatedAt: iso(row.updatedAt) || "",
+    video: null,
+    source: "cms",
   };
 }
 
