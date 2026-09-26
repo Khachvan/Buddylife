@@ -1423,7 +1423,7 @@ function EducationCards({ h, lang, posts = [], newestFirst = false }: { h: HubCo
         <article className="educationCard" key={post.id}>
           <a className="educationCardLink" href={localePath(lang, `/learn/${post.slug}`)} aria-label={`${post.title} — ${h.read}`}>
             <div className="educationImage">
-              <Image src={post.coverUrl} alt={post.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized={post.coverUrl.startsWith("/media/")} />
+              <Image src={post.coverUrl} alt={post.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized={post.coverUrl.startsWith("/media/") || !post.coverUrl.startsWith("/")} />
             </div>
             <div className="educationBody">
               {post.category && <span className="topicTag">{post.category}</span>}

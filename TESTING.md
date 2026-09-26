@@ -24,6 +24,7 @@ The fast gate runs deterministic Node tests and focused lint for the critical ac
 - CMS post helpers: slug rules, draft/scheduled/live/archived state from status and publish time, body rendering, input validation;
 - media upload validation, safe file names and header-based image dimensions;
 - migration file statement splitting;
+- repository post validation (fields, dates, covers, duplicates) and video embed detection; `pnpm content` runs in the fast gate;
 - Next.js compilation, type checking and route generation through the production build.
 
 Fixtures are synthetic and local. Tests do not use Production registrations, customer contacts, publishing accounts, payment data or deployment secrets.

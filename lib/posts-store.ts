@@ -1,10 +1,10 @@
 import { getSql, type Sql } from "./database";
-import { DEFAULT_COVER, isValidSlug, toPostRecord, type PostRecord, type PublicPost } from "./posts";
+import { loadRepositoryPosts, loadVisibleRepositoryPosts } from "./content-posts-store";
+import { DEFAULT_COVER, effectiveState, isValidSlug, toPostRecord, type PostRecord, type PublicPost } from "./posts";
 
 type PostRow = Record<string, unknown>;
 
-function toPublicPost(row: PostRow): PublicPost {
-  const record = toPostRecord(row);
+function recordToPublic(record: PostRecord): PublicPost {
   return {
     id: record.id,
     slug: record.slug,
@@ -14,7 +14,12 @@ function toPublicPost(row: PostRow): PublicPost {
     excerpt: record.excerpt,
     coverUrl: record.coverUrl || DEFAULT_COVER,
     publishAt: record.publishAt || record.createdAt,
+    source: record.source,
   };
+}
+
+function toPublicPost(row: PostRow): PublicPost {
+  return recordToPublic(toPostRecord(row));
 }
 
 const POST_COLUMNS = `
@@ -46,8 +51,7 @@ export async function getPublishedPost(sql: Sql, slug: string, language: string)
   return rows[0] ? toPostRecord(rows[0]) : null;
 }
 
-/** Public pages call this; a missing database or an unapplied migration simply yields no CMS posts. */
-export async function loadPublicPosts(): Promise<PublicPost[]> {
+async function loadDatabasePosts(): Promise<PublicPost[]> {
   if (!process.env.DATABASE_URL) return [];
   try {
     return await listPublishedPosts(getSql());
@@ -56,11 +60,23 @@ export async function loadPublicPosts(): Promise<PublicPost[]> {
   }
 }
 
+/** Public pages call this: backoffice posts plus repository posts, newest first. A missing database simply yields no CMS posts. */
+export async function loadPublicPosts(): Promise<PublicPost[]> {
+  const [database, repository] = await Promise.all([loadDatabasePosts(), loadVisibleRepositoryPosts()]);
+  const merged = [...database, ...repository.map(recordToPublic)];
+  return merged.sort((a, b) => b.publishAt.localeCompare(a.publishAt));
+}
+
 export async function loadPublishedPost(slug: string, language: string): Promise<PostRecord | null> {
-  if (!process.env.DATABASE_URL || !isValidSlug(slug)) return null;
-  try {
-    return await getPublishedPost(getSql(), slug, language);
-  } catch {
-    return null;
+  if (!isValidSlug(slug)) return null;
+  if (process.env.DATABASE_URL) {
+    try {
+      const fromDatabase = await getPublishedPost(getSql(), slug, language);
+      if (fromDatabase) return fromDatabase;
+    } catch {
+      // fall through to repository posts
+    }
   }
+  const candidates = (await loadRepositoryPosts()).filter((post) => post.slug === slug && effectiveState(post) === "live");
+  return candidates.find((post) => post.language === language) || candidates[0] || null;
 }

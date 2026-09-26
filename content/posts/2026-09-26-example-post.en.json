@@ -1,0 +1,16 @@
+{
+  "slug": "example-post",
+  "language": "en",
+  "title": "Example post (draft, never published)",
+  "excerpt": "Reference file showing every field a repository post can use.",
+  "category": "Everyday care",
+  "cover": "/og.webp",
+  "video": {
+    "url": "https://www.youtube.com/shorts/dQw4w9WgXcQ",
+    "title": "Example short",
+    "orientation": "portrait"
+  },
+  "status": "draft",
+  "publishAt": "2026-09-26T09:00:00+04:00",
+  "body": "## Heading\nParagraph text under the heading.\n\n- List item one\n- List item two\n\nA closing paragraph. Lines starting with \"## \" become headings, lines starting with \"- \" become list items, and blank lines separate paragraphs."
+}

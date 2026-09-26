@@ -8,6 +8,7 @@ import ArticleViewTracker from "./article-view-tracker";
 import { localeAlternates, localePath, localeUrl } from "../../../lib/locale";
 import { articlePublished } from "../../../lib/content-dates";
 import { renderBody } from "../../../lib/posts";
+import { isShort, videoEmbed, type PostVideo } from "../../../lib/content-posts";
 import { loadPublishedPost } from "../../../lib/posts-store";
 import { persianArticles, persianLearnUi } from "../../persian-copy";
 
@@ -462,7 +463,7 @@ function CmsArticle({ slug, post, query }: { slug: string; post: CmsPost; query:
     <article className="articleShell">
       <Link className="articleBack" href={localePath(lang, "/learn")}>← {labels.back}</Link>
       <p className="eyebrow">{post.category || labels.eyebrow}</p><h1>{post.title}</h1>{post.excerpt && <p className="articleDeck">{post.excerpt}</p>}
-      <Image className="articleHero" src={image} alt={post.title} width={1200} height={800} priority unoptimized={image.startsWith("/media/")} />
+      {post.video ? <PostVideoBlock video={post.video} title={post.title} /> : <Image className="articleHero" src={image} alt={post.title} width={1200} height={800} priority unoptimized={image.startsWith("/media/") || !image.startsWith("/")} />}
       <div className="articleBody">
         {blocks.map((block, index) => block.type === "heading" ? <h2 key={index}>{block.text}</h2> : block.type === "list" ? <ul key={index}>{block.items.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}</ul> : <p key={index}>{block.text}</p>)}
         <p className="articleDisclaimer">{labels.disclaimer}</p>
@@ -474,4 +475,16 @@ function CmsArticle({ slug, post, query }: { slug: string; post: CmsPost; query:
       <ArticleShare title={post.title} url={localizedUrl} lang={lang} />
     </article>
   </main></>;
+}
+
+function PostVideoBlock({ video, title }: { video: PostVideo; title: string }) {
+  const embed = videoEmbed(video);
+  const orientation = isShort(video) ? "portrait" : "landscape";
+  if (embed.kind === "iframe") {
+    return <div className={`articleVideo ${orientation}`}><iframe src={embed.src} title={video.title || title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" /></div>;
+  }
+  if (embed.kind === "file") {
+    return <div className={`articleVideo ${orientation}`}><video controls preload="metadata" playsInline src={embed.src} title={video.title || title}><track kind="captions" src={video.captions} label="Captions" /></video></div>;
+  }
+  return <a className="articleVideoLink" href={embed.href} target="_blank" rel="noopener noreferrer">▶ {video.title || `Watch on ${embed.provider}`}</a>;
 }

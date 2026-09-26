@@ -2,6 +2,7 @@ import { getSql } from "../../../lib/database";
 import { logEvent } from "../../../lib/logging";
 import { normalizePostInput, toPostRecord } from "../../../lib/posts";
 import { listAllPosts } from "../../../lib/posts-store";
+import { loadRepositoryPosts } from "../../../lib/content-posts-store";
 import { isUuid } from "../../../lib/qr-attribution";
 import { hasSameOrigin } from "../../../lib/request-security";
 
@@ -19,7 +20,8 @@ function unavailable(error: unknown, message: string) {
 
 export async function GET() {
   try {
-    return Response.json({ posts: await listAllPosts(getSql()) }, { headers: NO_STORE });
+    const [posts, repositoryPosts] = await Promise.all([listAllPosts(getSql()), loadRepositoryPosts()]);
+    return Response.json({ posts, repositoryPosts }, { headers: NO_STORE });
   } catch (error) {
     return unavailable(error, "Posts could not be loaded");
   }

@@ -66,6 +66,7 @@ async function readJson(response: Response) {
 
 export default function PostsClient() {
   const [posts, setPosts] = useState<PostRecord[]>([]);
+  const [repositoryPosts, setRepositoryPosts] = useState<PostRecord[]>([]);
   const [media, setMedia] = useState<MediaRecord[]>([]);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [filter, setFilter] = useState<"all" | PostState>("all");
@@ -83,6 +84,7 @@ export default function PostsClient() {
         fetch("/api/admin-media", { cache: "no-store" }).then(readJson).catch(() => ({ media: [] })),
       ]);
       setPosts(postsPayload.posts || []);
+      setRepositoryPosts(postsPayload.repositoryPosts || []);
       setMedia(mediaPayload.media || []);
       setError("");
     } catch (loadError) {
@@ -104,9 +106,9 @@ export default function PostsClient() {
   );
   const counts = useMemo(() => {
     const totals: Record<PostState, number> = { draft: 0, scheduled: 0, live: 0, archived: 0 };
-    for (const post of posts) totals[effectiveState(post)] += 1;
+    for (const post of [...posts, ...repositoryPosts]) totals[effectiveState(post)] += 1;
     return totals;
-  }, [posts]);
+  }, [posts, repositoryPosts]);
 
   const update = (patch: Partial<Draft>) => setDraft((current) => ({ ...current, ...patch }));
   const cover = media.find((item) => item.id === draft.coverMediaId) || null;
@@ -202,7 +204,7 @@ export default function PostsClient() {
         <article><b>{counts.draft}</b><span>Drafts</span></article>
         <article><b>{counts.archived}</b><span>Archived</span></article>
       </section>
-      <p className="adminMetricNote">Scheduled posts go live automatically at their publish time; no further action is needed.</p>
+      <p className="adminMetricNote">Scheduled posts go live automatically at their publish time; no further action is needed. Counts include posts managed from the repository.</p>
 
       {message && <div className="qrNotice" role="status">{message}</div>}
       {error && <div className="adminServiceError" role="alert"><b>Posts need attention</b><p>{error}</p></div>}
@@ -237,6 +239,27 @@ export default function PostsClient() {
               );
             })}
           </div>
+          {repositoryPosts.length > 0 && (
+            <>
+              <div className="adminPanelHead" style={{ marginTop: 22 }}><h2>From the repository</h2><span className="cmsHelp">edited through Codex or Git</span></div>
+              <div className="cmsList">
+                {repositoryPosts.filter((post) => filter === "all" || effectiveState(post) === filter).map((post) => {
+                  const state = effectiveState(post);
+                  return (
+                    <div key={post.id} className="cmsListItem" style={{ cursor: "default" }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={post.coverUrl || "/og.webp"} alt="" />
+                      <span>
+                        <b>{post.title}</b>
+                        <small>{post.language.toUpperCase()} · /learn/{post.slug} · {post.video ? "video · " : ""}{state === "scheduled" ? `goes live ${formatDate(post.publishAt)}` : state === "live" ? `since ${formatDate(post.publishAt)}` : post.file}</small>
+                      </span>
+                      <span className={`cmsStatus ${state}`}>{STATE_LABEL[state]}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </section>
 
         <section className="adminPanel">
