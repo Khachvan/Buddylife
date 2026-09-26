@@ -76,7 +76,14 @@ Scaffold a file with `pnpm post:new -- --title "..." --lang en --publish-at 2026
 5. Verify: `https://buddylife.am/<lang>/learn/<slug>` (Armenian has no prefix), the Learn
    hub, and the sitemap. Backoffice → Posts shows it under "From the repository".
 
-## 6. What not to do
+## 6. Social media drafts
+
+For every article, write `content/social/<YYYY-MM-DD>-<slug>.md` with a section per channel
+(Instagram, Facebook, Telegram), captions in Armenian and Russian, hashtags, the asset path
+and the planned posting time in Yerevan time. Drafts are published by the owner through
+Meta Business Suite or Telegram; nothing posts automatically from the repository.
+
+## 7. What not to do
 
 - Never run `vercel deploy` or any CLI production deploy; merging into `main` is the release.
 - Never put secrets, tokens or connection strings in content or commits.

@@ -9,5 +9,10 @@ export default function ProductionAnalytics() {
   const isInternal = pathname === "/backoffice" || pathname.startsWith("/admin");
 
   if (isInternal) return null;
-  return <><Analytics /><SpeedInsights /></>;
+  return (
+    <>
+      <Analytics beforeSend={(event) => (/\/(admin|backoffice)(\/|$)/.test(event.url) || /backoffice\./.test(event.url) ? null : event)} />
+      <SpeedInsights />
+    </>
+  );
 }

@@ -44,7 +44,8 @@ Codex or Claude publish articles, visuals, shorts and videos by committing files
 `content/posts/<date>-<slug>.<lang>.json` plus covers under `public/posts/`, with
 `publishAt` for scheduling and `video.url` for YouTube, Shorts or Vimeo. Validate with
 `pnpm content`, open a pull request, merge. Full rules in
-[docs/CONTENT-PLAYBOOK.md](./docs/CONTENT-PLAYBOOK.md).
+[docs/CONTENT-PLAYBOOK.md](./docs/CONTENT-PLAYBOOK.md); the division of work between Codex and Claude Code is in
+[docs/CODEX-BRIEF.md](./docs/CODEX-BRIEF.md), and the product backlog in [docs/PRODUCT-BACKLOG.md](./docs/PRODUCT-BACKLOG.md).
 
 ## Local development
 

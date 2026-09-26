@@ -84,6 +84,7 @@ export default function MetaPixelConsent({ pixelId, initialLanguage = "hy" }: { 
   const [consent, setConsent] = useState<Consent>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [language, setLanguage] = useState<Language>(initialLanguage);
+  const [engaged, setEngaged] = useState(false);
   const t = copy[language];
   const viewContent = useMemo(() => pathname.startsWith("/learn/") && pathname.split("/").length > 2, [pathname]);
   const hostname = typeof window === "undefined" ? "" : window.location.hostname;
@@ -97,6 +98,18 @@ export default function MetaPixelConsent({ pixelId, initialLanguage = "hy" }: { 
     window.addEventListener("buddylife:language", syncLanguage);
     return () => window.removeEventListener("buddylife:language", syncLanguage);
   }, [pathname]);
+
+  // Show the prompt once the visitor scrolls or after a few seconds, so it never covers the first call to action.
+  useEffect(() => {
+    if (!trackingEligible) return;
+    const reveal = () => setEngaged(true);
+    const timer = window.setTimeout(reveal, 6000);
+    window.addEventListener("scroll", reveal, { once: true, passive: true });
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", reveal);
+    };
+  }, [trackingEligible]);
 
   useEffect(() => {
     if (!trackingEligible) return;
@@ -131,6 +144,7 @@ export default function MetaPixelConsent({ pixelId, initialLanguage = "hy" }: { 
 
   const showDialog = consent === null || settingsOpen;
   if (!trackingEligible) return null;
+  if (consent === null && !engaged && !settingsOpen) return null;
 
   return (
     <>
