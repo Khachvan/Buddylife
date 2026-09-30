@@ -51,6 +51,10 @@ language, one short per week, one social post per article per channel.
 
 Every article ends with the join call to action the site already renders.
 
+## October plan
+
+The week-by-week content list and targets are in [`PLAN-OCTOBER-2026.md`](./PLAN-OCTOBER-2026.md). Follow its week order; every article ships in Armenian and Russian first.
+
 ## Social conventions
 
 - File per campaign: `content/social/<YYYY-MM-DD>-<slug>.md` with sections `Instagram`,
