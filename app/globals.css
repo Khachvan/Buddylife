@@ -1777,7 +1777,40 @@ button {
 .contactLinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 1px solid #ded5e5; border-radius: 999px; background: #fff; color: var(--plum); font-weight: 700; font-size: 14px; text-decoration: none; }
 .contactLinks a:hover { background: #f6f1fa; }
 .trustFooter .contactLinks a { border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06); color: #fff; }
-.contactBand { padding: 26px 0; background: #fbf9fd; border-top: 1px solid #efe9f4; }
+.contactBand { padding: 26px 0 40px; background: #fbf9fd; border-top: 1px solid #efe9f4; }
+.contactFormShell { margin-top: 28px; padding-top: 28px; border-top: 1px solid #efe9f4; }
+.contactFormShell .sectionIntro h3 { margin: 0 0 6px; font-size: 24px; }
+.contactFormShell .sectionIntro p { margin: 0 0 18px; color: var(--muted); }
+.contactForm { display: grid; gap: 14px; max-width: 720px; }
+.contactForm .formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.contactForm label { display: grid; gap: 6px; }
+.contactForm .fieldLabel { font-size: 13px; font-weight: 800; color: var(--plum); }
+.contactForm input, .contactForm textarea { min-height: 46px; border: 1px solid #ded5e5; border-radius: 12px; padding: 11px 13px; font: inherit; font-weight: 500; color: var(--plum); background: #fff; }
+.contactForm textarea { min-height: 130px; resize: vertical; }
+.contactForm input:focus, .contactForm textarea:focus { outline: 2px solid #b79ddc; outline-offset: 1px; }
+.contactForm .honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.contactForm .formError { margin: 0; color: #9b2c2c; font-weight: 700; }
+.contactFormActions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.contactFormActions small { max-width: 460px; font-size: 12px; line-height: 1.45; color: var(--muted); }
+.contactSent { display: flex; align-items: flex-start; gap: 12px; max-width: 720px; padding: 18px 20px; border-radius: 16px; background: #eefaf2; color: #1f7a3f; }
+.contactSent b { display: block; margin-bottom: 4px; color: var(--plum); }
+.contactSent p { margin: 0; color: var(--muted); }
+@media (max-width: 640px) { .contactForm .formRow { grid-template-columns: 1fr; } }
+.partnersSection { padding: 56px 0; background: #fff; }
+.partnerGrid { list-style: none; margin: 26px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.partnerGrid li > a, .partnerGrid li > div { display: grid; gap: 4px; min-height: 84px; padding: 18px 20px; border: 1px solid #e9e1f2; border-radius: 16px; background: #fbf9fd; color: var(--plum); text-decoration: none; }
+.partnerGrid b { font-size: 17px; }
+.partnerGrid span { font-size: 13px; color: var(--muted); }
+.partnerGrid li > a:hover { border-color: #c9b8dc; background: #f6f1fa; }
+.messageList { display: grid; gap: 12px; }
+.messageCard { padding: 16px 18px; border: 1px solid #e9e1f2; border-radius: 16px; background: #fff; }
+.messageCard.handled { opacity: .72; }
+.messageCard.test { border-style: dashed; }
+.messageCard header { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.messageCard header small { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); }
+.messageCard header small a { color: var(--purple, #6b3fa0); }
+.messageCard p { margin: 12px 0 0; white-space: pre-wrap; line-height: 1.55; }
+.messageActions { display: flex; gap: 8px; flex-wrap: wrap; }
 .contactBand .shell { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
 .contactBand h2 { margin: 0; font-size: 20px; }
 .contactBand p { margin: 4px 0 0; color: var(--muted); }

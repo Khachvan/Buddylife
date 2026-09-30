@@ -79,6 +79,9 @@ Rotating `BACKOFFICE_*` or `QR_ATTRIBUTION_SECRET` values in Vercel does not cha
 - Registration confirmation email: `RESEND_API_KEY`, `RESEND_FROM` (a sender on a domain
   verified in Resend) and optional `RESEND_REPLY_TO`, Production only. Without them the
   registration still succeeds and no mail is sent.
+- "Write to us" messages: stored in `contact_messages` (Backoffice → Messages) and forwarded
+  to `CONTACT_NOTIFY_TO` with the sender as reply-to. Without the variable they are still
+  stored, just not forwarded.
 
 ## Rollback
 

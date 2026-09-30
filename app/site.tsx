@@ -162,6 +162,19 @@ const tr = {
     contactLabels: ["Էլ․ փոստ", "WhatsApp", "Telegram", "Զանգել"],
     partnerTitle: "Դարձեք հիմնադիր գործընկեր",
     partnerLead: "Առաջին կլինիկաները, գրումերները և հյուրանոցները գրանցվում են անվճար, ստանում են վերիֆիկացված պրոֆիլ և տեղ գլխավոր էջում։ Թողեք կոնտակտ՝ մենք կզանգենք։",
+    contactFormTitle: "Գրեք մեզ",
+    contactFormLead: "Հարց, առաջարկ կամ գործընկերություն՝ գրեք, պատասխանում ենք աշխատանքային օրերին։",
+    messageLabel: "Հաղորդագրություն",
+    businessOptional: "Բիզնես (ոչ պարտադիր)",
+    phoneOptional: "Հեռախոս (ոչ պարտադիր)",
+    send: "Ուղարկել",
+    sending: "Ուղարկվում է…",
+    sentTitle: "Շնորհակալություն, ստացանք։",
+    sentBody: "Կպատասխանենք ձեր էլ․ փոստին աշխատանքային օրերին։",
+    contactFailed: "Հաղորդագրությունը չհաջողվեց ուղարկել։ Փորձեք կրկին մի փոքր ուշ։",
+    writeToUs: "Գրել մեզ",
+    partnersEyebrow: "ՀԻՄՆԱԴԻՐ ԳՈՐԾԸՆԿԵՐՆԵՐ",
+    partnersTitle: "Նրանք, ովքեր առաջինն են վստահել BuddyLife-ին",
     communityLabel: "Համայնք",
     preparingLabel: "Վաղ հասանելիության նախապատրաստում",
     slideLabel: "Սլայդ",
@@ -317,6 +330,19 @@ const tr = {
     contactLabels: ["Почта", "WhatsApp", "Telegram", "Позвонить"],
     partnerTitle: "Станьте партнёром-основателем",
     partnerLead: "Первые клиники, грумеры и гостиницы регистрируются бесплатно, получают проверенный профиль и место на главной странице. Оставьте контакт — мы перезвоним.",
+    contactFormTitle: "Напишите нам",
+    contactFormLead: "Вопрос, предложение или партнёрство — напишите, отвечаем в рабочие дни.",
+    messageLabel: "Сообщение",
+    businessOptional: "Бизнес (необязательно)",
+    phoneOptional: "Телефон (необязательно)",
+    send: "Отправить",
+    sending: "Отправляем…",
+    sentTitle: "Спасибо, получили.",
+    sentBody: "Ответим на вашу почту в рабочие дни.",
+    contactFailed: "Не удалось отправить сообщение. Попробуйте ещё раз чуть позже.",
+    writeToUs: "Написать нам",
+    partnersEyebrow: "ПАРТНЁРЫ-ОСНОВАТЕЛИ",
+    partnersTitle: "Те, кто первыми доверились BuddyLife",
     communityLabel: "Сообщество",
     preparingLabel: "Подготовка раннего доступа",
     slideLabel: "Слайд",
@@ -460,6 +486,19 @@ const tr = {
     contactLabels: ["Email", "WhatsApp", "Telegram", "Call"],
     partnerTitle: "Become a founding partner",
     partnerLead: "The first clinics, groomers and hotels register free, get a verified profile and a place on the home page. Leave a contact and we will call you.",
+    contactFormTitle: "Write to us",
+    contactFormLead: "A question, a suggestion or a partnership — write, we reply on working days.",
+    messageLabel: "Message",
+    businessOptional: "Business (optional)",
+    phoneOptional: "Phone (optional)",
+    send: "Send",
+    sending: "Sending…",
+    sentTitle: "Thank you, we got it.",
+    sentBody: "We will reply to your email on working days.",
+    contactFailed: "The message could not be sent. Please try again a little later.",
+    writeToUs: "Write to us",
+    partnersEyebrow: "FOUNDING PARTNERS",
+    partnersTitle: "The first to trust BuddyLife",
     communityLabel: "Community",
     preparingLabel: "Preparing early access",
     slideLabel: "Slide",
@@ -771,14 +810,15 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
             </div>
           </section>
           <AudienceSplit t={t} lang={lang} />
+          <FoundingPartners t={t} cms={cms} />
           <EducationPreview h={h} lang={lang} posts={posts} />
           <TrustSection t={t} lang={lang} />
           <Press t={t} open={open} />
         </>
       )}
-      {view === "owners" && <AudiencePage type="parent" t={t} open={open} />}{" "}
+      {view === "owners" && <AudiencePage type="parent" t={t} open={open} lang={lang} />}{" "}
       {view === "business" && (
-        <AudiencePage type="business" t={t} open={open} cms={cms} />
+        <AudiencePage type="business" t={t} open={open} cms={cms} lang={lang} />
       )}{" "}
       {view === "features" && <Features t={t} open={open} />}
       {view === "learn" && <EducationHub h={h} lang={lang} posts={posts} />}
@@ -1264,11 +1304,13 @@ function AudiencePage({
   t,
   open,
   cms = {},
+  lang,
 }: {
   type: Role;
   t: SiteCopy;
   open: (r?: Role) => void;
   cms?: Record<string, string>;
+  lang: Lang;
 }) {
   const cards = type === "parent" ? t.parentCards : t.businessCards;
   const cardIcons = type === "parent" ? parentIcons : businessIcons;
@@ -1319,10 +1361,86 @@ function AudiencePage({
               <ContactLinks t={t} cms={cms} />
             </div>
           </div>
+          <div className="shell contactFormShell" id="contact">
+            <div className="sectionIntro">
+              <h3>{t.contactFormTitle}</h3>
+              <p>{t.contactFormLead}</p>
+            </div>
+            <ContactForm t={t} lang={lang} page="/for-business" />
+          </div>
         </section>
       )}
       <Press t={t} open={() => open(type)} />
     </>
+  );
+}
+function ContactForm({ t, lang, page }: { t: SiteCopy; lang: Lang; page: string }) {
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "failed">("idle");
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const body = Object.fromEntries(new FormData(e.currentTarget).entries());
+    setState("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ ...body, language: lang, page, source: new URLSearchParams(window.location.search).get("utm_source") || "" }),
+      });
+      setState(res.ok ? "sent" : "failed");
+    } catch {
+      setState("failed");
+    }
+  }
+  if (state === "sent") {
+    return (
+      <div className="contactSent" role="status">
+        <CheckCircle2 size={22} aria-hidden="true" />
+        <div><b>{t.sentTitle}</b><p>{t.sentBody}</p></div>
+      </div>
+    );
+  }
+  return (
+    <form className="contactForm" onSubmit={submit}>
+      <div className="formRow">
+        <label><span className="fieldLabel">{t.name}<b className="requiredMark">*</b></span><input name="name" required maxLength={120} autoComplete="name" /></label>
+        <label><span className="fieldLabel">{t.email}<b className="requiredMark">*</b></span><input name="email" type="email" required maxLength={200} autoComplete="email" /></label>
+      </div>
+      <div className="formRow">
+        <label><span className="fieldLabel">{t.businessOptional}</span><input name="business" maxLength={160} autoComplete="organization" /></label>
+        <label><span className="fieldLabel">{t.phoneOptional}</span><input name="phone" type="tel" maxLength={40} autoComplete="tel" /></label>
+      </div>
+      <label><span className="fieldLabel">{t.messageLabel}<b className="requiredMark">*</b></span><textarea name="message" required minLength={10} maxLength={2000} rows={5} /></label>
+      <div className="honeypot" aria-hidden="true"><input name="website" tabIndex={-1} autoComplete="off" /></div>
+      {state === "failed" && <p className="formError" role="alert">{t.contactFailed}</p>}
+      <div className="contactFormActions">
+        <button className="button" type="submit" disabled={state === "sending"}>{state === "sending" ? t.sending : t.send}</button>
+        <small>{t.privacy}</small>
+      </div>
+    </form>
+  );
+}
+// Founding partners are managed in the backoffice (partner_<n>_name / _city / _url); the section only renders once one exists.
+function FoundingPartners({ t, cms }: { t: SiteCopy; cms: Record<string, string> }) {
+  const partners = [1, 2, 3, 4, 5, 6]
+    .map((index) => ({ name: (cms[`partner_${index}_name`] || "").trim(), city: (cms[`partner_${index}_city`] || "").trim(), url: (cms[`partner_${index}_url`] || "").trim() }))
+    .filter((partner) => partner.name);
+  if (!partners.length) return null;
+  return (
+    <section className="section partnersSection" aria-labelledby="partners-title">
+      <div className="shell">
+        <div className="sectionIntro centered">
+          <p className="eyebrow">{t.partnersEyebrow}</p>
+          <h2 id="partners-title">{t.partnersTitle}</h2>
+        </div>
+        <ul className="partnerGrid">
+          {partners.map((partner) => (
+            <li key={partner.name}>
+              {/^https:\/\//.test(partner.url) ? <a href={partner.url} target="_blank" rel="noopener noreferrer"><b>{partner.name}</b>{partner.city && <span>{partner.city}</span>}</a> : <div><b>{partner.name}</b>{partner.city && <span>{partner.city}</span>}</div>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 function ContactLinks({ t, cms }: { t: SiteCopy; cms: Record<string, string> }) {
@@ -1832,6 +1950,9 @@ function Footer({ t, lang, cms = {} }: { t: SiteCopy; lang: Lang; cms?: Record<s
             onClick={(e) => openRoute(e, "/verification")}
           >
             {t.verificationLink}
+          </a>
+          <a href={localePath(lang, "/for-business#contact")} target="_top" onClick={(e) => openRoute(e, "/for-business#contact")}>
+            {t.writeToUs}
           </a>
         </div>
         {hasContact && (

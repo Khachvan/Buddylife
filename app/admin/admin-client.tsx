@@ -15,6 +15,24 @@ const fields = [
   ["contact_whatsapp", "Contact · WhatsApp number in international format, e.g. +37477123456"],
   ["contact_telegram", "Contact · Telegram username without @"],
   ["contact_phone", "Contact · phone number to call, e.g. +37477123456"],
+  ["partner_1_name", "Founding partner 1 · name (the home-page section appears once a name is set)"],
+  ["partner_1_city", "Founding partner 1 · city"],
+  ["partner_1_url", "Founding partner 1 · website (https://…)"],
+  ["partner_2_name", "Founding partner 2 · name"],
+  ["partner_2_city", "Founding partner 2 · city"],
+  ["partner_2_url", "Founding partner 2 · website"],
+  ["partner_3_name", "Founding partner 3 · name"],
+  ["partner_3_city", "Founding partner 3 · city"],
+  ["partner_3_url", "Founding partner 3 · website"],
+  ["partner_4_name", "Founding partner 4 · name"],
+  ["partner_4_city", "Founding partner 4 · city"],
+  ["partner_4_url", "Founding partner 4 · website"],
+  ["partner_5_name", "Founding partner 5 · name"],
+  ["partner_5_city", "Founding partner 5 · city"],
+  ["partner_5_url", "Founding partner 5 · website"],
+  ["partner_6_name", "Founding partner 6 · name"],
+  ["partner_6_city", "Founding partner 6 · city"],
+  ["partner_6_url", "Founding partner 6 · website"],
 ];
 
 type Registration = {
@@ -147,6 +165,7 @@ export default function AdminClient() {
       </section>
       {loadError && <section className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p><button type="button" onClick={() => window.location.reload()}>Reload</button></section>}
       <section className="adminRegistrationLinks">
+        <a href="/admin/messages"><span>✉</span><div><b>Messages</b><small>Messages from the site&apos;s contact form, with reply and handled status</small></div><strong>Open →</strong></a>
         <a href="/admin/stats"><span>▤</span><div><b>Stats</b><small>Readers, join opens, registrations by week, source and language</small></div><strong>Open →</strong></a>
         <a href="/admin/posts"><span>✎</span><div><b>Posts and scheduling</b><small>Write Learn articles, schedule publish dates and manage what is live</small></div><strong>Open →</strong></a>
         <a href="/admin/media"><span>▣</span><div><b>Media library</b><small>Upload cover images and visuals for posts</small></div><strong>Open →</strong></a>
