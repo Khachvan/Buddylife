@@ -5,11 +5,33 @@ on:
   push:
     branches:
       - main
+      - "codex/**"
 
 permissions:
   contents: read
 
 jobs:
+  content-branch:
+    name: Content branch guard
+    if: startsWith(github.head_ref || github.ref_name, 'codex/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Codex branches change content only and start from current main
+        run: |
+          git fetch --no-tags origin main
+          node scripts/guard-content-branch.mjs origin/main
+
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 15

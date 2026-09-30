@@ -40,6 +40,12 @@ Fixtures are synthetic and local. Tests do not use Production registrations, cus
 - Genuine Lead/ProviderLead validation must use a real voluntary registration; never create a fake Production registration.
 - For browser-based checks, record each newly created tab's browser ID, tab ID, purpose, creator/run and retained or disposable state in the operating record. Close only this run's completed disposable tabs after checking for drafts, uploads and handoffs; preserve user-owned tabs and previews.
 
+## Branch and production guards
+
+- `Content branch guard` (CI job, `codex/**` branches and their pull requests): fails when a Codex branch changes anything outside `content/`, `public/posts/`, `public/videos/`, or is not based on the latest `main`.
+- `scripts/guard-production-build.mjs`: stops production builds from non-main branches.
+- `Production drift watchdog` (scheduled workflow): production must report `ref: main` on `/api/version` and serve the language routes.
+
 ## CI status boundary
 
 `.github/workflows/quality.yml` is configured for pull requests and pushes to `main`, with read-only repository permissions, locked dependency installation and a 15-minute job timeout. Configuration in the working tree is not proof that remote CI ran or that branch protection requires it. Remote execution and required-check enforcement remain pending until the owner’s normal commit/push/repository-settings workflow activates them.

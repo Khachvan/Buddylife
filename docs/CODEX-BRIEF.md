@@ -19,6 +19,13 @@ Formats and rules are in [CONTENT-PLAYBOOK.md](./CONTENT-PLAYBOOK.md). Validate 
 `pnpm content` and `pnpm check:fast`, open a pull request from a `codex/<topic>-<YYYYMMDD>`
 branch, and stop. The owner merges; production deploys from `main`.
 
+## Non-negotiable rules
+
+1. Never deploy or promote anything. Codex has no production role: it opens a pull request and stops.
+2. Start from the latest main every time: `git fetch origin && git switch -c codex/<topic>-<YYYYMMDD> origin/main`. Never continue in an old checkout.
+3. Only files under `content/`, `public/posts/` and `public/videos/`. Articles are JSON posts, never edits to `app/`.
+4. Run `pnpm content`, `pnpm content:guard` and `pnpm check:fast` before pushing; CI runs the same guards and blocks anything else.
+
 ## What Codex does not do
 
 - No changes under `app/`, `lib/`, `proxy.ts`, `next.config.ts`, `drizzle/`, `scripts/`,

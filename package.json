@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/guard-production-build.mjs && next build",
     "start": "next start",
     "test": "node --test tests/*.test.ts",
     "check:fast": "pnpm test && pnpm content && eslint lib/qr-attribution.ts lib/request-security.ts lib/tracking.ts lib/content-posts.ts app/production-analytics.tsx app/meta-pixel-consent.tsx tests/critical-flows.test.ts tests/tracking.test.ts tests/content-posts.test.ts",
@@ -22,7 +22,8 @@
     "db:migrate": "node scripts/migrate-database.mjs",
     "db:migrate:local": "node --env-file=.env.local scripts/migrate-database.mjs",
     "content": "node scripts/validate-content.ts",
-    "post:new": "node scripts/new-post.mjs"
+    "post:new": "node scripts/new-post.mjs",
+    "content:guard": "node scripts/guard-content-branch.mjs origin/main"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
