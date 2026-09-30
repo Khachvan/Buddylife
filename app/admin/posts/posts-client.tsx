@@ -58,6 +58,17 @@ function formatDate(value: string | null) {
   return new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
 
+// 09:00 on the chosen day, or one hour from now when that moment has already passed.
+function defaultScheduleTime(day: Date) {
+  const at = new Date(day);
+  at.setHours(9, 0, 0, 0);
+  if (at.getTime() <= Date.now()) {
+    at.setTime(Date.now() + 60 * 60 * 1000);
+    at.setSeconds(0, 0);
+  }
+  return at;
+}
+
 async function readJson(response: Response) {
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload.error || `Request failed with ${response.status}`);
@@ -75,6 +86,11 @@ export default function PostsClient() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [weekStart] = useState(() => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    return start.getTime();
+  });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -109,6 +125,31 @@ export default function PostsClient() {
     for (const post of [...posts, ...repositoryPosts]) totals[effectiveState(post)] += 1;
     return totals;
   }, [posts, repositoryPosts]);
+
+  const week = useMemo(() => {
+    const planned = [...posts, ...repositoryPosts].filter((post) => post.publishAt && ["scheduled", "live"].includes(effectiveState(post)));
+    return Array.from({ length: 7 }, (_, index) => {
+      const day = new Date(weekStart);
+      day.setDate(day.getDate() + index);
+      const next = new Date(day);
+      next.setDate(next.getDate() + 1);
+      const items = planned
+        .filter((post) => {
+          const at = new Date(post.publishAt as string).getTime();
+          return at >= day.getTime() && at < next.getTime();
+        })
+        .sort((a, b) => (a.publishAt as string).localeCompare(b.publishAt as string));
+      return { day, items };
+    });
+  }, [posts, repositoryPosts, weekStart]);
+
+  function scheduleOn(day: Date) {
+    const at = defaultScheduleTime(day);
+    setDraft({ ...emptyDraft(), mode: "schedule", scheduleAt: toLocalInput(at.toISOString()) });
+    setMessage(`New post scheduled for ${formatDate(at.toISOString())}. Fill it in and press Create post.`);
+    setError("");
+    document.getElementById("post-editor")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   const update = (patch: Partial<Draft>) => setDraft((current) => ({ ...current, ...patch }));
   const cover = media.find((item) => item.id === draft.coverMediaId) || null;
@@ -209,6 +250,35 @@ export default function PostsClient() {
       {message && <div className="qrNotice" role="status">{message}</div>}
       {error && <div className="adminServiceError" role="alert"><b>Posts need attention</b><p>{error}</p></div>}
 
+      <section className="adminPanel cmsWeekPanel" aria-label="Next 7 days">
+        <div className="adminPanelHead">
+          <h2>Next 7 days</h2>
+          <span className="cmsHelp">Everything that goes live this week, from the backoffice and the repository. Times are shown in your local time.</span>
+        </div>
+        <div className="cmsWeek">
+          {week.map(({ day, items }) => (
+            <article key={day.getTime()} className={`cmsWeekDay ${items.length ? "" : "empty"}`}>
+              <header>
+                <b>{new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(day)}</b>
+                <span>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" }).format(day)}</span>
+              </header>
+              {items.map((post) => {
+                const state = effectiveState(post);
+                const time = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" }).format(new Date(post.publishAt as string));
+                const label = <><small>{time} · {post.language.toUpperCase()} · {post.source === "cms" ? "CMS" : "Repo"}</small><span>{post.title}</span></>;
+                return post.source === "cms" ? (
+                  <button type="button" key={post.id} className={`cmsWeekItem ${state}`} onClick={() => { setDraft(draftFromPost(post)); setMessage(""); setError(""); }}>{label}</button>
+                ) : (
+                  <div key={post.id} className={`cmsWeekItem ${state}`}>{label}</div>
+                );
+              })}
+              {!items.length && <p className="cmsHelp">Nothing planned</p>}
+              <button type="button" className="cmsWeekAdd" onClick={() => scheduleOn(day)}><Plus size={13} aria-hidden="true" /> Schedule</button>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <div className="cmsLayout">
         <section className="adminPanel">
           <div className="adminPanelHead">
@@ -262,7 +332,7 @@ export default function PostsClient() {
           )}
         </section>
 
-        <section className="adminPanel">
+        <section className="adminPanel" id="post-editor">
           <div className="adminPanelHead">
             <h2>{draft.id ? "Edit post" : "New post"}</h2>
             {previewHref && draft.id && <a className="button secondary" href={previewHref} target="_blank" rel="noreferrer"><Eye size={16} aria-hidden="true" /> Open page</a>}
