@@ -2,6 +2,7 @@ import { ensureSchema, getSql } from "../../../lib/database";
 import { logEvent } from "../../../lib/logging";
 import { cookies } from "next/headers";
 import { decodeScanReference, QR_FIRST_COOKIE, QR_LAST_COOKIE } from "../../../lib/qr-attribution";
+import { isEmailLanguage, sendRegistrationEmail } from "../../../lib/email";
 
 type QrAttribution = {
   firstScanId: string | null;
@@ -123,7 +124,10 @@ export async function POST(request: Request) {
       `;
     }
     logEvent("info", "/api/register", "Registration stored", { role, hasAttribution: Boolean(qrAttribution || body.utmSource || body.utmCampaign), qrSerial: qrAttribution?.serial || null });
-    return Response.json({ ok: true, id }, { status: 201 });
+    // The promised checklist goes out right away; a mail problem never fails the registration.
+    const language = isEmailLanguage(body.language) ? body.language : "hy";
+    const mail = await sendRegistrationEmail({ to: email, language, role, name: String(body.name || body.businessName || "").trim().slice(0, 80) });
+    return Response.json({ ok: true, id, emailSent: mail.sent }, { status: 201 });
   } catch (error) {
     logEvent("error", "/api/register", "Registration storage failed", { error: error instanceof Error ? error.message : "Unknown error" });
     return Response.json({ error: "Registration service is temporarily unavailable" }, { status: 503 });

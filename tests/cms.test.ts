@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { effectiveState, isValidSlug, normalizePostInput, renderBody, slugify } from "../lib/posts.ts";
+import { effectiveState, isValidSlug, normalizePostInput, renderBody, renderInline, slugify } from "../lib/posts.ts";
 import { imageDimensions, safeFileName, validateMediaUpload } from "../lib/media.ts";
 import { splitStatements } from "../lib/migrations.ts";
 
@@ -61,4 +61,22 @@ test("media uploads are limited to images under 4 MB and dimensions are read fro
 
 test("migration files split into statements on semicolon line ends", () => {
   assert.deepEqual(splitStatements("CREATE TABLE a (x INT);\n\nCREATE INDEX i ON a (x);\n"), ["CREATE TABLE a (x INT)", "CREATE INDEX i ON a (x)"]);
+});
+
+test("callout lines and links render as their own blocks", () => {
+  assert.deepEqual(renderBody("> Short answer: chip first,\n> then register.\n\nSee https://www.arlis.am/hy/acts/228544 for the law."), [
+    { type: "callout", text: "Short answer: chip first, then register." },
+    { type: "paragraph", text: "See https://www.arlis.am/hy/acts/228544 for the law." },
+  ]);
+  assert.deepEqual(renderInline("See https://www.arlis.am/hy/acts/228544 for the law."), [
+    { type: "text", text: "See " },
+    { type: "link", href: "https://www.arlis.am/hy/acts/228544", text: "www.arlis.am/hy/acts/228544" },
+    { type: "text", text: " for the law." },
+  ]);
+  assert.deepEqual(renderInline("No links here"), [{ type: "text", text: "No links here" }]);
+  assert.deepEqual(renderInline("<b>x</b> http://a.example/y."), [
+    { type: "text", text: "<b>x</b> " },
+    { type: "link", href: "http://a.example/y", text: "a.example/y" },
+    { type: "text", text: "." },
+  ]);
 });

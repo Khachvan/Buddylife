@@ -47,6 +47,18 @@ repository posts read-only under "From the repository".
 
 Scaffold a file with `pnpm post:new -- --title "..." --lang en --publish-at 2026-10-01T09:00:00+04:00 --category "Everyday care" --cover /posts/2026-10-01/autumn-walks.jpg`.
 
+### Body format
+
+- `## ` starts a heading, `- ` a list item, an empty line separates paragraphs.
+- Lines starting with `> ` form a highlighted callout. Put a **Short answer** callout of two
+  or three sentences right after the first heading of every guide, so a reader on a phone gets
+  the answer before the details.
+- Any `https://` URL in the text becomes a clickable link (shown without the protocol). Write
+  sources as full URLs in a closing "Sources" list; never paste HTML.
+- Provider lists: one list item per place, `Name — address — phone`, so the owner can turn
+  them into partner listings later.
+- Paragraphs: 2–4 sentences. Split anything longer.
+
 ## 3. Visuals
 
 - Generate or edit the image, export JPEG or WebP, 1200×800 minimum, 3:2, under 400 KB.

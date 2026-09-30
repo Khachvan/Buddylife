@@ -71,6 +71,15 @@ Rotating `BACKOFFICE_*` or `QR_ATTRIBUTION_SECRET` values in Vercel does not cha
 - `/api/version` reports the commit and branch being served; `.github/workflows/production-drift.yml` checks it every 30 minutes and fails, notifying the owner, when production is not `main` or a language route is down.
 - `vercel.json` sets `ignoreCommand` so Vercel skips (exit 0) any production build whose branch is not `main` before the build even starts; every other build proceeds (exit 1). It is the same rule as the dashboard's "Ignored Build Step", kept in the repository so it is versioned and needs no dashboard change.
 
+## Search Console and email
+
+- Google Search Console: verify with the HTML-tag method and put the content value into
+  `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` (Production). No DNS change is needed. Then submit
+  `https://buddylife.am/sitemap.xml`.
+- Registration confirmation email: `RESEND_API_KEY`, `RESEND_FROM` (a sender on a domain
+  verified in Resend) and optional `RESEND_REPLY_TO`, Production only. Without them the
+  registration still succeeds and no mail is sent.
+
 ## Rollback
 
 If Production fails its smoke test, use Vercel's instant rollback and then investigate the failed change on a branch:

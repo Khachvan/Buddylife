@@ -14,14 +14,18 @@ import {
   BellRing,
   BookOpen,
   CalendarClock,
+  CheckCircle2,
   ChevronDown,
   HeartPulse,
   Home,
   MapPin,
   MapPinned,
   Link2,
+  Mail,
   Menu,
+  MessageCircle,
   PawPrint,
+  Phone,
   Search,
   Send,
   Share2,
@@ -151,6 +155,13 @@ const tr = {
     trustEyebrow: "BUDDYLIFE ՎՍՏԱՀՈՒԹՅՈՒՆ",
     pressEyebrow: "ՄԱՄՈՒԼԻ ՇՆՈՐՀԱՆԴԵՍ",
     earlyAccess: "ՎԱՂ ՀԱՍԱՆԵԼԻՈՒԹՅՈՒՆ",
+    promise: "Վաղ հասանելիություն և Երևանի կենդանատիրոջ ստուգաթերթը՝ էլ․ փոստով։ Առանց գովազդի, կարող եք հրաժարվել ցանկացած պահի։",
+    successNote: "Ստուգաթերթն արդեն ձեր էլ․ փոստում է (նայեք նաև «Սպամ» թղթապանակը)։",
+    contactTitle: "Հարց ունե՞ք",
+    contactLead: "Գրեք մեզ՝ պատասխանում ենք աշխատանքային օրերին։",
+    contactLabels: ["Էլ․ փոստ", "WhatsApp", "Telegram", "Զանգել"],
+    partnerTitle: "Դարձեք հիմնադիր գործընկեր",
+    partnerLead: "Առաջին կլինիկաները, գրումերները և հյուրանոցները գրանցվում են անվճար, ստանում են վերիֆիկացված պրոֆիլ և տեղ գլխավոր էջում։ Թողեք կոնտակտ՝ մենք կզանգենք։",
     communityLabel: "Համայնք",
     preparingLabel: "Վաղ հասանելիության նախապատրաստում",
     slideLabel: "Սլայդ",
@@ -299,6 +310,13 @@ const tr = {
     trustEyebrow: "ДОВЕРИЕ BUDDYLIFE",
     pressEyebrow: "ПРЕСС-ПРЕЗЕНТАЦИЯ",
     earlyAccess: "РАННИЙ ДОСТУП",
+    promise: "Ранний доступ и чек-лист владельца питомца в Ереване — на почту. Без рекламы, отписаться можно в любой момент.",
+    successNote: "Чек-лист уже в вашей почте (проверьте и папку «Спам»).",
+    contactTitle: "Есть вопрос?",
+    contactLead: "Напишите нам — отвечаем в рабочие дни.",
+    contactLabels: ["Почта", "WhatsApp", "Telegram", "Позвонить"],
+    partnerTitle: "Станьте партнёром-основателем",
+    partnerLead: "Первые клиники, грумеры и гостиницы регистрируются бесплатно, получают проверенный профиль и место на главной странице. Оставьте контакт — мы перезвоним.",
     communityLabel: "Сообщество",
     preparingLabel: "Подготовка раннего доступа",
     slideLabel: "Слайд",
@@ -435,6 +453,13 @@ const tr = {
     trustEyebrow: "BUDDYLIFE TRUST",
     pressEyebrow: "PRESS LAUNCH",
     earlyAccess: "EARLY ACCESS",
+    promise: "Early access plus the Yerevan pet-owner checklist by email. No ads; unsubscribe any time.",
+    successNote: "The checklist is already in your inbox (check the spam folder too).",
+    contactTitle: "Have a question?",
+    contactLead: "Write to us — we reply on working days.",
+    contactLabels: ["Email", "WhatsApp", "Telegram", "Call"],
+    partnerTitle: "Become a founding partner",
+    partnerLead: "The first clinics, groomers and hotels register free, get a verified profile and a place on the home page. Leave a contact and we will call you.",
     communityLabel: "Community",
     preparingLabel: "Preparing early access",
     slideLabel: "Slide",
@@ -732,6 +757,7 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
               <button className="button" onClick={() => open()}>
                 {t.join}
               </button>
+              <p className="heroPromise"><CheckCircle2 size={18} aria-hidden="true" /> {t.promise}</p>
               <div className="carouselDots">
                 {images.map((_, i) => (
                   <button
@@ -745,22 +771,21 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
             </div>
           </section>
           <AudienceSplit t={t} lang={lang} />
-          <FeaturePreview t={t} lang={lang} />
-          <TrustSection t={t} lang={lang} />
           <EducationPreview h={h} lang={lang} posts={posts} />
+          <TrustSection t={t} lang={lang} />
           <Press t={t} open={open} />
         </>
       )}
       {view === "owners" && <AudiencePage type="parent" t={t} open={open} />}{" "}
       {view === "business" && (
-        <AudiencePage type="business" t={t} open={open} />
+        <AudiencePage type="business" t={t} open={open} cms={cms} />
       )}{" "}
       {view === "features" && <Features t={t} open={open} />}
       {view === "learn" && <EducationHub h={h} lang={lang} posts={posts} />}
       {(view === "privacy" || view === "terms" || view === "verification") && (
         <LegalPage kind={view} content={legalContent[lang]} />
       )}
-      <Footer t={t} lang={lang} />
+      <Footer t={t} lang={lang} cms={cms} />
       {modal && (
         <JoinModal
           t={t}
@@ -1027,42 +1052,6 @@ function AudienceSplit({ t, lang }: { t: SiteCopy; lang: Lang }) {
     </section>
   );
 }
-function FeaturePreview({ t, lang }: { t: SiteCopy; lang: Lang }) {
-  return (
-    <section className="section featurePreview">
-      <div className="shell">
-        <div className="sectionIntro centered">
-          <p className="eyebrow">{t.productEyebrow}</p>
-          <h2>{t.featureTitle}</h2>
-          <p>{t.featureLead}</p>
-        </div>
-        <div className="previewCards">
-          {t.parentCards.slice(0, 4).map((x, i) => (
-            <article key={x[0]}>
-              <span>
-                {(() => {
-                  const Icon = parentIcons[i];
-                  return <Icon size={24} />;
-                })()}
-              </span>
-              <small>0{i + 1}</small>
-              <h3>{x[0]}</h3>
-              <p>{x[1]}</p>
-            </article>
-          ))}
-        </div>
-        <a
-          className="centerLink"
-          href={localePath(lang, "/features")}
-          target="_top"
-          onClick={(e) => openRoute(e, "/features")}
-        >
-          {t.learn} →
-        </a>
-      </div>
-    </section>
-  );
-}
 function TrustSection({ t, lang }: { t: SiteCopy; lang: Lang }) {
   const icons = [BadgeCheck, ShieldCheck, UsersRound];
   return (
@@ -1261,6 +1250,7 @@ function Press({ t, open }: { t: SiteCopy; open: () => void }) {
         <div>
           <p className="eyebrow light">{t.pressEyebrow}</p>
           <h2>{t.press}</h2>
+          <p className="pressPromise"><CheckCircle2 size={16} aria-hidden="true" /> {t.promise}</p>
         </div>
         <button className="button whiteButton" onClick={open}>
           {t.join}
@@ -1273,10 +1263,12 @@ function AudiencePage({
   type,
   t,
   open,
+  cms = {},
 }: {
   type: Role;
   t: SiteCopy;
   open: (r?: Role) => void;
+  cms?: Record<string, string>;
 }) {
   const cards = type === "parent" ? t.parentCards : t.businessCards;
   const cardIcons = type === "parent" ? parentIcons : businessIcons;
@@ -1315,7 +1307,36 @@ function AudiencePage({
           </div>
         </div>
       </section>
+      {type === "business" && (
+        <section className="contactBand" aria-labelledby="partner-title">
+          <div className="shell">
+            <div>
+              <h2 id="partner-title">{t.partnerTitle}</h2>
+              <p>{t.partnerLead}</p>
+            </div>
+            <div className="contactLinks">
+              <button type="button" className="button" onClick={() => open("business")}>{t.join}</button>
+              <ContactLinks t={t} cms={cms} />
+            </div>
+          </div>
+        </section>
+      )}
       <Press t={t} open={() => open(type)} />
+    </>
+  );
+}
+function ContactLinks({ t, cms }: { t: SiteCopy; cms: Record<string, string> }) {
+  const email = (cms.contact_email || "").trim();
+  const whatsapp = (cms.contact_whatsapp || "").replace(/[^\d+]/g, "");
+  const telegram = (cms.contact_telegram || "").trim().replace(/^@/, "");
+  const phone = (cms.contact_phone || "").replace(/[^\d+]/g, "");
+  const [emailLabel, whatsappLabel, telegramLabel, callLabel] = t.contactLabels;
+  return (
+    <>
+      {email && <a href={`mailto:${email}`}><Mail size={16} aria-hidden="true" /> {emailLabel}</a>}
+      {whatsapp && <a href={`https://wa.me/${whatsapp.replace(/^\+/, "")}`} target="_blank" rel="noopener noreferrer"><MessageCircle size={16} aria-hidden="true" /> {whatsappLabel}</a>}
+      {telegram && <a href={`https://t.me/${telegram}`} target="_blank" rel="noopener noreferrer"><Send size={16} aria-hidden="true" /> {telegramLabel}</a>}
+      {phone && <a href={`tel:${phone}`}><Phone size={16} aria-hidden="true" /> {callLabel}</a>}
     </>
   );
 }
@@ -1524,6 +1545,7 @@ function JoinModal({
       body: JSON.stringify({
         ...body,
         role,
+        language: lang,
         utmSource: new URLSearchParams(window.location.search).get("utm_source") || "",
         utmMedium: new URLSearchParams(window.location.search).get("utm_medium") || "",
         utmCampaign: new URLSearchParams(window.location.search).get("utm_campaign") || "",
@@ -1559,6 +1581,7 @@ function JoinModal({
           <div className="modalSuccess">
             <span>♥</span>
             <h2>{t.success}</h2>
+            <p className="successNote">{t.successNote}</p>
             <p>{t.press}</p>
             <div className="successSocials">
               <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">
@@ -1585,6 +1608,7 @@ function JoinModal({
               />
               <p>{t.press}</p>
             </div>
+            <p className="modalPromise"><CheckCircle2 size={16} aria-hidden="true" /> {t.promise}</p>
             <div className="roleTabs">
               <button
                 type="button"
@@ -1744,7 +1768,8 @@ function JoinModal({
     </div>
   );
 }
-function Footer({ t, lang }: { t: SiteCopy; lang: Lang }) {
+function Footer({ t, lang, cms = {} }: { t: SiteCopy; lang: Lang; cms?: Record<string, string> }) {
+  const hasContact = Boolean(cms.contact_email || cms.contact_whatsapp || cms.contact_telegram || cms.contact_phone);
   return (
     <footer className="trustFooter">
       <div className="shell footerMain">
@@ -1809,6 +1834,12 @@ function Footer({ t, lang }: { t: SiteCopy; lang: Lang }) {
             {t.verificationLink}
           </a>
         </div>
+        {hasContact && (
+          <div className="footerColumn">
+            <b>{t.contactTitle}</b>
+            <div className="contactLinks"><ContactLinks t={t} cms={cms} /></div>
+          </div>
+        )}
         <div className="footerColumn">
           <b>{t.communityLabel}</b>
           <a href="https://www.instagram.com/buddylifearmenia/" target="_blank" rel="noopener noreferrer">

@@ -11,6 +11,10 @@ const fields = [
   ["banner_3_hy", "Banner 3 · Armenian"],
   ["banner_3_ru", "Banner 3 · Russian"],
   ["banner_3_en", "Banner 3 · English"],
+  ["contact_email", "Contact · email address (shown in the footer and on the business page)"],
+  ["contact_whatsapp", "Contact · WhatsApp number in international format, e.g. +37477123456"],
+  ["contact_telegram", "Contact · Telegram username without @"],
+  ["contact_phone", "Contact · phone number to call, e.g. +37477123456"],
 ];
 
 type Registration = {
@@ -143,6 +147,7 @@ export default function AdminClient() {
       </section>
       {loadError && <section className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p><button type="button" onClick={() => window.location.reload()}>Reload</button></section>}
       <section className="adminRegistrationLinks">
+        <a href="/admin/stats"><span>▤</span><div><b>Stats</b><small>Readers, join opens, registrations by week, source and language</small></div><strong>Open →</strong></a>
         <a href="/admin/posts"><span>✎</span><div><b>Posts and scheduling</b><small>Write Learn articles, schedule publish dates and manage what is live</small></div><strong>Open →</strong></a>
         <a href="/admin/media"><span>▣</span><div><b>Media library</b><small>Upload cover images and visuals for posts</small></div><strong>Open →</strong></a>
         <a href="/admin/database"><span>◍</span><div><b>Database</b><small>Neon status, migrations and Vercel storage links</small></div><strong>Open →</strong></a>
