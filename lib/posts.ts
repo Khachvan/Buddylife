@@ -45,7 +45,29 @@ export type PostSource = "cms" | "repository";
 export type BodyBlock =
   | { type: "heading"; text: string }
   | { type: "paragraph"; text: string }
-  | { type: "list"; items: string[] };
+  | { type: "list"; items: string[] }
+  | { type: "callout"; text: string };
+
+export type InlinePart = { type: "text"; text: string } | { type: "link"; href: string; text: string };
+
+const URL_PATTERN = /https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"]/g;
+
+/** Splits text into plain runs and https links so sources become clickable without allowing HTML. */
+export function renderInline(text: string): InlinePart[] {
+  const parts: InlinePart[] = [];
+  let last = 0;
+  for (const match of text.matchAll(URL_PATTERN)) {
+    const index = match.index ?? 0;
+    if (index > last) parts.push({ type: "text", text: text.slice(last, index) });
+    const href = match[0];
+    let label = href.replace(/^https?:\/\//, "");
+    if (label.length > 60) label = `${label.slice(0, 57)}…`;
+    parts.push({ type: "link", href, text: label });
+    last = index + href.length;
+  }
+  if (last < text.length) parts.push({ type: "text", text: text.slice(last) });
+  return parts;
+}
 
 export const POST_LIMITS = { slug: 80, category: 60, title: 160, excerpt: 400, body: 20000 };
 export const DEFAULT_COVER = "/og.webp";
@@ -93,9 +115,17 @@ export function renderBody(body: string): BodyBlock[] {
     if (list.length) blocks.push({ type: "list", items: list });
     list = [];
   };
+  let callout: string[] = [];
+  const flushCallout = () => {
+    if (callout.length) blocks.push({ type: "callout", text: callout.join(" ") });
+    callout = [];
+  };
   for (const raw of body.replace(/\r\n?/g, "\n").split("\n")) {
     const line = raw.trim();
-    if (!line) { flushParagraph(); flushList(); continue; }
+    if (!line) { flushParagraph(); flushList(); flushCallout(); continue; }
+    // "> " lines form a highlighted callout, used for the short answer at the top of a guide.
+    if (line.startsWith("> ") || line === ">") { flushParagraph(); flushList(); if (line.length > 2) callout.push(line.slice(2).trim()); continue; }
+    flushCallout();
     if (line.startsWith("## ")) { flushParagraph(); flushList(); blocks.push({ type: "heading", text: line.slice(3).trim() }); continue; }
     if (/^[-*•]\s+/.test(line)) { flushParagraph(); list.push(line.replace(/^[-*•]\s+/, "")); continue; }
     flushList();
@@ -103,6 +133,7 @@ export function renderBody(body: string): BodyBlock[] {
   }
   flushParagraph();
   flushList();
+  flushCallout();
   return blocks;
 }
 

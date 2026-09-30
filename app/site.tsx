@@ -771,9 +771,8 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
             </div>
           </section>
           <AudienceSplit t={t} lang={lang} />
-          <FeaturePreview t={t} lang={lang} />
-          <TrustSection t={t} lang={lang} />
           <EducationPreview h={h} lang={lang} posts={posts} />
+          <TrustSection t={t} lang={lang} />
           <Press t={t} open={open} />
         </>
       )}
@@ -1050,42 +1049,6 @@ function AudienceSplit({ t, lang }: { t: SiteCopy; lang: Lang }) {
           </div>
         </div>
       </article>
-    </section>
-  );
-}
-function FeaturePreview({ t, lang }: { t: SiteCopy; lang: Lang }) {
-  return (
-    <section className="section featurePreview">
-      <div className="shell">
-        <div className="sectionIntro centered">
-          <p className="eyebrow">{t.productEyebrow}</p>
-          <h2>{t.featureTitle}</h2>
-          <p>{t.featureLead}</p>
-        </div>
-        <div className="previewCards">
-          {t.parentCards.slice(0, 4).map((x, i) => (
-            <article key={x[0]}>
-              <span>
-                {(() => {
-                  const Icon = parentIcons[i];
-                  return <Icon size={24} />;
-                })()}
-              </span>
-              <small>0{i + 1}</small>
-              <h3>{x[0]}</h3>
-              <p>{x[1]}</p>
-            </article>
-          ))}
-        </div>
-        <a
-          className="centerLink"
-          href={localePath(lang, "/features")}
-          target="_top"
-          onClick={(e) => openRoute(e, "/features")}
-        >
-          {t.learn} →
-        </a>
-      </div>
     </section>
   );
 }

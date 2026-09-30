@@ -161,7 +161,7 @@ a {
 }
 .eyebrow {
   color: var(--violet);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.16em;
   font-weight: 900;
   margin: 0 0 22px;
@@ -189,6 +189,9 @@ h1 span {
   gap: 26px;
 }
 .textLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-weight: 800;
   font-size: 14px;
 }
@@ -803,6 +806,9 @@ footer {
 }
 .educationLink {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--violet);
   font-weight: 800;
 }
@@ -933,8 +939,8 @@ footer {
   color: var(--violet);
   background: #f1eafa;
   border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 11px;
+  padding: 7px 11px;
+  font-size: 12.5px;
   font-weight: 900;
 }
 .educationBody h3 {
@@ -1041,6 +1047,17 @@ footer {
   font-size: 17px;
   line-height: 1.8;
 }
+.articleCallout {
+  margin: 0 0 22px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border-inline-start: 4px solid #6f42c1;
+  background: #f4eefb;
+  color: var(--plum);
+  font-weight: 650;
+  line-height: 1.6;
+}
+.articleBody a { color: #6f42c1; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .articleDisclaimer {
   margin-top: 30px;
   padding: 20px;
@@ -3262,7 +3279,7 @@ button {
   border-radius: 12px;
   padding: 10px 12px;
   color: #594e61;
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 800;
 }
 .audienceSignals svg {
@@ -3390,11 +3407,12 @@ button {
 .footerColumn span,
 .footerColumn p {
   color: #cdbfd5;
-  font-size: 13px;
+  font-size: 14px;
 }
 .footerColumn a {
   display: flex;
   align-items: center;
+  min-height: 40px;
   gap: 8px;
   transition: 0.2s;
 }

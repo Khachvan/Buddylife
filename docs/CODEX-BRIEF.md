@@ -57,12 +57,25 @@ The week-by-week content list and targets are in [`PLAN-OCTOBER-2026.md`](./PLAN
 
 ## Social conventions
 
-- File per campaign: `content/social/<YYYY-MM-DD>-<slug>.md` with sections `Instagram`,
-  `Facebook`, `Telegram`, each with the caption in `hy` and `ru`, hashtags, the asset path
-  and the target post time in Yerevan time.
-- Reuse the article cover; for Instagram add a 1080×1350 crop under the same folder.
-- Link always to the localized article URL, never to a raw share URL.
-- Do not post from Codex; the owner (or a scheduler the owner connects) publishes.
+- 3–4 posts a week in total across Instagram and Facebook, not more. Rhythm: Monday community
+  question, Wednesday guide, Friday guide or real-interface reel, Sunday one useful tip.
+- One language per post. Armenian by default; a separate Russian post for topics with Russian
+  demand (registration, clinics, costs). English stays on the website.
+- 1–3 sentences, one concrete tip or one question, one call to action. Facebook: concise
+  native text and the verified link. Instagram: link in bio plus one story frame with the
+  link. Stories only when something is live. 3–5 hashtags.
+- Visuals: BuddyLife editorial illustrations are the default while there is no real material;
+  screen recordings of the live site, branded checklist cards and the team's own pets are also
+  fine. Never present AI imagery as a real clinic, venue, customer or result; never invent
+  testimonials, partners, venues, prices or launch dates.
+- File per week: `content/social/<YYYY-MM-DD>-week.md` with one section per post (channel,
+  day and time in Yerevan time, language, caption, hashtags, asset path, tracked link with
+  `utm_source`, `utm_medium`, `utm_campaign`). The owner approves the week once on Monday.
+- Community work is part of every week and is recorded: follow 20 relevant Armenian
+  accounts, leave 10 genuine comments, share each guide in 3 Facebook groups with a personal
+  sentence, answer group questions with the matching guide, draft 3 partner outreach messages.
+- No paid ads or boosts. Measure link clicks and registrations (backoffice Stats), not views.
+- Do not post from Codex; the owner publishes.
 
 ## Health rules for the channel
 

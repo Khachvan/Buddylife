@@ -7,7 +7,7 @@ import ArticleHeader from "./article-header";
 import ArticleViewTracker from "./article-view-tracker";
 import { localeAlternates, localePath, localeUrl } from "../../../lib/locale";
 import { articlePublished } from "../../../lib/content-dates";
-import { renderBody } from "../../../lib/posts";
+import { renderBody, renderInline } from "../../../lib/posts";
 import { isShort, videoEmbed, type PostVideo } from "../../../lib/content-posts";
 import { loadPublicPosts, loadPublishedPost } from "../../../lib/posts-store";
 import { educationSlugs, hub } from "../../learn-copy";
@@ -465,9 +465,9 @@ function CmsArticle({ slug, post, query }: { slug: string; post: CmsPost; query:
     <article className="articleShell">
       <Link className="articleBack" href={localePath(lang, "/learn")}>← {labels.back}</Link>
       <p className="eyebrow">{post.category || labels.eyebrow}</p><h1>{post.title}</h1>{post.excerpt && <p className="articleDeck">{post.excerpt}</p>}
-      {post.video ? <PostVideoBlock video={post.video} title={post.title} /> : <Image className="articleHero" src={image} alt={post.title} width={1200} height={800} priority unoptimized={image.startsWith("/media/") || !image.startsWith("/")} />}
+      {post.video ? <PostVideoBlock video={post.video} title={post.title} /> : <Image className="articleHero" src={image} alt={post.title} width={1200} height={800} sizes="(max-width: 860px) 100vw, 780px" priority unoptimized={image.startsWith("/media/") || !image.startsWith("/")} />}
       <div className="articleBody">
-        {blocks.map((block, index) => block.type === "heading" ? <h2 key={index}>{block.text}</h2> : block.type === "list" ? <ul key={index}>{block.items.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}</ul> : <p key={index}>{block.text}</p>)}
+        {blocks.map((block, index) => block.type === "heading" ? <h2 key={index}>{block.text}</h2> : block.type === "list" ? <ul key={index}>{block.items.map((item, itemIndex) => <li key={itemIndex}><Inline text={item} /></li>)}</ul> : block.type === "callout" ? <aside key={index} className="articleCallout"><Inline text={block.text} /></aside> : <p key={index}><Inline text={block.text} /></p>)}
         <p className="articleDisclaimer">{labels.disclaimer}</p>
       </div>
       <section className="articleConversionCta" aria-labelledby="article-join-title">
@@ -478,6 +478,10 @@ function CmsArticle({ slug, post, query }: { slug: string; post: CmsPost; query:
       <ArticleShare title={post.title} url={localizedUrl} lang={lang} />
     </article>
   </main></>;
+}
+
+function Inline({ text }: { text: string }) {
+  return <>{renderInline(text).map((part, index) => part.type === "link" ? <a key={index} href={part.href} target="_blank" rel="noopener noreferrer">{part.text}</a> : <span key={index}>{part.text}</span>)}</>;
 }
 
 function PostVideoBlock({ video, title }: { video: PostVideo; title: string }) {
