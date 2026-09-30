@@ -4,9 +4,12 @@ Written 30 September 2026 from the site review, the Armenian market scan and the
 (Vercel: 211 visitors / 459 views in 30 days, 70% bounce, Facebook the only referrer;
 database: 17 registrations, none since 1 September; Google: 2 referrals a month).
 
-Three owners. **Claude Code** owns code and product (this file, `docs/PRODUCT-BACKLOG.md`).
-**Codex** owns content and social under `docs/CODEX-BRIEF.md`. **Owner** (Khachatur) owns
-accounts, partners, publishing and money. Nothing here authorises spending or account changes.
+Three owners. **Claude Code** owns the website and its development (buddylife.am, Learn,
+registrations, backoffice, QR attribution; this file and `docs/PRODUCT-BACKLOG.md`).
+**Codex** owns content and social drafts under `docs/CODEX-BRIEF.md`. **Owner** (Khachatur)
+owns accounts, partners, publishing and money. The BuddyLife application (pet profiles,
+health passport, reminders, in-app directory) is built by the owner's dev team and is out of
+scope for this plan. Nothing here authorises spending or account changes.
 
 ## Goals for 31 October
 
@@ -72,13 +75,14 @@ accounts, partners, publishing and money. Nothing here authorises spending or ac
 ## Weeks 3–4 (13–31 October) — directory and retention
 
 **Claude Code**
-1. Verified provider directory (backlog item 2): category, city, languages, verified
-   badge, "request a quote" to up to three providers, tracked as `quote_requested`.
+1. Website provider listing (backlog item 2): a public page of founding partners by
+   category and city with a "request a quote" form, tracked as `quote_requested`. This is
+   a website page for lead capture; the in-app directory belongs to the app team.
 2. Founding partners section on the home page fed by backoffice content keys.
-3. Pet record fields for the municipal register: chip number, registration date, yearly
-   vaccination reminder email (backlog item 3).
-4. Weekly email digest to registered users: the week's guides (Resend is already
+3. Weekly email digest to registered users: the week's guides (Resend is already
    connected). Unsubscribe link and consent line on the form.
+4. Social insight in the backoffice Stats page: reach and engagement of the Facebook and
+   Instagram pages next to site visits, once the accounts are connected read-only.
 
 **Codex**
 - Travelling inside Armenia with a pet, insurance explainer (EFES, INGO, Nairi), adoption
@@ -98,5 +102,5 @@ accounts, partners, publishing and money. Nothing here authorises spending or ac
 
 ## Not doing in October
 
-Mobile app, payments, booking engine, paid ads. The directory and the content base come
+Anything belonging to the application (it is the dev team's), payments, booking engine, paid ads. The directory and the content base come
 first; ads are only worth buying once the join conversion is back above 20%.
