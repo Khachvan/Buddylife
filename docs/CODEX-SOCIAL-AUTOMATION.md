@@ -1,10 +1,10 @@
 # Codex social automation — replacement prompt (October 2026)
 
-Paste the block below into the Codex automation `buddylife-social-and-ads-review`
-(`~/.codex/automations/buddylife-social-and-ads-review/automation.toml`, field `prompt`),
-replacing the whole existing prompt. Keep the automation on the BuddyLife main thread.
-Change the schedule from every 30 minutes to twice a day (09:00 and 18:00 Asia/Yerevan);
-nothing in this prompt needs a half-hourly run.
+Applied on 30 September 2026 to the Codex automation `buddylife-social-and-ads-review`
+(`~/.codex/automations/buddylife-social-and-ads-review/automation.toml`, field `prompt`); the
+previous prompt is kept next to it as `automation.toml.bak-<timestamp>`. The automation stays on
+the BuddyLife main thread and now runs every 6 hours instead of every 30 minutes; the prompt
+ends the run quietly when nothing is due. The block below is the prompt in force.
 
 Why it changes: the old prompt still carried a Preview → promote-to-Production release flow
 (the cause of the 29 September outage), a paid-media programme that is not happening, and a
