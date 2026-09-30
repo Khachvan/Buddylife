@@ -76,6 +76,15 @@ Scaffold a file with `pnpm post:new -- --title "..." --lang en --publish-at 2026
 5. Verify: `https://buddylife.am/<lang>/learn/<slug>` (Armenian has no prefix), the Learn
    hub, and the sitemap. Backoffice → Posts shows it under "From the repository".
 
+### Planning a whole week
+
+Run `pnpm content:week` first. It prints the next 7 days in Yerevan time with everything
+already scheduled and marks empty days with a ready `--publish-at` value. Create one post
+per empty day with `pnpm post:new`, put all of the week's files and covers in one pull
+request (`codex/week-<YYYYMMDD>`), and run `pnpm content:week` again to confirm no day is
+empty. After the merge the owner sees the same plan in Backoffice → Posts → "Next 7 days",
+where backoffice posts can also be scheduled on a day with one click.
+
 ## 6. Social media drafts
 
 For every article, write `content/social/<YYYY-MM-DD>-<slug>.md` with a section per channel

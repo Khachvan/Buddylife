@@ -23,6 +23,7 @@
     "db:migrate:local": "node --env-file=.env.local scripts/migrate-database.mjs",
     "content": "node scripts/validate-content.ts",
     "post:new": "node scripts/new-post.mjs",
+    "content:week": "node scripts/content-week.mjs",
     "content:guard": "node scripts/guard-content-branch.mjs origin/main"
   },
   "dependencies": {

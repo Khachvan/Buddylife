@@ -64,5 +64,7 @@ Every article ends with the join call to action the site already renders.
 
 - One topic per pull request; content and images together.
 - The `codex/` branch is deleted after merge.
+- Plan a week at a time: `pnpm content:week` shows the next 7 days and the empty ones; one
+  `codex/week-<YYYYMMDD>` pull request may carry the whole week of posts and covers.
 - `pnpm content` must be green; a red validator means the pull request is not ready.
 - Never overwrite a live post's slug or cover; create a new file for a new version.
