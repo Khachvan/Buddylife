@@ -4,6 +4,15 @@
 
 Before BuddyLife work, read [`README.md`](./README.md), [`TESTING.md`](./TESTING.md), [`VERCEL_ENVIRONMENTS.md`](./VERCEL_ENVIRONMENTS.md) and, for QR work, [`QR_RELEASE_GUARDRAILS.md`](./QR_RELEASE_GUARDRAILS.md). The operations index (`CURRENT-WORK.md`, `buddylife_operations/`) is kept outside this repository; when it is not present next to the checkout, treat the documents above as the working index. BuddyLife Main Tread (`01a02aec-5479-7833-8b48-f59e68db5035`) is the sole coordinator and writer of the shared flow register. Supporting work owns only its recorded surface and must route status/evidence back through the coordinator. Do not infer human specialist approval, provider capacity, publication authority, production approval, or spending authority from task ownership. Apply the task-based model routing in `TESTING.md` only through real supported dispatch controls; AGENTS text alone does not switch models.
 
+## Production safety — 30 September 2026
+
+On 29 September a preview built from a stale `codex/` branch was put on the production domain and replaced `main` for a day: languages, the scheduler, the backoffice CMS and security fixes all disappeared. Rules for every agent and session:
+
+- Never deploy, promote, alias or roll back anything on Vercel. No `vercel` CLI, no Vercel connector writes, no dashboard promotion. Production changes only when a pull request is merged into `main`.
+- Start every branch from a fresh `origin/main` (`git fetch origin && git switch -c <branch> origin/main`). Never reuse an old checkout or worktree.
+- `codex/` branches may only touch `content/`, `public/posts/` and `public/videos/`. CI enforces this and the freshness of the base (`pnpm content:guard`).
+- A production build from any branch other than `main` fails by design, and a watchdog workflow checks every 30 minutes that buddylife.am serves `main`.
+
 ## Content publishing from chat — 26 September 2026
 
 Codex owns content; Claude Code owns code and product. Codex follows [`docs/CODEX-BRIEF.md`](./docs/CODEX-BRIEF.md) and must not change application code. Articles, visuals, shorts, videos, social drafts and their scheduling are produced from chat sessions as repository content, following [`docs/CONTENT-PLAYBOOK.md`](./docs/CONTENT-PLAYBOOK.md): one JSON file per post and language under `content/posts/`, images under `public/posts/<date>/`, videos as YouTube/Vimeo links, `publishAt` for scheduling. Validate with `pnpm content` and `pnpm check:fast`, open a pull request, and merge into `main` the same day; the site publishes at the scheduled time without any deploy step. Backoffice posts remain the manual channel at backoffice.buddylife.am. Development work stays separate from content pull requests.

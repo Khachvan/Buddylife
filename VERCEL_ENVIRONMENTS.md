@@ -65,6 +65,14 @@ BuddyLife QR QA uses the stable Preview-only alias `https://buddylife-qr-preview
 
 Rotating `BACKOFFICE_*` or `QR_ATTRIBUTION_SECRET` values in Vercel does not change Git. Apply the new values with `vercel redeploy <current production deployment> --target production`, which rebuilds nothing and only restarts the already-verified build with the new environment. This is the one accepted CLI production action; it must never be used to deploy new code.
 
+## Guards against non-main production (30 September 2026)
+
+- `pnpm build` runs `scripts/guard-production-build.mjs`, which fails a production build when the branch is not `main`.
+- `/api/version` reports the commit and branch being served; `.github/workflows/production-drift.yml` checks it every 30 minutes and fails, notifying the owner, when production is not `main` or a language route is down.
+- Recommended in the Vercel project settings (Git → Ignored Build Step) as a repository-independent lock:
+  `if [ "$VERCEL_ENV" = "production" ] && [ "$VERCEL_GIT_COMMIT_REF" != "main" ]; then exit 0; else exit 1; fi`
+  (exit 0 skips the build, so a production build from another branch never starts).
+
 ## Rollback
 
 If Production fails its smoke test, use Vercel's instant rollback and then investigate the failed change on a branch:

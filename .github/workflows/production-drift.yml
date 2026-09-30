@@ -1,0 +1,48 @@
+name: Production drift watchdog
+
+# Fails (and notifies the repository owner) when buddylife.am is not serving main.
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 50
+
+      - name: Production must serve main
+        run: |
+          set -euo pipefail
+          body=$(curl -fsS -m 30 https://buddylife.am/api/version) || { echo "::error::/api/version is missing: production is not running current code"; exit 1; }
+          echo "production: $body"
+          ref=$(echo "$body" | sed -n 's/.*"ref":"\([^"]*\)".*/\1/p')
+          commit=$(echo "$body" | sed -n 's/.*"commit":"\([^"]*\)".*/\1/p')
+          if [ "$ref" != "main" ]; then echo "::error::production is built from '$ref', not main"; exit 1; fi
+          head=$(git rev-parse HEAD)
+          if [ "$commit" = "$head" ]; then echo "production matches main ($head)"; exit 0; fi
+          age=$(( $(date +%s) - $(git log -1 --format=%ct HEAD) ))
+          if git merge-base --is-ancestor "$commit" HEAD 2>/dev/null && [ "$age" -lt 1800 ]; then
+            echo "production is one deploy behind a recent merge (${age}s ago); allowed"
+            exit 0
+          fi
+          echo "::error::production serves $commit but main is $head"
+          exit 1
+
+      - name: Language routes and scheduler are alive
+        run: |
+          set -euo pipefail
+          for path in / /ru /en /fa /learn /sitemap.xml; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -m 30 "https://buddylife.am$path")
+            echo "$path -> $code"
+            [ "$code" = "200" ] || { echo "::error::$path returned $code"; exit 1; }
+          done
