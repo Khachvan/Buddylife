@@ -1,20 +1,28 @@
-# Hero headline suggestions
+# Hero and join-copy proposals
 
-Paste into Backoffice → Website management → Rotating banner copy. One line per banner.
-Positioning: BuddyLife's pet record works at every clinic, groomer and hotel in Armenia,
-not only at one chain.
+## Rotating hero headlines
 
-## Banner 1
-- hy: Կենդանուդ առողջության պատմությունը՝ մեկ տեղում, ցանկացած կլինիկայի հետ
-- ru: История здоровья питомца в одном месте — с любой клиникой
-- en: Your pet's health record in one place, with any clinic
+### 1
+- hy: Երևանում կենդանուդ կարևոր տվյալները՝ մեկ հստակ տեղում
+- ru: Важные данные вашего питомца в Ереване — в одном понятном месте
+- en: Your pet’s essentials in Yerevan, in one clear place
+- fa: اطلاعات ضروری حیوان خانگی‌تان در ایروان، در یک جای روشن
 
-## Banner 2
-- hy: Հիշեցում պատվաստման, չիպի և գրանցման մասին՝ մինչև ժամկետը
-- ru: Напоминания о прививках, чипировании и регистрации — заранее
-- en: Reminders for vaccinations, chipping and registration, before they are due
+### 2
+- hy: Անասնաբույժ, խնամք և օգտակար ուղեցույցներ՝ Երևանի կենդանատերերի համար
+- ru: Ветеринары, уход и полезные гиды для владельцев животных в Ереване
+- en: Vet care, everyday help, and useful guides for Yerevan pet owners
+- fa: دامپزشکی، مراقبت روزانه و راهنماهای کاربردی برای صاحبان حیوانات در ایروان
 
-## Banner 3
-- hy: Ստուգված մասնագետներ Երևանում՝ առանց երկար որոնման
-- ru: Проверенные специалисты в Ереване — без долгих поисков
-- en: Verified pet professionals in Yerevan, without the long search
+### 3
+- hy: Նախ պատրաստվեք, հետո հանգիստ գնացեք կենդանուդ հետ
+- ru: Сначала подготовьтесь — потом спокойно отправляйтесь вместе с питомцем
+- en: Prepare first, then head out calmly with your pet
+- fa: اول آماده شوید، بعد با آرامش همراه حیوان خانگی‌تان بروید
+
+## Join promise
+
+- hy: Ստացեք վաղ հասանելիություն և Երևանի կենդանատիրոջ checklist-ը՝ էլ. փոստով։
+- ru: Получите ранний доступ и чек-лист владельца питомца в Ереване по email.
+- en: Get early access and the Yerevan pet-owner checklist by email.
+- fa: دسترسی زودهنگام و چک‌لیست صاحب حیوان خانگی در ایروان را از طریق ایمیل دریافت کنید.
