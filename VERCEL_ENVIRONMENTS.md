@@ -69,9 +69,7 @@ Rotating `BACKOFFICE_*` or `QR_ATTRIBUTION_SECRET` values in Vercel does not cha
 
 - `pnpm build` runs `scripts/guard-production-build.mjs`, which fails a production build when the branch is not `main`.
 - `/api/version` reports the commit and branch being served; `.github/workflows/production-drift.yml` checks it every 30 minutes and fails, notifying the owner, when production is not `main` or a language route is down.
-- Recommended in the Vercel project settings (Git → Ignored Build Step) as a repository-independent lock:
-  `if [ "$VERCEL_ENV" = "production" ] && [ "$VERCEL_GIT_COMMIT_REF" != "main" ]; then exit 0; else exit 1; fi`
-  (exit 0 skips the build, so a production build from another branch never starts).
+- `vercel.json` sets `ignoreCommand` so Vercel skips (exit 0) any production build whose branch is not `main` before the build even starts; every other build proceeds (exit 1). It is the same rule as the dashboard's "Ignored Build Step", kept in the repository so it is versioned and needs no dashboard change.
 
 ## Rollback
 
