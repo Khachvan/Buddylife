@@ -180,24 +180,50 @@ export function emailConfigured() {
   return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM);
 }
 
-/** Sends the confirmation and never throws: a mail failure must not fail the registration. */
-export async function sendRegistrationEmail(input: { to: string; language: EmailLanguage; role: EmailRole; name: string }) {
-  if (!emailConfigured()) return { sent: false as const, reason: "not_configured" as const };
-  const message = registrationEmail(input);
+type SendResult = { sent: true } | { sent: false; reason: "not_configured" | "rejected" | "failed" };
+
+/** Sends through Resend and never throws: a mail failure must not fail the request that triggered it. */
+async function sendEmail(route: string, label: string, payload: { to: string; subject: string; text: string; html: string; replyTo?: string }): Promise<SendResult> {
+  if (!emailConfigured()) return { sent: false, reason: "not_configured" };
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { authorization: `Bearer ${process.env.RESEND_API_KEY}`, "content-type": "application/json" },
-      body: JSON.stringify({ from: process.env.RESEND_FROM, to: [input.to], subject: message.subject, text: message.text, html: message.html, reply_to: process.env.RESEND_REPLY_TO || undefined }),
+      body: JSON.stringify({ from: process.env.RESEND_FROM, to: [payload.to], subject: payload.subject, text: payload.text, html: payload.html, reply_to: payload.replyTo || process.env.RESEND_REPLY_TO || undefined }),
       signal: AbortSignal.timeout(8000),
     });
     if (!response.ok) {
-      logEvent("error", "/api/register", "Confirmation email rejected", { status: response.status });
-      return { sent: false as const, reason: "rejected" as const };
+      logEvent("error", route, `${label} rejected`, { status: response.status });
+      return { sent: false, reason: "rejected" };
     }
-    return { sent: true as const };
+    return { sent: true };
   } catch (error) {
-    logEvent("error", "/api/register", "Confirmation email failed", { error: error instanceof Error ? error.message : "Unknown error" });
-    return { sent: false as const, reason: "failed" as const };
+    logEvent("error", route, `${label} failed`, { error: error instanceof Error ? error.message : "Unknown error" });
+    return { sent: false, reason: "failed" };
   }
+}
+
+export function sendRegistrationEmail(input: { to: string; language: EmailLanguage; role: EmailRole; name: string }) {
+  const message = registrationEmail(input);
+  return sendEmail("/api/register", "Confirmation email", { to: input.to, ...message });
+}
+
+/** Forwards a "Write to us" message to the owner (CONTACT_NOTIFY_TO) with the sender as reply-to. */
+export function sendContactNotification(input: { id: string; name: string; email: string; phone: string | null; business: string | null; message: string; language: string; page: string | null }) {
+  const to = process.env.CONTACT_NOTIFY_TO?.trim();
+  if (!to) return Promise.resolve<SendResult>({ sent: false, reason: "not_configured" });
+  const subject = `BuddyLife message from ${input.name}${input.business ? ` (${input.business})` : ""}`;
+  const lines = [
+    `From: ${input.name} <${input.email}>`,
+    input.phone ? `Phone: ${input.phone}` : null,
+    input.business ? `Business: ${input.business}` : null,
+    `Language: ${input.language}${input.page ? ` · Page: ${input.page}` : ""}`,
+    "",
+    input.message,
+    "",
+    `Reply to this email to answer. Backoffice → Messages (${input.id}).`,
+  ].filter((line): line is string => line !== null);
+  const text = lines.join("\n");
+  const html = `<pre style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;white-space:pre-wrap;font-size:15px;line-height:1.5;color:#2d163f">${escapeHtml(text)}</pre>`;
+  return sendEmail("/api/contact", "Contact notification", { to, subject, text, html, replyTo: input.email });
 }

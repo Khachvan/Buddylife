@@ -3,6 +3,7 @@ import test from "node:test";
 
 import { effectiveState, isValidSlug, normalizePostInput, renderBody, renderInline, slugify } from "../lib/posts.ts";
 import { imageDimensions, safeFileName, validateMediaUpload } from "../lib/media.ts";
+import { normalizeContactInput } from "../lib/contact.ts";
 import { splitStatements } from "../lib/migrations.ts";
 
 test("slugs are Latin, lowercase and hyphenated", () => {
@@ -79,4 +80,20 @@ test("callout lines and links render as their own blocks", () => {
     { type: "link", href: "http://a.example/y", text: "a.example/y" },
     { type: "text", text: "." },
   ]);
+});
+
+test("contact messages are validated and honeypot submissions are rejected", () => {
+  const ok = normalizeContactInput({ name: " Ani ", email: "Ani@Example.com", message: "Hello, we run a clinic in Yerevan.", business: "Vet Ani", language: "ru", page: "/for-business" });
+  assert.ok(ok.ok);
+  if (ok.ok) {
+    assert.equal(ok.value.email, "ani@example.com");
+    assert.equal(ok.value.name, "Ani");
+    assert.equal(ok.value.phone, null);
+    assert.equal(ok.value.language, "ru");
+  }
+  assert.equal(normalizeContactInput({ name: "A", email: "nope", message: "Hello there friend" }).ok, false);
+  assert.equal(normalizeContactInput({ name: "A", email: "a@b.co", message: "short" }).ok, false);
+  assert.equal(normalizeContactInput({ name: "A", email: "a@b.co", message: "Hello there friend", website: "http://spam" }).ok, false);
+  const fallback = normalizeContactInput({ name: "A", email: "a@b.co", message: "Hello there friend", language: "xx" });
+  assert.ok(fallback.ok && fallback.value.language === "hy");
 });
