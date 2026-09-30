@@ -54,6 +54,14 @@ Fixtures are synthetic and local. Tests do not use Production registrations, cus
 
 Set `DATABASE_URL=pglite:.data/pglite` plus test `BACKOFFICE_*` hashes and QR secrets in `.env.local`, run `pnpm dev`, sign in at `/backoffice`, and apply migrations from `/admin/database`. This gives a complete local database for exercising posts, scheduling, media uploads, QR creation, the `/q/<token>` redirect, form-open tracking and attributed registration without touching Neon. Verified on 25 September 2026: migrations 0000 to 0004 applied, image upload and serving, scheduled post going live at its publish time, QR scan → registration attribution with venue and serial recorded, printable SVG encoding the configured public origin.
 
+## Manual checks on production
+
+Any manual check of the live site that opens the join form or reads an article must add
+`?utm_source=internal` to the first URL of the session (the value is carried into every
+event of that browser session). Events with source `internal`, `internal_qa` or
+`production_smoke` are stored but excluded from Backoffice → Stats. Registrations created by
+a check are deleted afterwards or marked as test in the backoffice.
+
 ## Known gaps
 
 - the PGlite harness is manual; CI still runs only the deterministic unit tests and the build;

@@ -14,6 +14,10 @@ const METADATA_KEYS = ["sessionId", "article", "source", "medium", "campaign", "
 const AUDIENCES = new Set(["parent", "business"]);
 const LANGUAGES = new Set(["hy", "ru", "en", "fa"]);
 
+// Sources that mark our own checks (?utm_source=internal on production, smoke tests, QA captures).
+// They are stored but excluded from every statistic.
+export const INTERNAL_SOURCES = ["internal", "internal_qa", "production_smoke"] as const;
+
 export const MAX_TRACKING_BODY_BYTES = 4096;
 const MAX_VALUE_LENGTH = 200;
 
