@@ -5495,3 +5495,38 @@ button.cmsWeekItem { cursor: pointer; }
 .notFoundCard > p:not(.eyebrow) { color: var(--muted); line-height: 1.6; }
 .notFoundActions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 24px; }
 @media (max-width: 760px) { .relatedGuides .educationGrid { grid-template-columns: 1fr; } }
+
+/* Backoffice on phones and small tablets: no sideways scrolling, stacked headers, scrollable tables. */
+@media (max-width: 760px) {
+  .adminPage { width: calc(100% - 28px); padding: 28px 0 60px; }
+  .adminTop { flex-direction: column; align-items: stretch; gap: 14px; }
+  .adminTop h1 { font-size: 34px; line-height: 1.1; overflow-wrap: anywhere; }
+  .adminTop p { max-width: none; }
+  .adminActions { flex-wrap: wrap; }
+  .adminActions .button, .adminActions select { flex: 1 1 140px; justify-content: center; min-height: 44px; }
+  .adminStats, .adminStats.compact { grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+  .adminStats article { padding: 16px; border-radius: 16px; min-width: 0; }
+  .adminStats b { font-size: 26px; }
+  .adminPanel { padding: 16px; border-radius: 18px; }
+  .adminPanel h2 { font-size: 22px; }
+  .adminPanelHead { flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .adminNav, .adminRegistrationLinks { flex-wrap: wrap; }
+  .adminRegistrationLinks a { min-width: 0; }
+  .adminRegistrationLinks a > div { min-width: 0; overflow-wrap: anywhere; }
+  .adminTable, .statsTable { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .adminTable .tableRow { min-width: 520px; }
+  .registrationsTable .tableRow { min-width: 640px; }
+  .statsHead, .statsRow { min-width: 420px; }
+  .adminPanel > label, .adminPanel textarea, .adminPanel input { max-width: 100%; }
+  .cmsLayout { gap: 14px; }
+  .cmsLayout > *, .adminPanel { min-width: 0; }
+  .cmsListItem { grid-template-columns: 48px minmax(0, 1fr); }
+  .cmsListItem .cmsStatus { grid-column: 2; justify-self: start; }
+  .cmsCover { flex-wrap: wrap; }
+  .cmsCover select { min-width: 0; flex: 1 1 160px; }
+  .cmsActions .button, .cmsActions .cmsDanger { flex: 1 1 140px; justify-content: center; min-height: 44px; }
+  .messageCard header { flex-direction: column; }
+  .messageActions .button, .messageActions .cmsDanger { flex: 1 1 130px; min-height: 44px; }
+  .adminMetricNote { overflow-wrap: anywhere; }
+  .adminPage code, .adminPage pre { overflow-wrap: anywhere; white-space: pre-wrap; }
+}
