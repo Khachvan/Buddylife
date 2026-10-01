@@ -4,6 +4,8 @@ import test from "node:test";
 import { effectiveState, isValidSlug, normalizePostInput, renderBody, renderInline, slugify } from "../lib/posts.ts";
 import { imageDimensions, safeFileName, validateMediaUpload } from "../lib/media.ts";
 import { normalizeContactInput } from "../lib/contact.ts";
+import { applyPinAction, orderArticles } from "../lib/article-settings.ts";
+import { hashPassword, passwordProblem, roleAllows, validUsername, verifyPassword } from "../lib/backoffice-users.ts";
 import { splitStatements } from "../lib/migrations.ts";
 
 test("slugs are Latin, lowercase and hyphenated", () => {
@@ -96,4 +98,34 @@ test("contact messages are validated and honeypot submissions are rejected", () 
   assert.equal(normalizeContactInput({ name: "A", email: "a@b.co", message: "Hello there friend", website: "http://spam" }).ok, false);
   const fallback = normalizeContactInput({ name: "A", email: "a@b.co", message: "Hello there friend", language: "xx" });
   assert.ok(fallback.ok && fallback.value.language === "hy");
+});
+
+test("pinned articles lead, hidden ones disappear, the rest keep their order", () => {
+  const items = [{ slug: "a" }, { slug: "b" }, { slug: "c" }, { slug: "d" }];
+  const settings = { c: { hidden: false, position: 1 }, a: { hidden: false, position: 2 }, b: { hidden: true, position: null } };
+  assert.deepEqual(orderArticles(items, settings).map((item) => item.slug), ["c", "a", "d"]);
+  assert.deepEqual(applyPinAction(["c", "a"], "d", "pin"), ["d", "c", "a"]);
+  assert.deepEqual(applyPinAction(["d", "c", "a"], "a", "up"), ["d", "a", "c"]);
+  assert.deepEqual(applyPinAction(["d", "a", "c"], "d", "down"), ["a", "d", "c"]);
+  assert.deepEqual(applyPinAction(["a", "d", "c"], "d", "unpin"), ["a", "c"]);
+  assert.deepEqual(applyPinAction(["a"], "a", "up"), ["a"]);
+});
+
+test("account passwords are salted hashes and roles gate the owner-only areas", () => {
+  const stored = hashPassword("correct horse battery");
+  assert.ok(stored.startsWith("scrypt$"));
+  assert.notEqual(stored, hashPassword("correct horse battery"));
+  assert.equal(verifyPassword("correct horse battery", stored), true);
+  assert.equal(verifyPassword("wrong horse battery", stored), false);
+  assert.equal(verifyPassword("x", "not-a-hash"), false);
+  assert.equal(passwordProblem("short"), "Use a password of at least 12 characters");
+  assert.equal(passwordProblem("long enough password"), null);
+  assert.equal(validUsername("chatgpt"), true);
+  assert.equal(validUsername("Bad Name"), false);
+  assert.equal(roleAllows("editor", "/admin/posts"), true);
+  assert.equal(roleAllows("editor", "/api/admin-media"), true);
+  assert.equal(roleAllows("editor", "/admin/users"), false);
+  assert.equal(roleAllows("editor", "/api/admin-users"), false);
+  assert.equal(roleAllows("editor", "/api/admin-database"), false);
+  assert.equal(roleAllows("owner", "/admin/database"), true);
 });

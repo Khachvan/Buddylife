@@ -12,22 +12,30 @@ export function validBackofficeCredentials(username: string, password: string) {
     && safeEqual(digest(password), process.env.BACKOFFICE_PASSWORD_SHA256?.trim() || "");
 }
 
-export function createBackofficeSession() {
+export type BackofficeSession = { user: string; role: "owner" | "editor"; expiresAt: number };
+
+export function createBackofficeSession(user = "owner", role: "owner" | "editor" = "owner") {
   if (!sessionSecret()) throw new Error("BACKOFFICE_SESSION_SECRET is not configured");
-  const payload = Buffer.from(JSON.stringify({ expiresAt: Date.now() + SESSION_SECONDS * 1000, nonce: crypto.randomUUID() })).toString("base64url");
+  const payload = Buffer.from(JSON.stringify({ expiresAt: Date.now() + SESSION_SECONDS * 1000, nonce: crypto.randomUUID(), user, role })).toString("base64url");
   return `${payload}.${sessionSignature(payload)}`;
 }
 
-export function validBackofficeSession(value?: string | null) {
-  if (!sessionSecret() || !value) return false;
+/** The signed-in account, or null. Sessions created before accounts existed count as the owner. */
+export function readBackofficeSession(value?: string | null): BackofficeSession | null {
+  if (!sessionSecret() || !value) return null;
   const [payload, signature] = value.split(".");
-  if (!payload || !signature) return false;
+  if (!payload || !signature) return null;
   const expected = sessionSignature(payload);
-  if (!safeEqual(signature, expected)) return false;
+  if (!safeEqual(signature, expected)) return null;
   try {
     const parsed = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
-    return Number.isFinite(parsed.expiresAt) && parsed.expiresAt > Date.now();
+    if (!Number.isFinite(parsed.expiresAt) || parsed.expiresAt <= Date.now()) return null;
+    return { user: typeof parsed.user === "string" && parsed.user ? parsed.user : "owner", role: parsed.role === "editor" ? "editor" : "owner", expiresAt: parsed.expiresAt };
   } catch {
-    return false;
+    return null;
   }
+}
+
+export function validBackofficeSession(value?: string | null) {
+  return readBackofficeSession(value) !== null;
 }

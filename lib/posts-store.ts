@@ -1,3 +1,5 @@
+import { isHidden, orderArticles } from "./article-settings";
+import { loadArticleSettings } from "./article-settings-store";
 import { getSql, type Sql } from "./database";
 import { loadRepositoryPosts, loadVisibleRepositoryPosts } from "./content-posts-store";
 import { DEFAULT_COVER, effectiveState, isValidSlug, toPostRecord, type PostRecord, type PublicPost } from "./posts";
@@ -62,13 +64,15 @@ async function loadDatabasePosts(): Promise<PublicPost[]> {
 
 /** Public pages call this: backoffice posts plus repository posts, newest first. A missing database simply yields no CMS posts. */
 export async function loadPublicPosts(): Promise<PublicPost[]> {
-  const [database, repository] = await Promise.all([loadDatabasePosts(), loadVisibleRepositoryPosts()]);
-  const merged = [...database, ...repository.map(recordToPublic)];
-  return merged.sort((a, b) => b.publishAt.localeCompare(a.publishAt));
+  const [database, repository, settings] = await Promise.all([loadDatabasePosts(), loadVisibleRepositoryPosts(), loadArticleSettings()]);
+  const merged = [...database, ...repository.map(recordToPublic)].sort((a, b) => b.publishAt.localeCompare(a.publishAt));
+  // Articles hidden in the backoffice disappear everywhere; pinned ones lead, the rest stay newest first.
+  return orderArticles(merged, settings);
 }
 
 export async function loadPublishedPost(slug: string, language: string): Promise<PostRecord | null> {
   if (!isValidSlug(slug)) return null;
+  if (isHidden(await loadArticleSettings(), slug)) return null;
   if (process.env.DATABASE_URL) {
     try {
       const fromDatabase = await getPublishedPost(getSql(), slug, language);

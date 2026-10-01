@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validBackofficeSession } from "./lib/backoffice-auth";
+import { readBackofficeSession } from "./lib/backoffice-auth";
+import { roleAllows } from "./lib/backoffice-users";
 import { hasSameOrigin } from "./lib/request-security";
 import { DEFAULT_LOCALE, isLocale, localePath, splitLocale } from "./lib/locale";
 
@@ -82,10 +83,16 @@ export function proxy(request: NextRequest) {
   )
     return continueRequest();
   if (isBackofficeHost || backofficeProtected) {
-    if (
-      validBackofficeSession(request.cookies.get("buddylife_backoffice")?.value)
-    )
+    const session = readBackofficeSession(request.cookies.get("buddylife_backoffice")?.value);
+    if (session) {
+      // Editors can do content work; users and the database stay with the owner.
+      if (!roleAllows(session.role, path)) {
+        return path.startsWith("/api/")
+          ? NextResponse.json({ error: "This account cannot do that" }, { status: 403 })
+          : NextResponse.redirect(new URL("/admin", request.url));
+      }
       return continueRequest();
+    }
     if (!isBackofficeHost && host && host !== "localhost")
       return NextResponse.redirect(
         "https://backoffice.buddylife.am/backoffice",

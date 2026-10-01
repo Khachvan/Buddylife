@@ -92,3 +92,9 @@ rollback are in [VERCEL_ENVIRONMENTS.md](./VERCEL_ENVIRONMENTS.md); testing rule
 
 - [DESIGN.md](./DESIGN.md), [UX-CONTRACT.md](./UX-CONTRACT.md), [design-qa.md](./design-qa.md)
 - [QR_ATTRIBUTION_ARCHITECTURE.md](./QR_ATTRIBUTION_ARCHITECTURE.md), [QR_IMPLEMENTATION_STATUS.md](./QR_IMPLEMENTATION_STATUS.md), [QR_RELEASE_GUARDRAILS.md](./QR_RELEASE_GUARDRAILS.md)
+
+## Backoffice accounts and article control
+
+- **Accounts:** the owner login comes from the environment (`BACKOFFICE_*`). Additional accounts are created in Backoffice → Accounts and stored in `backoffice_users` with salted scrypt hashes. Roles: `owner` (everything) and `editor` (articles, uploads, scheduling, order and visibility, website content, messages, stats — not accounts or the database). The middleware enforces roles from the signed session cookie; deactivating an account blocks new sign-ins and an open session ends within 8 hours.
+- **Order and visibility:** Backoffice → Posts lists every article on the site, whatever its source (backoffice, repository or built-in). Pin puts an article first on the Learn hub and home preview; hide removes it from the hub, its own URL (404) and the sitemap without deleting it. Settings live in `cms_article_settings`, keyed by slug, and reach visitors within about 30 seconds.
+- An assistant such as ChatGPT can use the backoffice through its own editor account in a browser; it then has exactly the rights of an editor.
