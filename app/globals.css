@@ -5426,6 +5426,21 @@ body {
 .statsRow span:not(:first-child), .statsHead span:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
 .statsRow a { color: var(--purple, #6b3fa0); text-decoration: none; overflow-wrap: anywhere; }
 .statsPeriod small { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.siteOrder { display: grid; gap: 6px; max-height: 460px; overflow-y: auto; padding-right: 4px; }
+.siteOrderRow { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid #eee7f1; border-radius: 12px; background: #fff; }
+.siteOrderRow.pinned { border-color: #d9c8ee; background: #faf6fe; }
+.siteOrderRow.hidden { opacity: .6; border-style: dashed; }
+.siteOrderIndex { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 999px; background: #f2ecf7; color: var(--plum); font-size: 12px; font-weight: 850; }
+.siteOrderTitle { min-width: 0; }
+.siteOrderTitle b { display: block; font-size: 14px; overflow-wrap: anywhere; }
+.siteOrderTitle small { display: block; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.siteOrderActions { display: inline-flex; gap: 4px; }
+.siteOrderActions button { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid #ded5e5; border-radius: 10px; background: #fff; color: var(--plum); cursor: pointer; }
+.siteOrderActions button:hover:not(:disabled) { background: #f6f1fa; }
+.siteOrderActions button:disabled { opacity: .4; cursor: default; }
+.adminAccount { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+.userPassword { grid-template-columns: minmax(0, 1fr) auto; align-items: end; margin-top: 12px; }
+@media (max-width: 760px) { .siteOrderRow { grid-template-columns: 30px minmax(0, 1fr); } .siteOrderActions { grid-column: 1 / -1; justify-content: flex-end; } .userPassword { grid-template-columns: 1fr; } }
 .cmsWeekPanel { margin-bottom: 22px; }
 .cmsWeek { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; align-items: start; }
 .cmsWeekDay { display: flex; flex-direction: column; gap: 8px; min-height: 150px; padding: 12px; border: 1px solid #e6dfee; border-radius: 16px; background: #fff; }

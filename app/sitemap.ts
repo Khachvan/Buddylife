@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { ARTICLE_PUBLISHED, PAGE_UPDATED, newestArticleDate } from "../lib/content-dates";
 import { LOCALES, localeUrl } from "../lib/locale";
+import { isHidden } from "../lib/article-settings";
+import { loadArticleSettings } from "../lib/article-settings-store";
 import { loadPublicPosts } from "../lib/posts-store";
 
 // Re-read CMS posts at most once an hour so scheduled posts join the sitemap after they go live.
@@ -24,7 +26,8 @@ const pages: Array<[route: string, changeFrequency: ChangeFrequency, priority: n
 
 // One entry per page per language, each listing all language versions (hreflang).
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticEntries = pages.flatMap(([route, changeFrequency, priority, lastModified]) => {
+  const settings = await loadArticleSettings();
+  const staticEntries = pages.filter(([route]) => !(route.startsWith("/learn/") && isHidden(settings, route.slice("/learn/".length)))).flatMap(([route, changeFrequency, priority, lastModified]) => {
     const href = route || "/";
     const languages = Object.fromEntries(LOCALES.map((locale) => [locale, localeUrl(locale, href)]));
     return LOCALES.map((locale) => ({

@@ -1,12 +1,15 @@
 "use client";
 
-import { CalendarClock, Eye, Plus, Save, Trash2, Upload } from "lucide-react";
+import { ArrowDown, ArrowUp, CalendarClock, Eye, EyeOff, Pin, PinOff, Plus, Save, Trash2, Upload } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { orderArticles, type ArticleAction, type ArticleSettings } from "../../../lib/article-settings";
 import { localePath } from "../../../lib/locale";
 import type { MediaRecord } from "../../../lib/media";
 import { effectiveState, isValidSlug, slugify, type PostLanguage, type PostRecord, type PostState } from "../../../lib/posts";
 
 type PublishMode = "draft" | "now" | "schedule" | "archived";
+type SiteArticle = { slug: string; title: string; source: "backoffice" | "repository" | "built-in"; languages: string[]; state: PostState; publishAt: string | null };
+const SOURCE_LABEL: Record<SiteArticle["source"], string> = { backoffice: "Backoffice", repository: "Repository", "built-in": "Built-in guide" };
 
 type Draft = {
   id: string | null;
@@ -86,6 +89,9 @@ export default function PostsClient() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [articles, setArticles] = useState<SiteArticle[]>([]);
+  const [settings, setSettings] = useState<ArticleSettings>({});
+  const [ordering, setOrdering] = useState(false);
   const [weekStart] = useState(() => {
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -95,10 +101,13 @@ export default function PostsClient() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [postsPayload, mediaPayload] = await Promise.all([
+      const [postsPayload, mediaPayload, articlesPayload] = await Promise.all([
         fetch("/api/admin-posts", { cache: "no-store" }).then(readJson),
         fetch("/api/admin-media", { cache: "no-store" }).then(readJson).catch(() => ({ media: [] })),
+        fetch("/api/admin-articles", { cache: "no-store" }).then(readJson).catch(() => ({ articles: [], settings: {} })),
       ]);
+      setArticles(articlesPayload.articles || []);
+      setSettings(articlesPayload.settings || {});
       setPosts(postsPayload.posts || []);
       setRepositoryPosts(postsPayload.repositoryPosts || []);
       setMedia(mediaPayload.media || []);
@@ -149,6 +158,29 @@ export default function PostsClient() {
     setMessage(`New post scheduled for ${formatDate(at.toISOString())}. Fill it in and press Create post.`);
     setError("");
     document.getElementById("post-editor")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // The order visitors see: pinned first, then newest published, then the built-in guides.
+  const siteOrder = useMemo(() => {
+    const live = [...articles].sort((a, b) => (b.publishAt || "").localeCompare(a.publishAt || ""));
+    const pinned = orderArticles(live.filter((item) => typeof settings[item.slug]?.position === "number"), Object.fromEntries(Object.entries(settings).map(([slug, value]) => [slug, { ...value, hidden: false }])));
+    const rest = live.filter((item) => typeof settings[item.slug]?.position !== "number");
+    return [...pinned, ...rest];
+  }, [articles, settings]);
+  const pinnedCount = siteOrder.filter((item) => typeof settings[item.slug]?.position === "number").length;
+
+  async function articleAction(slug: string, action: ArticleAction) {
+    setOrdering(true);
+    setError("");
+    try {
+      const payload = await fetch("/api/admin-articles", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ slug, action }) }).then(readJson);
+      setSettings(payload.settings || {});
+      setMessage(action === "hide" ? "Hidden from the site." : action === "show" ? "Visible on the site again." : "Order updated. Visitors see the change within a minute.");
+    } catch (actionError) {
+      setError(actionError instanceof Error ? actionError.message : "The change could not be saved");
+    } finally {
+      setOrdering(false);
+    }
   }
 
   const update = (patch: Partial<Draft>) => setDraft((current) => ({ ...current, ...patch }));
@@ -276,6 +308,42 @@ export default function PostsClient() {
               <button type="button" className="cmsWeekAdd" onClick={() => scheduleOn(day)}><Plus size={13} aria-hidden="true" /> Schedule</button>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="adminPanel cmsWeekPanel" aria-label="Order and visibility on the site">
+        <div className="adminPanelHead">
+          <h2>Order and visibility on the site</h2>
+          <span className="cmsHelp">Every article on buddylife.am, in the order visitors see it. Pin to put an article first, hide to take it off the site without deleting it.</span>
+        </div>
+        <div className="siteOrder">
+          {siteOrder.map((article, index) => {
+            const setting = settings[article.slug];
+            const pinned = typeof setting?.position === "number";
+            const hidden = Boolean(setting?.hidden);
+            return (
+              <div key={article.slug} className={`siteOrderRow ${hidden ? "hidden" : ""} ${pinned ? "pinned" : ""}`}>
+                <span className="siteOrderIndex">{pinned ? <Pin size={14} aria-label="Pinned" /> : index + 1}</span>
+                <span className="siteOrderTitle">
+                  <b>{article.title}</b>
+                  <small>{SOURCE_LABEL[article.source]} · {article.languages.map((code) => code.toUpperCase()).join(" ")} · /learn/{article.slug}{article.state !== "live" ? ` · ${STATE_LABEL[article.state].toLowerCase()}` : ""}{hidden ? " · hidden from the site" : ""}</small>
+                </span>
+                <span className="siteOrderActions">
+                  {pinned ? (
+                    <>
+                      <button type="button" title="Move up" aria-label={`Move ${article.title} up`} disabled={ordering || index === 0} onClick={() => articleAction(article.slug, "up")}><ArrowUp size={15} /></button>
+                      <button type="button" title="Move down" aria-label={`Move ${article.title} down`} disabled={ordering || index >= pinnedCount - 1} onClick={() => articleAction(article.slug, "down")}><ArrowDown size={15} /></button>
+                      <button type="button" title="Unpin" aria-label={`Unpin ${article.title}`} disabled={ordering} onClick={() => articleAction(article.slug, "unpin")}><PinOff size={15} /></button>
+                    </>
+                  ) : (
+                    <button type="button" title="Pin to the top" aria-label={`Pin ${article.title} to the top`} disabled={ordering} onClick={() => articleAction(article.slug, "pin")}><Pin size={15} /></button>
+                  )}
+                  <button type="button" title={hidden ? "Show on the site" : "Hide from the site"} aria-label={`${hidden ? "Show" : "Hide"} ${article.title}`} disabled={ordering} onClick={() => articleAction(article.slug, hidden ? "show" : "hide")}>{hidden ? <Eye size={15} /> : <EyeOff size={15} />}</button>
+                </span>
+              </div>
+            );
+          })}
+          {!siteOrder.length && !loading && <p className="adminEmpty">No articles yet.</p>}
         </div>
       </section>
 

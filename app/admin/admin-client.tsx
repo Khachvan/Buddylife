@@ -72,6 +72,13 @@ function sessionOf(event: AnalyticsEvent) {
 export default function AdminClient() {
   const [data, setData] = useState<BackofficeData>({ content: {}, registrations: [], events: [] });
   const [saved, setSaved] = useState("");
+  const [account, setAccount] = useState<{ user: string; role: "owner" | "editor" } | null>(null);
+  useEffect(() => {
+    fetch("/api/admin-session", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => payload && setAccount({ user: payload.user, role: payload.role }))
+      .catch(() => {});
+  }, []);
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
     fetch("/api/admin-content")
@@ -119,6 +126,7 @@ export default function AdminClient() {
         <div>
           <p className="eyebrow">BUDDYLIFE CMS</p>
           <h1>Website management</h1>
+          {account && <p className="adminAccount">Signed in as <b>{account.user}</b> · {account.role === "owner" ? "Owner" : "Editor"}</p>}
         </div>
         <div className="adminActions">
           <a className="button secondary" href="https://buddylife.am/">View website</a>
@@ -165,6 +173,7 @@ export default function AdminClient() {
       </section>
       {loadError && <section className="adminServiceError" role="alert"><b>CMS data connection needs attention</b><p>{loadError}</p><button type="button" onClick={() => window.location.reload()}>Reload</button></section>}
       <section className="adminRegistrationLinks">
+        {account?.role === "owner" && <a href="/admin/users"><span>☺</span><div><b>Accounts</b><small>Logins for people and assistants; editors and owners</small></div><strong>Open →</strong></a>}
         <a href="/admin/messages"><span>✉</span><div><b>Messages</b><small>Messages from the site&apos;s contact form, with reply and handled status</small></div><strong>Open →</strong></a>
         <a href="/admin/stats"><span>▤</span><div><b>Stats</b><small>Readers, join opens, registrations by week, source and language</small></div><strong>Open →</strong></a>
         <a href="/admin/posts"><span>✎</span><div><b>Posts and scheduling</b><small>Write Learn articles, schedule publish dates and manage what is live</small></div><strong>Open →</strong></a>

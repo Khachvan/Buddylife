@@ -8,6 +8,8 @@ import ArticleViewTracker from "./article-view-tracker";
 import { localeAlternates, localePath, localeUrl } from "../../../lib/locale";
 import { articlePublished } from "../../../lib/content-dates";
 import { renderBody, renderInline } from "../../../lib/posts";
+import { isHidden, orderArticles } from "../../../lib/article-settings";
+import { loadArticleSettings } from "../../../lib/article-settings-store";
 import { isShort, videoEmbed, type PostVideo } from "../../../lib/content-posts";
 import { loadPublicPosts, loadPublishedPost } from "../../../lib/posts-store";
 import { educationSlugs, hub } from "../../learn-copy";
@@ -413,6 +415,7 @@ export default async function LearnArticle({ params, searchParams }: { params: P
     if (!post) notFound();
     return <CmsArticle slug={slug} post={post} query={query} />;
   }
+  if (isHidden(await loadArticleSettings(), slug)) notFound();
   const lang = requested;
   const article: Copy = record[lang];
   const labels = ui[lang];
@@ -505,10 +508,10 @@ async function RelatedGuides({ lang, currentSlug }: { lang: Lang; currentSlug: s
     .map((topic, index) => ({ slug: educationSlugs[index], category: topic[0], title: topic[1], excerpt: topic[2], image: topic[3] }))
     .filter((card) => card.slug && card.slug !== currentSlug)
     .reverse();
-  const cards = [
+  const cards = orderArticles([
     ...posts.map((post) => ({ slug: post.slug, category: post.category, title: post.title, excerpt: post.excerpt, image: post.coverUrl })),
     ...staticCards,
-  ].slice(0, 3);
+  ], await loadArticleSettings()).slice(0, 3);
   if (!cards.length) return null;
   return (
     <section className="relatedGuides" aria-labelledby="related-guides-title">

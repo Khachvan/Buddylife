@@ -38,6 +38,7 @@ import {
 import { track as vaTrack } from "@vercel/analytics";
 import { persianLegalCopy, persianSiteCopy } from "./persian-copy";
 import { educationSlugs, hub } from "./learn-copy";
+import { orderArticles, type ArticleSettings } from "../lib/article-settings";
 import type { Lang } from "./language";
 import { isLocale, localePath, localeUrl, splitLocale } from "../lib/locale";
 import type { PublicPost } from "../lib/posts";
@@ -668,7 +669,7 @@ function track(
     vaTrack(eventType, { language, audience: audience || "none", source: attribution.source, campaign: attribution.campaign });
   }
 }
-export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { view: View; initialLang?: Lang; posts?: PublicPost[] }) {
+export default function BuddyPage({ view, initialLang = "hy", posts = [], articleSettings = {} }: { view: View; initialLang?: Lang; posts?: PublicPost[]; articleSettings?: ArticleSettings }) {
   const [lang, setLang] = useState<Lang>(initialLang),
     [slide, setSlide] = useState(0),
     [modal, setModal] = useState(false),
@@ -811,7 +812,7 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
           </section>
           <AudienceSplit t={t} lang={lang} />
           <FoundingPartners t={t} cms={cms} />
-          <EducationPreview h={h} lang={lang} posts={posts} />
+          <EducationPreview h={h} lang={lang} posts={posts} settings={articleSettings} />
           <TrustSection t={t} lang={lang} />
           <Press t={t} open={open} />
         </>
@@ -821,7 +822,7 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [] }: { vi
         <AudiencePage type="business" t={t} open={open} cms={cms} lang={lang} />
       )}{" "}
       {view === "features" && <Features t={t} open={open} />}
-      {view === "learn" && <EducationHub h={h} lang={lang} posts={posts} />}
+      {view === "learn" && <EducationHub h={h} lang={lang} posts={posts} settings={articleSettings} />}
       {(view === "privacy" || view === "terms" || view === "verification") && (
         <LegalPage kind={view} content={legalContent[lang]} />
       )}
@@ -1154,56 +1155,39 @@ function EducationShare({ title, slug, lang }: { title: string; slug: string; la
     </div>
   );
 }
-function EducationCards({ h, lang, posts = [], newestFirst = false, limit }: { h: HubCopy; lang: Lang; posts?: PublicPost[]; newestFirst?: boolean; limit?: number }) {
-  const cards = h.topics
-    .map((topic, index) => ({ topic, slug: educationSlugs[index] }));
-  const allStaticCards = newestFirst ? cards.reverse() : cards;
-  // Posts written in the backoffice or the repository appear first, newest publish date at the top.
-  const allCmsCards = posts.filter((post) => post.language === lang);
-  const cmsCards = limit ? allCmsCards.slice(0, limit) : allCmsCards;
-  const orderedCards = limit ? allStaticCards.slice(0, Math.max(0, limit - cmsCards.length)) : allStaticCards;
+function EducationCards({ h, lang, posts = [], newestFirst = false, limit, settings = {} }: { h: HubCopy; lang: Lang; posts?: PublicPost[]; newestFirst?: boolean; limit?: number; settings?: ArticleSettings }) {
+  const builtIn = h.topics.map((topic, index) => ({ slug: educationSlugs[index], category: topic[0], title: topic[1], excerpt: topic[2], image: topic[3], unoptimized: false, key: `static:${educationSlugs[index]}` }));
+  // Backoffice and repository posts lead (newest first), then the built-in guides; pinned articles
+  // from the backoffice jump to the front and hidden ones are removed, whatever their source.
+  const fromPosts = posts
+    .filter((post) => post.language === lang)
+    .map((post) => ({ slug: post.slug, category: post.category, title: post.title, excerpt: post.excerpt, image: post.coverUrl, unoptimized: post.coverUrl.startsWith("/media/") || !post.coverUrl.startsWith("/"), key: post.id }));
+  const taken = new Set(fromPosts.map((card) => card.slug));
+  const all = orderArticles([...fromPosts, ...(newestFirst ? builtIn.reverse() : builtIn).filter((card) => card.slug && !taken.has(card.slug))], settings);
+  const cards = limit ? all.slice(0, limit) : all;
 
   return (
     <div className="educationGrid">
-      {cmsCards.map((post) => (
-        <article className="educationCard" key={post.id}>
-          <a className="educationCardLink" href={localePath(lang, `/learn/${post.slug}`)} aria-label={`${post.title} — ${h.read}`}>
+      {cards.map((card) => (
+        <article className="educationCard" key={card.key}>
+          <a className="educationCardLink" href={localePath(lang, `/learn/${card.slug}`)} aria-label={`${card.title} — ${h.read}`}>
             <div className="educationImage">
-              <Image src={post.coverUrl} alt={post.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized={post.coverUrl.startsWith("/media/") || !post.coverUrl.startsWith("/")} />
+              <Image src={card.image} alt={card.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized={card.unoptimized} />
             </div>
             <div className="educationBody">
-              {post.category && <span className="topicTag">{post.category}</span>}
-              <h3>{post.title}</h3>
-              <p>{post.excerpt}</p>
+              {card.category && <span className="topicTag">{card.category}</span>}
+              <h3>{card.title}</h3>
+              <p>{card.excerpt}</p>
               <small><BookOpen size={15} /> {h.read}</small>
             </div>
           </a>
-          <EducationShare title={post.title} slug={post.slug} lang={lang} />
-        </article>
-      ))}
-      {orderedCards.map(({ topic, slug }) => (
-        <article
-          className="educationCard"
-          key={topic[1]}
-        >
-          <a className="educationCardLink" href={localePath(lang, `/learn/${slug}`)} aria-label={`${topic[1]} — ${h.read}`}>
-            <div className="educationImage">
-              <Image src={topic[3]} alt={topic[1]} fill sizes="(max-width: 760px) 100vw, 33vw" />
-            </div>
-            <div className="educationBody">
-              <span className="topicTag">{topic[0]}</span>
-              <h3>{topic[1]}</h3>
-              <p>{topic[2]}</p>
-              <small><BookOpen size={15} /> {h.read}</small>
-            </div>
-          </a>
-          <EducationShare title={topic[1]} slug={slug} lang={lang} />
+          <EducationShare title={card.title} slug={card.slug} lang={lang} />
         </article>
       ))}
     </div>
   );
 }
-function EducationPreview({ h, lang, posts = [] }: { h: HubCopy; lang: Lang; posts?: PublicPost[] }) {
+function EducationPreview({ h, lang, posts = [], settings = {} }: { h: HubCopy; lang: Lang; posts?: PublicPost[]; settings?: ArticleSettings }) {
   return (
     <section className="section educationPreview">
       <div className="shell">
@@ -1225,7 +1209,7 @@ function EducationPreview({ h, lang, posts = [] }: { h: HubCopy; lang: Lang; pos
             {h.all} →
           </a>
         </div>
-        <EducationCards h={h} lang={lang} posts={posts} newestFirst limit={3} />
+        <EducationCards h={h} lang={lang} posts={posts} newestFirst limit={3} settings={settings} />
       </div>
     </section>
   );
@@ -1258,7 +1242,7 @@ function LegalPage({
     </section>
   );
 }
-function EducationHub({ h, lang, posts = [] }: { h: HubCopy; lang: Lang; posts?: PublicPost[] }) {
+function EducationHub({ h, lang, posts = [], settings = {} }: { h: HubCopy; lang: Lang; posts?: PublicPost[]; settings?: ArticleSettings }) {
   return (
     <>
       <section className="hubHero">
@@ -1273,7 +1257,7 @@ function EducationHub({ h, lang, posts = [] }: { h: HubCopy; lang: Lang; posts?:
           <div className="educationHeader compact">
             <h2>{h.latest}</h2>
           </div>
-          <EducationCards h={h} lang={lang} posts={posts} newestFirst />
+          <EducationCards h={h} lang={lang} posts={posts} newestFirst settings={settings} />
           <div className="educationDisclaimer">
             <ShieldCheck size={22} />
             <p>{h.disclaimer}</p>
