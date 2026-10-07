@@ -1758,7 +1758,7 @@ button {
   cursor: pointer;
   margin-top: 12px;
 }
-.heroPromise, .modalPromise, .pressPromise {
+.modalPromise {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -1769,9 +1769,8 @@ button {
   color: var(--plum);
   font-weight: 600;
 }
-.heroPromise svg, .modalPromise svg, .pressPromise svg { flex: 0 0 auto; margin-top: 2px; color: #2f9a55; }
+.modalPromise svg { flex: 0 0 auto; margin-top: 2px; color: #2f9a55; }
 .modalPromise { margin: 4px 0 12px; font-size: 14px; }
-.pressPromise { margin: 8px 0 0; color: var(--muted); font-weight: 500; }
 .successNote { margin: 6px 0 14px; font-size: 14px; color: var(--muted); }
 .contactLinks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
 .contactLinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 1px solid #ded5e5; border-radius: 999px; background: #fff; color: var(--plum); font-weight: 700; font-size: 14px; text-decoration: none; }
