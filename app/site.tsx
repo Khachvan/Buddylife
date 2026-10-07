@@ -797,7 +797,6 @@ export default function BuddyPage({ view, initialLang = "hy", posts = [], articl
               <button className="button" onClick={() => open()}>
                 {t.join}
               </button>
-              <p className="heroPromise"><CheckCircle2 size={18} aria-hidden="true" /> {t.promise}</p>
               <div className="carouselDots">
                 {images.map((_, i) => (
                   <button
@@ -1274,7 +1273,6 @@ function Press({ t, open }: { t: SiteCopy; open: () => void }) {
         <div>
           <p className="eyebrow light">{t.pressEyebrow}</p>
           <h2>{t.press}</h2>
-          <p className="pressPromise"><CheckCircle2 size={16} aria-hidden="true" /> {t.promise}</p>
         </div>
         <button className="button whiteButton" onClick={open}>
           {t.join}
