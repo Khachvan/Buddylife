@@ -12,6 +12,8 @@ on:
   workflow_run:
     workflows: ["Quality gate"]
     types: [completed]
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: write
@@ -24,29 +26,50 @@ concurrency:
 jobs:
   merge:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Merge green content pull requests
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         run: |
-          set -euo pipefail
-          prs=$(gh pr list --repo "$REPO" --state open --json number,headRefName,mergeable,headRefOid --jq '.[] | select(.headRefName | startswith("codex/")) | "\(.number) \(.headRefName) \(.mergeable) \(.headRefOid)"')
-          if [ -z "$prs" ]; then echo "No open content pull requests."; exit 0; fi
-          while read -r number branch mergeable sha; do
-            echo "::group::PR #$number ($branch)"
-            if [ "$mergeable" != "MERGEABLE" ]; then echo "Not mergeable yet ($mergeable); skipping."; echo "::endgroup::"; continue; fi
+          set -uo pipefail
+          # A pull_request event fires before its checks finish; give them a few minutes first.
+          if [ "${{ github.event_name }}" = "pull_request" ]; then sleep 240; fi
+          numbers=$(gh api "repos/$REPO/pulls?state=open&per_page=50" --jq '.[] | select(.head.ref | startswith("codex/")) | .number')
+          if [ -z "$numbers" ]; then echo "No open content pull requests."; exit 0; fi
+          for number in $numbers; do
+            echo "::group::PR #$number"
+            # GitHub computes mergeability lazily; poll until it is known.
+            state=""; sha=""; branch=""
+            for attempt in 1 2 3 4 5 6; do
+              pr=$(gh api "repos/$REPO/pulls/$number")
+              mergeable=$(echo "$pr" | jq -r '.mergeable')
+              state=$(echo "$pr" | jq -r '.mergeable_state')
+              sha=$(echo "$pr" | jq -r '.head.sha')
+              branch=$(echo "$pr" | jq -r '.head.ref')
+              [ "$mergeable" != "null" ] && break
+              echo "Mergeability not computed yet (attempt $attempt); waiting."; sleep 10
+            done
+            echo "branch=$branch sha=$sha mergeable=$mergeable state=$state"
+            if [ "$mergeable" != "true" ]; then echo "Not mergeable ($state); skipping."; echo "::endgroup::"; continue; fi
             # Every changed file must live under the content folders.
             bad=$(gh api "repos/$REPO/pulls/$number/files" --paginate --jq '.[].filename' | grep -Ev '^(content/|public/posts/|public/videos/)' || true)
             if [ -n "$bad" ]; then echo "Touches non-content files; leaving for a human:"; echo "$bad"; echo "::endgroup::"; continue; fi
             # The quality gate for this exact commit must have completed successfully.
             runs=$(gh api "repos/$REPO/commits/$sha/check-runs" --jq '[.check_runs[] | {name, status, conclusion}]')
+            echo "$runs"
             total=$(echo "$runs" | jq 'length')
             pending=$(echo "$runs" | jq '[.[] | select(.status != "completed")] | length')
-            failed=$(echo "$runs" | jq '[.[] | select(.status == "completed" and .conclusion != "success" and .conclusion != "skipped")] | length')
-            if [ "$total" -eq 0 ] || [ "$pending" -gt 0 ]; then echo "Checks still running ($pending pending of $total); skipping."; echo "::endgroup::"; continue; fi
-            if [ "$failed" -gt 0 ]; then echo "A check failed; leaving for a human."; echo "$runs"; echo "::endgroup::"; continue; fi
-            gh pr merge "$number" --repo "$REPO" --merge --delete-branch --subject "Merge pull request #$number from $branch" || echo "Merge failed for #$number"
+            failed=$(echo "$runs" | jq '[.[] | select(.status == "completed" and .conclusion != "success" and .conclusion != "skipped" and .conclusion != "neutral")] | length')
+            gate=$(echo "$runs" | jq '[.[] | select(.name == "verify" and .status == "completed" and .conclusion == "success")] | length')
+            if [ "$total" -eq 0 ] || [ "$pending" -gt 0 ] || [ "$gate" -eq 0 ]; then echo "Quality gate not finished ($pending pending, verify ok: $gate); skipping."; echo "::endgroup::"; continue; fi
+            if [ "$failed" -gt 0 ]; then echo "A check failed; leaving for a human."; echo "::endgroup::"; continue; fi
+            if gh api -X PUT "repos/$REPO/pulls/$number/merge" -f merge_method=merge -f commit_title="Merge pull request #$number from $branch" >/tmp/merge.json 2>/tmp/merge.err; then
+              echo "Merged: $(jq -r '.sha' /tmp/merge.json)"
+              gh api -X DELETE "repos/$REPO/git/refs/heads/$branch" >/dev/null 2>&1 && echo "Deleted branch $branch" || echo "Branch $branch left in place"
+            else
+              echo "Merge call failed:"; cat /tmp/merge.err; cat /tmp/merge.json 2>/dev/null || true
+            fi
             echo "::endgroup::"
-          done <<< "$prs"
+          done
