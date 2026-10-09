@@ -1,0 +1,2 @@
+ALTER TABLE cms_posts ADD COLUMN IF NOT EXISTS video_url TEXT;
+ALTER TABLE cms_posts ADD COLUMN IF NOT EXISTS video_orientation TEXT;

@@ -14,6 +14,9 @@ export type PostInput = {
   coverMediaId: string | null;
   status: PostStatus;
   publishAt: string | null;
+  /** YouTube / Vimeo link, an https video URL, or /media/<id> for an uploaded clip. */
+  videoUrl: string | null;
+  videoOrientation: "landscape" | "portrait" | null;
 };
 
 export type PostRecord = PostInput & {
@@ -73,6 +76,16 @@ export const POST_LIMITS = { slug: 80, category: 60, title: 160, excerpt: 400, b
 export const DEFAULT_COVER = "/og.webp";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const MEDIA_PATH = /^\/media\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/** Accepts an https link (YouTube, Vimeo, a video file) or an uploaded /media/<id> clip; anything else is rejected. */
+export function normalizeVideoUrl(value: unknown): string | null | undefined {
+  if (typeof value !== "string" || !value.trim()) return null;
+  const url = value.trim().slice(0, 500);
+  if (MEDIA_PATH.test(url)) return url;
+  if (/^https:\/\/[^\s<>"']+$/i.test(url)) return url;
+  return undefined;
+}
 
 export function isValidSlug(value: string) {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value) && value.length >= 3 && value.length <= POST_LIMITS.slug;
@@ -163,6 +176,9 @@ export function normalizePostInput(input: unknown, now = new Date()): { ok: true
   let publishAt = parsedPublishAt;
   if (status === "scheduled" && !publishAt) return { ok: false, error: "Choose the date and time to publish" };
   if (status === "published" && !publishAt) publishAt = now.toISOString();
+  const videoUrl = normalizeVideoUrl(raw.videoUrl);
+  if (videoUrl === undefined) return { ok: false, error: "Use an https video link (YouTube, Vimeo or a video file) or upload the clip in the media library" };
+  const videoOrientation = raw.videoOrientation === "portrait" ? "portrait" : raw.videoOrientation === "landscape" ? "landscape" : null;
   return {
     ok: true,
     value: {
@@ -175,6 +191,8 @@ export function normalizePostInput(input: unknown, now = new Date()): { ok: true
       coverMediaId,
       status,
       publishAt,
+      videoUrl,
+      videoOrientation: videoUrl ? videoOrientation : null,
     },
   };
 }
@@ -189,6 +207,8 @@ type PostRow = Record<string, unknown>;
 
 export function toPostRecord(row: PostRow): PostRecord {
   const coverMediaId = typeof row.coverMediaId === "string" ? row.coverMediaId : null;
+  const videoUrl = typeof row.videoUrl === "string" && row.videoUrl ? row.videoUrl : null;
+  const videoOrientation = row.videoOrientation === "portrait" ? "portrait" : row.videoOrientation === "landscape" ? "landscape" : null;
   return {
     id: String(row.id),
     slug: String(row.slug),
@@ -203,7 +223,9 @@ export function toPostRecord(row: PostRow): PostRecord {
     publishAt: iso(row.publishAt),
     createdAt: iso(row.createdAt) || "",
     updatedAt: iso(row.updatedAt) || "",
-    video: null,
+    videoUrl,
+    videoOrientation,
+    video: videoUrl ? { url: videoUrl, ...(videoOrientation ? { orientation: videoOrientation } : {}) } : null,
     source: "cms",
   };
 }

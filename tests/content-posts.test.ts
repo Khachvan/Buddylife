@@ -39,3 +39,7 @@ test("videos embed for YouTube and Vimeo, play inline for files, and link out ot
   assert.equal(isShort({ url: "https://vimeo.com/1" }), false);
   assert.equal(isShort({ url: "https://vimeo.com/1", orientation: "portrait" }), true);
 });
+
+test("uploaded clips under /media play inline like video files", () => {
+  assert.deepEqual(videoEmbed({ url: "/media/8b43e24b-859a-406d-ad08-5a4cb6d1e316" }), { kind: "file", src: "/media/8b43e24b-859a-406d-ad08-5a4cb6d1e316" });
+});

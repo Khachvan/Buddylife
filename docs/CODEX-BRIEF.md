@@ -8,23 +8,22 @@ in this repository; nothing needs a login or a secret.
 
 | Area | Deliverable | Where |
 | --- | --- | --- |
-| Articles (Learn hub) | One JSON file per post and language | `content/posts/` |
-| Visuals | Cover images, 1200×800, 3:2, under 400 KB | `public/posts/<YYYY-MM-DD>/` |
-| Shorts and videos | YouTube, Shorts or Vimeo links in the post's `video` field; small MP4s only under `public/videos/` | in the post file |
-| Scheduling | `publishAt` with timezone (`+04:00` for Yerevan); the site publishes on its own | in the post file |
-| Social media | Captions and asset references per channel, ready to paste into Meta Business Suite or Telegram | `content/social/` |
-| Hero headlines | Suggested rotating headlines per language for the owner to paste into Backoffice → Banner copy | `content/social/hero-headlines.md` |
+| Articles (Learn hub) | Written, scheduled and published in the backoffice, like any editor | backoffice.buddylife.am → Posts |
+| Visuals | Cover 1200×800 JPEG/WebP under 400 KB, uploaded in the backoffice | Posts → Cover image → Upload |
+| Shorts and videos | YouTube/Shorts/Vimeo link pasted into the post's Video field, or a short MP4 up to 4 MB uploaded there | Posts → Video |
+| Scheduling | "Schedule for" date and time in the post; the site publishes on its own | Posts → Publishing |
+| Social drafts | Captions per channel with the article's public link, as a file in the repository | `content/social/` |
 
-Formats and rules are in [CONTENT-PLAYBOOK.md](./CONTENT-PLAYBOOK.md). Validate with
-`pnpm content` and `pnpm check:fast`, open a pull request from a `codex/<topic>-<YYYYMMDD>`
-branch, and stop. The owner merges; production deploys from `main`.
+**Primary channel is the backoffice.** Codex signs in with its own editor account (the owner
+creates it in Backoffice → Accounts and gives Codex the login), creates the post in each
+language, uploads the cover, sets the video, and schedules it. The public link is shown in
+the editor as soon as the slug is typed (`https://buddylife.am/<lang>/learn/<slug>`), so
+social captions can carry the final link before the article is live. Nothing needs a merge.
 
-## Non-negotiable rules
-
-1. Never deploy or promote anything. Codex has no production role: it opens a pull request and stops.
-2. Start from the latest main every time: `git fetch origin && git switch -c codex/<topic>-<YYYYMMDD> origin/main`. Never continue in an old checkout.
-3. Only files under `content/`, `public/posts/` and `public/videos/`. Articles are JSON posts, never edits to `app/`.
-4. Run `pnpm content`, `pnpm content:guard` and `pnpm check:fast` before pushing; CI runs the same guards and blocks anything else.
+**Fallback channel is the repository.** Posts may still be added as JSON files under
+`content/posts/` on a `codex/<topic>-<YYYYMMDD>` branch with a pull request. Those pull
+requests merge automatically once the quality gate passes (`.github/workflows/auto-merge-content.yml`);
+never ask the owner to merge. Formats and rules are in [CONTENT-PLAYBOOK.md](./CONTENT-PLAYBOOK.md).
 
 ## What Codex does not do
 
@@ -81,7 +80,8 @@ The week-by-week content list and targets are in [`PLAN-OCTOBER-2026.md`](./PLAN
 
 - One topic per pull request; content and images together.
 - The `codex/` branch is deleted after merge.
-- Plan a week at a time: `pnpm content:week` shows the next 7 days and the empty ones; one
-  `codex/week-<YYYYMMDD>` pull request may carry the whole week of posts and covers.
+- Plan a week at a time: the backoffice "Next 7 days" planner (or `pnpm content:week` for
+  repository posts) shows the empty days. Schedule the week's posts in one sitting.
+- Social posts go out after the article's publish time, never before, so the link resolves.
 - `pnpm content` must be green; a red validator means the pull request is not ready.
 - Never overwrite a live post's slug or cover; create a new file for a new version.

@@ -100,7 +100,8 @@ export function videoEmbed(video: PostVideo): { kind: "iframe"; src: string; pro
   if (youtube) return { kind: "iframe", src: `https://www.youtube-nocookie.com/embed/${youtube[1]}`, provider: "YouTube" };
   const vimeo = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (vimeo) return { kind: "iframe", src: `https://player.vimeo.com/video/${vimeo[1]}`, provider: "Vimeo" };
-  if (/\.(mp4|webm|mov)(\?.*)?$/i.test(url)) return { kind: "file", src: url };
+  // Uploaded clips are served from /media/<id> without an extension.
+  if (/\.(mp4|webm|mov)(\?.*)?$/i.test(url) || /^\/media\//.test(url)) return { kind: "file", src: url };
   const provider = /instagram\.com/i.test(url) ? "Instagram" : /tiktok\.com/i.test(url) ? "TikTok" : /facebook\.com|fb\.watch/i.test(url) ? "Facebook" : "video";
   return { kind: "link", href: url, provider };
 }

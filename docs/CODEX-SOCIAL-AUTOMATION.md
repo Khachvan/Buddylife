@@ -19,11 +19,16 @@ work, in Asia/Yerevan time. Read docs/CODEX-BRIEF.md, docs/CONTENT-PLAYBOOK.md a
 docs/PLAN-OCTOBER-2026.md in the buddylife repository first; they override older plan files.
 
 WEBSITE
-Articles are repository posts under content/posts, one JSON file per post and language, with
-publishAt for scheduling. Work on a fresh branch from origin/main (codex/week-<YYYYMMDD>), run
-pnpm content, pnpm content:guard and pnpm check:fast, open a pull request and stop. Never deploy,
-promote, alias, roll back or touch Vercel; never edit anything outside content/, public/posts/ and
-public/videos/. The site publishes each article at its publishAt time on its own.
+Articles are created in the backoffice at backoffice.buddylife.am with the Codex editor account
+(the owner provides the login): one post per language with the same slug, cover uploaded, video
+link or short MP4 (up to 4 MB) set, "Schedule for" date and time. The editor shows the public link
+(https://buddylife.am/<lang>/learn/<slug>) as soon as the slug is typed; use it in social captions,
+and publish social posts only after the article's publish time. If the backoffice is unavailable,
+the fallback is a repository post under content/posts on a fresh codex/<topic>-<YYYYMMDD> branch
+from origin/main with pnpm content, pnpm content:guard and pnpm check:fast green; such pull
+requests merge automatically when CI passes — never ask the owner to merge. Never deploy,
+promote, alias, roll back or touch Vercel; never edit anything outside content/, public/posts/
+and public/videos/.
 
 WEEKLY RHYTHM
 Monday 09:00: run pnpm content:week, propose the week (two guides, one community question, one

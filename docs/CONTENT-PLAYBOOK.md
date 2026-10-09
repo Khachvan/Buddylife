@@ -77,14 +77,25 @@ Scaffold a file with `pnpm post:new -- --title "..." --lang en --publish-at 2026
   captions as a WebVTT file next to it and reference it in `video.captions`
   (`/videos/<name>.<lang>.vtt`).
 
-## 5. Scheduling workflow from chat
+## 5a. Scheduling in the backoffice (preferred)
+
+1. Sign in at backoffice.buddylife.am with your editor account → Posts → New post.
+2. Title, slug (Latin, lowercase), language, category, short description, body (`## `
+   headings, `> ` short-answer callout, `- ` lists, https sources).
+3. Cover: upload or pick from the media library. Video: paste a YouTube/Shorts/Vimeo link or
+   upload a short MP4 up to 4 MB; choose "Vertical" for shorts and reels.
+4. Copy the **Public link** shown under the category field for the social caption.
+5. Publishing: "Schedule for" a date and time, or "Publish now". Create one post per language
+   with the same slug. Done — no merge, no deploy.
+
+## 5. Scheduling workflow from the repository (fallback)
 
 1. Create the post files (one per language) and the cover image.
 2. Run `pnpm content` and `pnpm check:fast`; both must pass.
 3. Commit on a branch named `codex/<topic>-<YYYYMMDD>` or `claude/<topic>`, push, and open
    a pull request to `main`. CI runs the same checks and Vercel builds a Preview.
-4. Merge the pull request the same day it is approved. Production deploys from `main` and
-   the post becomes visible at its `publishAt` time.
+4. The pull request merges on its own once CI is green (content files only). Production
+   deploys from `main` and the post becomes visible at its `publishAt` time.
 5. Verify: `https://buddylife.am/<lang>/learn/<slug>` (Armenian has no prefix), the Learn
    hub, and the sitemap. Backoffice → Posts shows it under "From the repository".
 

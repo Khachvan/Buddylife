@@ -1,0 +1,52 @@
+name: Auto-merge content pull requests
+
+# Content pull requests from codex/ branches merge on their own once the quality gate passes,
+# so the owner never has to merge anything for an article to be scheduled. Code changes never
+# qualify: the content-branch guard in quality.yml fails for anything outside content folders,
+# and this job re-checks the file list before merging.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Quality gate"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: auto-merge-content
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Merge green content pull requests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          prs=$(gh pr list --repo "$REPO" --state open --json number,headRefName,mergeable,headRefOid --jq '.[] | select(.headRefName | startswith("codex/")) | "\(.number) \(.headRefName) \(.mergeable) \(.headRefOid)"')
+          if [ -z "$prs" ]; then echo "No open content pull requests."; exit 0; fi
+          while read -r number branch mergeable sha; do
+            echo "::group::PR #$number ($branch)"
+            if [ "$mergeable" != "MERGEABLE" ]; then echo "Not mergeable yet ($mergeable); skipping."; echo "::endgroup::"; continue; fi
+            # Every changed file must live under the content folders.
+            bad=$(gh api "repos/$REPO/pulls/$number/files" --paginate --jq '.[].filename' | grep -Ev '^(content/|public/posts/|public/videos/)' || true)
+            if [ -n "$bad" ]; then echo "Touches non-content files; leaving for a human:"; echo "$bad"; echo "::endgroup::"; continue; fi
+            # The quality gate for this exact commit must have completed successfully.
+            runs=$(gh api "repos/$REPO/commits/$sha/check-runs" --jq '[.check_runs[] | {name, status, conclusion}]')
+            total=$(echo "$runs" | jq 'length')
+            pending=$(echo "$runs" | jq '[.[] | select(.status != "completed")] | length')
+            failed=$(echo "$runs" | jq '[.[] | select(.status == "completed" and .conclusion != "success" and .conclusion != "skipped")] | length')
+            if [ "$total" -eq 0 ] || [ "$pending" -gt 0 ]; then echo "Checks still running ($pending pending of $total); skipping."; echo "::endgroup::"; continue; fi
+            if [ "$failed" -gt 0 ]; then echo "A check failed; leaving for a human."; echo "$runs"; echo "::endgroup::"; continue; fi
+            gh pr merge "$number" --repo "$REPO" --merge --delete-branch --subject "Merge pull request #$number from $branch" || echo "Merge failed for #$number"
+            echo "::endgroup::"
+          done <<< "$prs"
