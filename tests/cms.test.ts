@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { effectiveState, isValidSlug, normalizePostInput, renderBody, renderInline, slugify } from "../lib/posts.ts";
+import { effectiveState, isValidSlug, normalizePostInput, normalizeVideoUrl, renderBody, renderInline, slugify, toPostRecord } from "../lib/posts.ts";
 import { imageDimensions, safeFileName, validateMediaUpload } from "../lib/media.ts";
 import { normalizeContactInput } from "../lib/contact.ts";
 import { applyPinAction, orderArticles } from "../lib/article-settings.ts";
@@ -128,4 +128,19 @@ test("account passwords are salted hashes and roles gate the owner-only areas", 
   assert.equal(roleAllows("editor", "/api/admin-users"), false);
   assert.equal(roleAllows("editor", "/api/admin-database"), false);
   assert.equal(roleAllows("owner", "/admin/database"), true);
+});
+
+test("posts accept a YouTube link or an uploaded clip as video and reject anything else", () => {
+  const base = { title: "T", slug: "video-test", language: "en", status: "draft" };
+  const yt = normalizePostInput({ ...base, videoUrl: " https://youtube.com/shorts/abc123xyz ", videoOrientation: "portrait" });
+  assert.ok(yt.ok && yt.value.videoUrl === "https://youtube.com/shorts/abc123xyz" && yt.value.videoOrientation === "portrait");
+  const uploaded = normalizePostInput({ ...base, videoUrl: "/media/0f8a2b1c-1234-4abc-8def-0123456789ab" });
+  assert.ok(uploaded.ok && uploaded.value.videoUrl === "/media/0f8a2b1c-1234-4abc-8def-0123456789ab" && uploaded.value.videoOrientation === null);
+  const none = normalizePostInput({ ...base, videoUrl: "", videoOrientation: "portrait" });
+  assert.ok(none.ok && none.value.videoUrl === null && none.value.videoOrientation === null);
+  assert.equal(normalizePostInput({ ...base, videoUrl: "javascript:alert(1)" }).ok, false);
+  assert.equal(normalizePostInput({ ...base, videoUrl: "http://insecure.example/clip.mp4" }).ok, false);
+  assert.equal(normalizeVideoUrl("/media/not-a-uuid"), undefined);
+  const record = toPostRecord({ id: "1", slug: "s", language: "hy", title: "x", status: "published", videoUrl: "https://vimeo.com/123", videoOrientation: "landscape" });
+  assert.deepEqual(record.video, { url: "https://vimeo.com/123", orientation: "landscape" });
 });

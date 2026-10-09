@@ -26,14 +26,33 @@ function toPublicPost(row: PostRow): PublicPost {
 
 const POST_COLUMNS = `
   id, slug, language, category, title, excerpt, body, cover_media_id AS "coverMediaId",
-  status, publish_at AS "publishAt", created_at AS "createdAt", updated_at AS "updatedAt"`;
+  status, publish_at AS "publishAt", created_at AS "createdAt", updated_at AS "updatedAt",
+  video_url AS "videoUrl", video_orientation AS "videoOrientation"`;
+
+const columnsReady = globalThis as unknown as { __buddylifePostColumns?: Promise<void> };
+
+/** Adds the video columns to installations created before they existed; runs once per server. */
+export function ensurePostColumns(sql: Sql) {
+  if (!columnsReady.__buddylifePostColumns) {
+    columnsReady.__buddylifePostColumns = (async () => {
+      await sql.query(`ALTER TABLE cms_posts ADD COLUMN IF NOT EXISTS video_url TEXT`);
+      await sql.query(`ALTER TABLE cms_posts ADD COLUMN IF NOT EXISTS video_orientation TEXT`);
+    })().catch((error) => {
+      columnsReady.__buddylifePostColumns = undefined;
+      throw error;
+    });
+  }
+  return columnsReady.__buddylifePostColumns;
+}
 
 export async function listAllPosts(sql: Sql): Promise<PostRecord[]> {
+  await ensurePostColumns(sql);
   const rows = await sql.query(`SELECT ${POST_COLUMNS} FROM cms_posts ORDER BY COALESCE(publish_at, created_at) DESC, created_at DESC`);
   return rows.map(toPostRecord);
 }
 
 export async function listPublishedPosts(sql: Sql, limit = 100): Promise<PublicPost[]> {
+  await ensurePostColumns(sql);
   const rows = await sql.query(
     `SELECT ${POST_COLUMNS} FROM cms_posts
      WHERE status IN ('published', 'scheduled') AND publish_at IS NOT NULL AND publish_at <= NOW()
@@ -44,6 +63,7 @@ export async function listPublishedPosts(sql: Sql, limit = 100): Promise<PublicP
 }
 
 export async function getPublishedPost(sql: Sql, slug: string, language: string): Promise<PostRecord | null> {
+  await ensurePostColumns(sql);
   const rows = await sql.query(
     `SELECT ${POST_COLUMNS} FROM cms_posts
      WHERE slug = $1 AND status IN ('published', 'scheduled') AND publish_at IS NOT NULL AND publish_at <= NOW()

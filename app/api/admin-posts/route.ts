@@ -1,7 +1,7 @@
 import { getSql } from "../../../lib/database";
 import { logEvent } from "../../../lib/logging";
 import { normalizePostInput, toPostRecord } from "../../../lib/posts";
-import { listAllPosts } from "../../../lib/posts-store";
+import { ensurePostColumns, listAllPosts } from "../../../lib/posts-store";
 import { loadRepositoryPosts } from "../../../lib/content-posts-store";
 import { isUuid } from "../../../lib/qr-attribution";
 import { hasSameOrigin } from "../../../lib/request-security";
@@ -39,6 +39,7 @@ export async function POST(request: Request) {
   const sql = getSql();
 
   try {
+    await ensurePostColumns(sql);
     if (action === "delete") {
       const id = String(body.id || "");
       if (!isUuid(id)) return Response.json({ error: "Invalid post identity" }, { status: 400 });
@@ -68,17 +69,20 @@ export async function POST(request: Request) {
             UPDATE cms_posts
             SET slug = ${post.slug}, language = ${post.language}, category = ${post.category}, title = ${post.title},
                 excerpt = ${post.excerpt}, body = ${post.body}, cover_media_id = ${post.coverMediaId},
-                status = ${post.status}, publish_at = ${post.publishAt}, updated_at = NOW()
+                status = ${post.status}, publish_at = ${post.publishAt}, video_url = ${post.videoUrl},
+                video_orientation = ${post.videoOrientation}, updated_at = NOW()
             WHERE id = ${id}
             RETURNING id, slug, language, category, title, excerpt, body, cover_media_id AS "coverMediaId",
-                      status, publish_at AS "publishAt", created_at AS "createdAt", updated_at AS "updatedAt"
+                      status, publish_at AS "publishAt", created_at AS "createdAt", updated_at AS "updatedAt",
+                      video_url AS "videoUrl", video_orientation AS "videoOrientation"
           `
         : await sql`
-            INSERT INTO cms_posts (id, slug, language, category, title, excerpt, body, cover_media_id, status, publish_at)
+            INSERT INTO cms_posts (id, slug, language, category, title, excerpt, body, cover_media_id, status, publish_at, video_url, video_orientation)
             VALUES (${crypto.randomUUID()}, ${post.slug}, ${post.language}, ${post.category}, ${post.title}, ${post.excerpt},
-                    ${post.body}, ${post.coverMediaId}, ${post.status}, ${post.publishAt})
+                    ${post.body}, ${post.coverMediaId}, ${post.status}, ${post.publishAt}, ${post.videoUrl}, ${post.videoOrientation})
             RETURNING id, slug, language, category, title, excerpt, body, cover_media_id AS "coverMediaId",
-                      status, publish_at AS "publishAt", created_at AS "createdAt", updated_at AS "updatedAt"
+                      status, publish_at AS "publishAt", created_at AS "createdAt", updated_at AS "updatedAt",
+                      video_url AS "videoUrl", video_orientation AS "videoOrientation"
           `;
       if (!rows.length) return Response.json({ error: "Post not found" }, { status: 404 });
       logEvent("info", "/api/admin-posts", id ? "Post updated" : "Post created", { slug: post.slug, status: post.status });

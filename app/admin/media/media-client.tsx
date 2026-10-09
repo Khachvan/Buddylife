@@ -98,12 +98,12 @@ export default function MediaClient() {
       {error && <div className="adminServiceError" role="alert"><b>Media library needs attention</b><p>{error}</p></div>}
 
       <section className="adminPanel">
-        <h2>Upload an image</h2>
+        <h2>Upload an image or a short video</h2>
         <form className="cmsForm" onSubmit={upload}>
           <div className="cmsRow">
             <label>
-              Image file (JPEG, PNG, WebP or GIF, up to 4 MB)
-              <input name="file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required />
+              File (JPEG, PNG, WebP or GIF up to 4 MB; MP4 or WebM clip up to 4 MB)
+              <input name="file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" required />
             </label>
             <label>
               Alt text (describes the image for accessibility)
@@ -124,7 +124,7 @@ export default function MediaClient() {
           {media.map((item) => (
             <article className="mediaCard" key={item.id}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.url} alt={item.altText} loading="lazy" />
+              {item.contentType.startsWith("video/") ? <video src={item.url} muted playsInline preload="metadata" /> : <img src={item.url} alt={item.altText} loading="lazy" />}
               <b>{item.fileName}</b>
               <small>{item.width && item.height ? `${item.width}×${item.height} · ` : ""}{formatSize(item.byteSize)} · {new Date(item.createdAt).toLocaleDateString("en-GB")}</small>
               <div className="cmsActions">

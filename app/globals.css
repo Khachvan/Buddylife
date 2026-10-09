@@ -5425,6 +5425,12 @@ body {
 .statsRow span:not(:first-child), .statsHead span:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
 .statsRow a { color: var(--purple, #6b3fa0); text-decoration: none; overflow-wrap: anywhere; }
 .statsPeriod small { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.cmsLinkBox { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; border: 1px dashed #c9b8dc; border-radius: 12px; background: #faf6fe; font-size: 13px; color: var(--plum); }
+.cmsLinkBox span { flex: 1 1 320px; min-width: 0; overflow-wrap: anywhere; }
+.cmsLinkBox a { color: var(--violet); font-weight: 700; }
+.cmsLinkBox .button { padding: 8px 14px; font-size: 12px; min-height: 36px; }
+.cmsLinkButton { border: 0; background: none; padding: 0; color: #9b2c2c; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.mediaGrid video { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: #1b1024; }
 .siteOrder { display: grid; gap: 6px; max-height: 460px; overflow-y: auto; padding-right: 4px; }
 .siteOrderRow { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid #eee7f1; border-radius: 12px; background: #fff; }
 .siteOrderRow.pinned { border-color: #d9c8ee; background: #faf6fe; }

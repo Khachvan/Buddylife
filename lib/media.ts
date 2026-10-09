@@ -3,8 +3,17 @@ export const MEDIA_TYPES: Record<string, string> = {
   "image/png": "png",
   "image/webp": "webp",
   "image/gif": "gif",
+  "video/mp4": "mp4",
+  "video/webm": "webm",
 };
 export const MAX_MEDIA_BYTES = 4 * 1024 * 1024;
+// Uploads pass through a serverless function whose request body is capped at 4.5 MB on Vercel,
+// so clips must stay small; longer videos go to YouTube or Vimeo and are linked.
+export const MAX_VIDEO_BYTES = 4 * 1024 * 1024;
+
+export function isVideoType(contentType: string) {
+  return contentType.startsWith("video/");
+}
 
 export type MediaRecord = {
   id: string;
@@ -23,9 +32,10 @@ export function mediaUrl(id: string) {
 }
 
 export function validateMediaUpload(file: { type: string; size: number; name: string }) {
-  if (!MEDIA_TYPES[file.type]) return "Upload a JPEG, PNG, WebP or GIF image";
+  if (!MEDIA_TYPES[file.type]) return "Upload a JPEG, PNG, WebP or GIF image, or an MP4 / WebM video";
   if (file.size <= 0) return "The selected file is empty";
-  if (file.size > MAX_MEDIA_BYTES) return `Images must be ${MAX_MEDIA_BYTES / 1024 / 1024} MB or smaller`;
+  if (isVideoType(file.type) && file.size > MAX_VIDEO_BYTES) return `Videos must be ${MAX_VIDEO_BYTES / 1024 / 1024} MB or smaller; for longer clips upload to YouTube or Vimeo and paste the link`;
+  if (!isVideoType(file.type) && file.size > MAX_MEDIA_BYTES) return `Images must be ${MAX_MEDIA_BYTES / 1024 / 1024} MB or smaller`;
   return null;
 }
 

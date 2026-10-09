@@ -27,6 +27,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
         "Cache-Control": "public, max-age=3600, s-maxage=3600",
         "Content-Disposition": `inline; filename="${String(media.fileName).replace(/[^A-Za-z0-9._-]+/g, "-")}"`,
         "X-Content-Type-Options": "nosniff",
+        "Accept-Ranges": "bytes",
       },
     });
   } catch {

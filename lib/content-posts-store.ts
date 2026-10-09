@@ -23,6 +23,8 @@ export function toRepositoryRecord(post: ContentPost, file: string): PostRecord 
     coverUrl: post.cover,
     status: post.status,
     publishAt: post.publishAt,
+    videoUrl: post.video?.url || null,
+    videoOrientation: post.video?.orientation || null,
     createdAt: stamp,
     updatedAt: post.updatedAt || stamp,
     video: post.video,

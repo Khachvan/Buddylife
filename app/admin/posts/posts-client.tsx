@@ -1,9 +1,9 @@
 "use client";
 
-import { ArrowDown, ArrowUp, CalendarClock, Eye, EyeOff, Pin, PinOff, Plus, Save, Trash2, Upload } from "lucide-react";
+import { ArrowDown, ArrowUp, CalendarClock, Copy, Eye, EyeOff, Link2, Pin, PinOff, Plus, Save, Trash2, Upload, Video } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { orderArticles, type ArticleAction, type ArticleSettings } from "../../../lib/article-settings";
-import { localePath } from "../../../lib/locale";
+import { localePath, localeUrl } from "../../../lib/locale";
 import type { MediaRecord } from "../../../lib/media";
 import { effectiveState, isValidSlug, slugify, type PostLanguage, type PostRecord, type PostState } from "../../../lib/posts";
 
@@ -20,6 +20,8 @@ type Draft = {
   excerpt: string;
   body: string;
   coverMediaId: string | null;
+  videoUrl: string;
+  videoOrientation: "landscape" | "portrait";
   mode: PublishMode;
   scheduleAt: string;
   publishAt: string | null;
@@ -29,7 +31,7 @@ const LANGUAGES: Array<[PostLanguage, string]> = [["hy", "Armenian"], ["ru", "Ru
 const STATE_LABEL: Record<PostState, string> = { draft: "Draft", scheduled: "Scheduled", live: "Live", archived: "Archived" };
 
 function emptyDraft(): Draft {
-  return { id: null, title: "", slug: "", language: "hy", category: "", excerpt: "", body: "", coverMediaId: null, mode: "draft", scheduleAt: "", publishAt: null };
+  return { id: null, title: "", slug: "", language: "hy", category: "", excerpt: "", body: "", coverMediaId: null, videoUrl: "", videoOrientation: "landscape", mode: "draft", scheduleAt: "", publishAt: null };
 }
 
 function toLocalInput(iso: string | null) {
@@ -50,6 +52,8 @@ function draftFromPost(post: PostRecord): Draft {
     excerpt: post.excerpt,
     body: post.body,
     coverMediaId: post.coverMediaId,
+    videoUrl: post.videoUrl || "",
+    videoOrientation: post.videoOrientation === "portrait" ? "portrait" : "landscape",
     mode: state === "draft" ? "draft" : state === "archived" ? "archived" : state === "scheduled" ? "schedule" : "now",
     scheduleAt: toLocalInput(post.publishAt),
     publishAt: post.publishAt,
@@ -204,7 +208,7 @@ export default function PostsClient() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           action: "save",
-          post: { id: draft.id, title: draft.title, slug: draft.slug, language: draft.language, category: draft.category, excerpt: draft.excerpt, body: draft.body, coverMediaId: draft.coverMediaId, status, publishAt },
+          post: { id: draft.id, title: draft.title, slug: draft.slug, language: draft.language, category: draft.category, excerpt: draft.excerpt, body: draft.body, coverMediaId: draft.coverMediaId, videoUrl: draft.videoUrl.trim() || null, videoOrientation: draft.videoOrientation, status, publishAt },
         }),
       }).then(readJson);
       const saved: PostRecord = payload.post;
@@ -236,7 +240,7 @@ export default function PostsClient() {
     }
   }
 
-  async function uploadCover(file: File | null) {
+  async function uploadCover(file: File | null, kind: "cover" | "video" = "cover") {
     if (!file) return;
     setUploading(true);
     setError("");
@@ -246,7 +250,8 @@ export default function PostsClient() {
     try {
       const payload = await fetch("/api/admin-media", { method: "POST", body: form }).then(readJson);
       setMedia((current) => [payload.media, ...current]);
-      update({ coverMediaId: payload.media.id });
+      if (kind === "video") update({ videoUrl: payload.media.url });
+      else update({ coverMediaId: payload.media.id });
       setMessage(`Uploaded ${payload.media.fileName}.`);
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : "Upload failed");
@@ -256,6 +261,18 @@ export default function PostsClient() {
   }
 
   const previewHref = draft.slug && isValidSlug(draft.slug) ? localePath(draft.language, `/learn/${draft.slug}`) : null;
+  // The public address is fixed by the slug, so it can go into social posts before the article is live.
+  const publicUrl = draft.slug && isValidSlug(draft.slug) ? localeUrl(draft.language, `/learn/${draft.slug}`) : null;
+  const copyUrl = async () => {
+    if (!publicUrl) return;
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      setMessage("Link copied.");
+    } catch {
+      setMessage(publicUrl);
+    }
+  };
+  const imageMedia = media.filter((item) => !item.contentType.startsWith("video/"));
 
   return (
     <main className="adminPage">
@@ -436,7 +453,7 @@ export default function PostsClient() {
                   ) : <span className="cmsThumb" aria-hidden="true" />}
                   <select value={draft.coverMediaId || ""} onChange={(event) => update({ coverMediaId: event.target.value || null })}>
                     <option value="">Default BuddyLife image</option>
-                    {media.map((item) => <option key={item.id} value={item.id}>{item.fileName}</option>)}
+                    {imageMedia.map((item) => <option key={item.id} value={item.id}>{item.fileName}</option>)}
                   </select>
                 </div>
                 <span className="cmsHelp">
@@ -444,6 +461,28 @@ export default function PostsClient() {
                   {" "}or manage all images in the <a href="/admin/media">media library</a>.
                 </span>
               </div>
+            </div>
+            {publicUrl && (
+              <div className="cmsLinkBox" role="status">
+                <Link2 size={15} aria-hidden="true" />
+                <span><b>Public link</b> (ready for social posts; it opens once the article is live): <a href={publicUrl} target="_blank" rel="noreferrer">{publicUrl}</a></span>
+                <button type="button" className="button secondary" onClick={copyUrl}><Copy size={14} aria-hidden="true" /> Copy</button>
+              </div>
+            )}
+            <div className="cmsField">
+              <span><Video size={14} aria-hidden="true" /> Video (optional)</span>
+              <div className="cmsRow">
+                <input type="url" value={draft.videoUrl} onChange={(event) => update({ videoUrl: event.target.value })} placeholder="YouTube, Shorts or Vimeo link — or upload a clip" />
+                <select value={draft.videoOrientation} onChange={(event) => update({ videoOrientation: event.target.value as "landscape" | "portrait" })} aria-label="Video orientation">
+                  <option value="landscape">Landscape video</option>
+                  <option value="portrait">Vertical (short / reel)</option>
+                </select>
+              </div>
+              <span className="cmsHelp">
+                <label className="cmsUpload"><Upload size={14} aria-hidden="true" /> {uploading ? "Uploading…" : "Upload a short MP4 (up to 4 MB)"}<input type="file" accept="video/mp4,video/webm" hidden disabled={uploading} onChange={(event) => uploadCover(event.target.files?.[0] || null, "video")} /></label>
+                {" "}A video replaces the cover image on the article page; the cover is still used on cards and when the link is shared.
+                {draft.videoUrl && <> <button type="button" className="cmsLinkButton" onClick={() => update({ videoUrl: "" })}>Remove video</button></>}
+              </span>
             </div>
             <label>
               Short description
